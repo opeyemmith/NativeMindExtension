@@ -1,0 +1,40 @@
+{
+  "name": "nativemind-ext",
+  "version": "0.0.0",
+  "private": true,
+  "description": "manifest.json description",
+  "type": "module",
+  "scripts": {
+    "build": "wxt build",
+    "build:firefox": "wxt build -b firefox",
+    "compile": "vue-tsc --noEmit",
+    "dev": "wxt",
+    "dev:firefox": "wxt -b firefox",
+    "postinstall": "wxt prepare",
+    "zip": "wxt zip",
+    "zip:firefox": "wxt zip -b firefox"
+  },
+  "dependencies": {
+    "@wxt-dev/auto-icons": "^1.0.2",
+    "ai": "^4.3.13",
+    "ollama": "^0.5.15",
+    "ollama-ai-provider": "^1.2.0",
+    "prettier-plugin-packagejson": "^2.5.11",
+    "vue": "^3.5.13"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.26.0",
+    "@types/chrome": "^0.0.320",
+    "@wxt-dev/module-vue": "^1.0.2",
+    "husky": "^9.1.7",
+    "typescript": "5.6.3",
+    "typescript-eslint": "^8.32.0",
+    "vue-tsc": "^2.2.10",
+    "wxt": "^0.20.6"
+  },
+  "packageManager": "pnpm@10.10.0",
+  "engines": {
+    "node": "22.14.0"
+  }
+}
+

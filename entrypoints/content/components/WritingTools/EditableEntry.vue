@@ -64,10 +64,11 @@
 </template>
 <script setup lang="ts">
 import { useElementBounding, useEventListener } from '@vueuse/core'
-import { UnwrapRef } from 'vue'
+import { computed, ref, UnwrapRef } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
+import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
 
 import SuggestionCard from './SuggestionCard.vue'
 import { WritingToolType } from './types'
@@ -105,6 +106,7 @@ const selectedRange = computed(() => {
       return selection.getRangeAt(0)
     }
   }
+  return undefined
 })
 
 const selectedBounding = computed(() => {

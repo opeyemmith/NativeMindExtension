@@ -10,6 +10,7 @@ import hljs from 'highlight.js'
 import { Marked, Renderer, Tokens } from 'marked'
 import { createDirectives, type DirectiveConfig } from 'marked-directive'
 import { markedHighlight } from 'marked-highlight'
+import { ref, watchEffect } from 'vue'
 
 import IconMDLink from '@/assets/icons/md-link.svg?raw'
 import logger from '@/utils/logger'

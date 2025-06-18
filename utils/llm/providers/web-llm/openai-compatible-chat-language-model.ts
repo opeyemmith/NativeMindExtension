@@ -12,7 +12,7 @@ import { ChatCompletionChunk } from '@mlc-ai/web-llm'
 import { z } from 'zod'
 
 import { UnknownError } from '@/utils/error'
-import { logger } from '#imports'
+import { logger } from '@/utils/logger'
 
 import { ExtendedMLCEngineInterface } from '../../web-llm'
 import { convertToOpenAICompatibleChatMessages } from './convert-to-openai-compatible-chat-messages'

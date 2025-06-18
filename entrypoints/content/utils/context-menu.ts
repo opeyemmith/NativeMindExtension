@@ -1,3 +1,5 @@
+import { watch } from 'vue'
+
 import { getLanguageName, LanguageCode } from '@/utils/language/detect'
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'

@@ -1,5 +1,6 @@
-import { watch } from 'vue'
+import { effectScope, watch } from 'vue'
 
+import { lazyInitialize } from '@/utils/cache'
 import { ActionMessageV1 } from '@/utils/tab-store/history'
 import { getUserConfig } from '@/utils/user-config'
 

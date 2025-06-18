@@ -1,4 +1,7 @@
-import { storage } from '#imports'
+import { customRef, Ref, ref, toRaw, watch } from 'vue'
+import { storage } from 'wxt/utils/storage'
+
+import { debounce } from '../debounce'
 
 export async function persistentRef<T>(
   storeKey: string,

@@ -98,6 +98,8 @@
 
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
+import { onMounted } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 import IconSendFill from '@/assets/icons/send-fill.svg?component'
 import AutoExpandTextArea from '@/components/AutoExpandTextArea.vue'

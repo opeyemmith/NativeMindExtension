@@ -1,5 +1,6 @@
 import { deleteModelInCache, hasModelInCache } from '@mlc-ai/web-llm'
 import { generateObject as originalGenerateObject, GenerateObjectResult, generateText as originalGenerateText, streamObject as originalStreamObject, streamText as originalStreamText } from 'ai'
+import { Browser, browser } from 'wxt/browser'
 import { z } from 'zod'
 
 import logger from '@/utils/logger'

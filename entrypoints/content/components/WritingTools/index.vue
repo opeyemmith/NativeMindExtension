@@ -27,6 +27,7 @@
   </Teleport>
 </template>
 <script setup lang="ts">
+import { ref, watch } from 'vue'
 import { ShadowRoot } from 'vue-shadow-dom'
 
 import { useObserveElements } from '@/composables/useObserverElements'

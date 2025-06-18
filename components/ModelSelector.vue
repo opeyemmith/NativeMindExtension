@@ -73,7 +73,7 @@
   </div>
 </template>
 <script setup lang="ts">
-import { toRefs } from 'vue'
+import { computed, onMounted, toRefs, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'

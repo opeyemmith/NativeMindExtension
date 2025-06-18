@@ -1,3 +1,4 @@
+import { parseDocument } from '@/utils/document-parser'
 import { c2bRpc } from '@/utils/rpc'
 import { getTabStore } from '@/utils/tab-store'
 

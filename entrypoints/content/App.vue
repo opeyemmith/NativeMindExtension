@@ -28,9 +28,10 @@
   </Suspense>
 </template>
 <script setup lang="tsx">
-import { onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 
 import Modal from '@/components/Modal.vue'
+import { useToast } from '@/composables/useToast'
 import { useZIndex } from '@/composables/useZIndex'
 import { registerContentScriptRpcEvent } from '@/utils/rpc'
 import { registerContentScriptRpcEventFromMainWorld } from '@/utils/rpc/content-main-world-fns'

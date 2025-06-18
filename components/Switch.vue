@@ -68,7 +68,9 @@
 </template>
 <script setup lang="ts" generic="T extends unknown, Key extends string | boolean, Item extends SwitchItem<T, Key>">
 import { useElementBounding } from '@vueuse/core'
-import type { CSSProperties, UnwrapRef, VNode } from 'vue'
+import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, type UnwrapRef, type VNode, watch } from 'vue'
+
+import { debounce } from '@/utils/debounce'
 
 export interface SwitchItem<T = unknown, Key extends string | boolean = string> {
   name?: string

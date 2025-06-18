@@ -1,11 +1,14 @@
 import '@/utils/polyfill'
-import { Suspense } from 'vue'
-import App from './App.vue'
-import { createShadowRootOverlay } from './ui'
 import 'tailwindcss/index.css'
 import './utils/time'
 import './style.css'
+
+import { Suspense } from 'vue'
+import { defineContentScript } from 'wxt/utils/define-content-script'
+
+import App from './App.vue'
 import RootProvider from './components/RootProvider.vue'
+import { createShadowRootOverlay } from './ui'
 
 export default defineContentScript({
   matches: ['*://*/*'],

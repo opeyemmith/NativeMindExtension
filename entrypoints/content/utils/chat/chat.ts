@@ -1,6 +1,7 @@
 import EventEmitter from 'events'
-import type { Ref } from 'vue'
+import { type Ref, ref, watch } from 'vue'
 
+import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import logger from '@/utils/logger'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'

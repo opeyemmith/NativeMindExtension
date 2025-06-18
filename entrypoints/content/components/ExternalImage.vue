@@ -13,6 +13,7 @@
 </template>
 <script lang="ts">
 import { LRUCache } from 'lru-cache'
+import { ref, watchEffect } from 'vue'
 const imageCache = new LRUCache<string, string>({
   max: 50,
 })

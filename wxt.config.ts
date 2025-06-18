@@ -1,9 +1,10 @@
-import { defineConfig } from 'wxt'
-import { VERSION } from './utils/constants'
 import tailwindcss from '@tailwindcss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import webfontDownload from 'vite-plugin-webfont-dl'
 import svgLoader from 'vite-svg-loader'
-import webfontDownload from 'vite-plugin-webfont-dl';
+import { defineConfig } from 'wxt'
+
+import { VERSION } from './utils/constants'
 
 const IS_FIREFOX = process.argv.includes('firefox')
 
@@ -37,6 +38,7 @@ svgLoaderPlugin.name = 'svg-loader'
 
 // See https://wxt.dev/api/config.html
 export default defineConfig({
+  imports: false,
   modules: ['@wxt-dev/module-vue', './wxt-modules/auto-icons/index.mjs'],
   webExt: {
     chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
@@ -46,26 +48,27 @@ export default defineConfig({
   },
   hooks: {
     // replace the default svg-loader plugin provided by wxt with our custom one
-    "vite:build:extendConfig": (_entrypoint, config) => {
-      const idx = config.plugins?.findIndex(plugin => plugin && 'name' in plugin && plugin.name === 'svg-loader')
+    'vite:build:extendConfig': (_entrypoint, config) => {
+      const idx = config.plugins?.findIndex((plugin) => plugin && 'name' in plugin && plugin.name === 'svg-loader')
       if (idx === undefined || idx === -1) {
         config.plugins = config.plugins || []
         config.plugins.push(svgLoaderPlugin)
         return
-      } else {
+      }
+      else {
         config.plugins?.splice(idx, 1, svgLoaderPlugin)
       }
     },
   },
-  vite: _env => {
+  vite: (_env) => {
     return {
       plugins: [
         webfontDownload([
-          'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap'
+          'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
         ]),
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),
-      ] as any[],
+      ],
     }
   },
   manifest: {
@@ -76,7 +79,7 @@ export default defineConfig({
     permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', ...extraPermissions],
     minimum_chrome_version: '124',
     content_security_policy: {
-      extension_pages: "script-src 'self' 'wasm-unsafe-eval'; object-src 'self';",
+      extension_pages: 'script-src \'self\' \'wasm-unsafe-eval\'; object-src \'self\';',
     },
     web_accessible_resources: [
       {
@@ -90,7 +93,7 @@ export default defineConfig({
         js: ['/main-world-injected.js'],
         run_at: 'document_start',
         world: 'MAIN',
-      }
+      },
     ],
     host_permissions: ['*://*/*'],
   },

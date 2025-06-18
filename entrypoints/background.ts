@@ -2,6 +2,7 @@ import '@/utils/polyfill'
 import '@/utils/rpc'
 
 import { browser } from 'wxt/browser'
+import { defineBackground } from 'wxt/utils/define-background'
 
 import { CONTEXT_MENU } from '@/utils/context-menu'
 import logger from '@/utils/logger'

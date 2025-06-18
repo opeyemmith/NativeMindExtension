@@ -117,6 +117,8 @@
 </template>
 <script setup lang="ts">
 
+import { ref } from 'vue'
+
 import ModelLogo from '@/components/ModelLogo.vue'
 import Selector from '@/components/Selector.vue'
 import StatusBadge from '@/components/StatusBadge.vue'

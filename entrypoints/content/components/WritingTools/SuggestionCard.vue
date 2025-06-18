@@ -50,6 +50,8 @@
   </div>
 </template>
 <script setup lang="ts">
+import { onBeforeUnmount, ref, watch } from 'vue'
+
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import Loading from '@/components/Loading.vue'
 import logger from '@/utils/logger'

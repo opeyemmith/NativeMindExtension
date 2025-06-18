@@ -1,3 +1,7 @@
+import { ref } from 'vue'
+
+import { lazyInitialize } from '@/utils/cache'
+
 const getZIndexStore = lazyInitialize(() => {
   const groups = new Map<string, number>()
   const getNextIndex = (groupName: string, baseLevel: number) => {

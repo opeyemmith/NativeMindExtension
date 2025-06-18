@@ -1,10 +1,14 @@
 import { TextStreamPart, ToolSet } from 'ai'
 import EventEmitter from 'events'
+import { browser } from 'wxt/browser'
 
+import { toAsyncIter } from '../async'
+import { logger } from '../logger'
 import { getTabStore } from '../tab-store'
 import { getUserConfig } from '../user-config'
 import { c2bRpc } from '.'
 
+const log = logger.child('main-world-fns')
 const eventEmitter = new EventEmitter()
 
 export type Events = {
@@ -71,7 +75,7 @@ export async function checkBackendModelReady() {
     }
   }
   catch (error) {
-    logger.debug('Error checking backend model', error)
+    log.debug('Error checking backend model', error)
     return false
   }
 }

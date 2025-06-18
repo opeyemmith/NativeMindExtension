@@ -59,8 +59,9 @@
 </template>
 <script lang="ts">
 import { useElementBounding } from '@vueuse/core'
-import { reactive } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
+import { useInjectContext } from '@/composables/useInjectContext'
 import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 
 const modalStack: { close(): void, canCloseByEsc(): boolean }[] = reactive([])

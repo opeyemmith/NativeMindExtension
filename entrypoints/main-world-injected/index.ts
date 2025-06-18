@@ -1,3 +1,5 @@
+import { defineContentScript } from 'wxt/utils/define-content-script'
+
 import { logger } from '@/utils/logger'
 
 import { exposeToGlobal, generateText, ping, polyfillForBuiltInAI } from './utils'

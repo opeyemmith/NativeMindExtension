@@ -60,6 +60,7 @@
 </template>
 <script setup lang="tsx">
 import { useElementBounding } from '@vueuse/core'
+import { computed, ref } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
 import IconAdd from '@/assets/icons/new-chat-add.svg?component'

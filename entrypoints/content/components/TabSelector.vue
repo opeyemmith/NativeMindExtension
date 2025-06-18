@@ -108,6 +108,7 @@
 </template>
 <script setup lang="ts">
 import { useEventListener, useVModel } from '@vueuse/core'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import IconAdd from '@/assets/icons/add.svg?component'
 import IconTab from '@/assets/icons/tab.svg?component'

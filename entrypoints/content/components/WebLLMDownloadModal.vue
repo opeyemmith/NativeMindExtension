@@ -57,15 +57,20 @@
   </div>
 </template>
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import IconWarning from '@/assets/icons/warning.svg?component'
 import ProgressBar from '@/components/ProgressBar.vue'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
+import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
 
 import { initWebLLMEngine } from '../utils/llm'
+
+const log = logger.child('WebLLMDownloadModal')
 
 const emit = defineEmits<{
   (e: 'canceled'): void
@@ -83,7 +88,7 @@ const initWebLLM = async () => {
   webLLMInitializeProgress.value.started = true
   const progressIter = initWebLLMEngine(DEFAULT_MODEL.modelId)
   for await (const progress of progressIter) {
-    logger.debug('WebLLM model download progress', progress)
+    log.debug('WebLLM model download progress', progress)
     if (progress.type === 'progress') {
       webLLMInitializeProgress.value.downloaded = progress.progress.progress * webLLMInitializeProgress.value.total
     }

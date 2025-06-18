@@ -1,13 +1,17 @@
 import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
+import { logger } from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
+
+const log = logger.child('store')
 
 export const useOllamaStatusStore = defineStore('ollama-status', () => {
   const modelList = ref<{ name: string, model: string, size_vram?: number, size?: number }[]>([])
   const connectionStatus = ref<'connected' | 'error' | 'unconnected'>('unconnected')
   const updateModelList = async () => {
     const response = await c2bRpc.getLocalModelList()
-    logger.debug('Model list fetched:', response)
+    log.debug('Model list fetched:', response)
     modelList.value = response.models
     return modelList.value
   }

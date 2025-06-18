@@ -83,3 +83,7 @@ export class ObservableArray<T> extends Array<T> {
     this.eventEmitter.emit('change', this, oldArray)
   }
 }
+
+export function nonNullable<T>(value: T | null | undefined): value is T {
+  return value !== null && value !== undefined
+}

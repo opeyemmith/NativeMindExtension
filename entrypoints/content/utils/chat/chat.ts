@@ -1,6 +1,7 @@
 import EventEmitter from 'events'
 import { type Ref, ref, watch } from 'vue'
 
+import { nonNullable } from '@/utils/array'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import logger from '@/utils/logger'
@@ -296,7 +297,7 @@ export class Chat {
     const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
     const pages = await getDocumentContentOfTabs(relevantTabIds)
     const abortController = this.createAbortController()
-    const prompt = await nextStep(contextMsgs, pages)
+    const prompt = await nextStep(contextMsgs, pages.filter(nonNullable))
     const next = await generateObjectInBackground({
       schema: 'nextStep',
       prompt: prompt.user,
@@ -404,7 +405,7 @@ export class Chat {
     const abortController = this.createAbortController()
     const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
     const pages = await getDocumentContentOfTabs(relevantTabIds)
-    const prompt = await generateSearchKeywords(contextMsgs, pages)
+    const prompt = await generateSearchKeywords(contextMsgs, pages.filter(nonNullable))
     const r = await generateObjectInBackground({
       schema: 'searchKeywords',
       system: prompt.system,
@@ -459,7 +460,7 @@ export class Chat {
     }
     const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
     const pages = await getDocumentContentOfTabs(relevantTabIds)
-    const prompt = await chatWithPageContent(question, pages, onlineResults)
+    const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults)
     await this.sendMessage(prompt.user, prompt.system, { assistantMsg: loading })
   }
 

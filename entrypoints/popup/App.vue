@@ -2,11 +2,14 @@
 import { ref } from 'vue'
 import { browser } from 'wxt/browser'
 
+import { INVALID_URLS } from '@/utils/constants'
+
 const isValidUrl = ref(false)
 browser.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
   if (tabs.length === 1) {
     const tab = tabs[0]
-    isValidUrl.value = /https?:\/\//.test(tab.url ?? '')
+    const { url } = tab || {}
+    isValidUrl.value = !!url && /https?:\/\//.test(url) && !INVALID_URLS.some((regexp) => regexp.test(url))
   }
 })
 </script>

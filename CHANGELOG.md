@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.3...v1.2.0-beta.4)
+
+### 🚀 Enhancements
+
+- **style:** Update ModelSelector container position ([1ddfcba](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1ddfcba))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.2...v1.2.0-beta.3)

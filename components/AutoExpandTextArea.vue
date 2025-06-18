@@ -10,6 +10,7 @@
 
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
+import { nextTick, ref, watch } from 'vue'
 
 const emit = defineEmits<{
   (e: 'input', ev: Event): void
@@ -20,18 +21,23 @@ const props = defineProps<{
   modelValue?: string
 }>()
 
+const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const inputValue = useVModel(props, 'modelValue', emit, {
-  passive: true,
   eventName: 'update:modelValue',
 })
 
-const onInput = (event: Event) => {
-  emit('input', event)
-  const textarea = event.target as HTMLTextAreaElement
+watch(inputValue, async () => {
+  await nextTick()
+  const textarea = textareaRef.value as HTMLTextAreaElement
+  if (!textarea) return
   textarea.style.height = 'auto' // Reset height to auto to shrink if needed
   // force a reflow to ensure the height is recalculated
   const _ = textarea.offsetHeight
   const scrollHeight = textarea.scrollHeight
   textarea.style.height = `${scrollHeight}px` // Set height to scrollHeight to expand
+})
+
+const onInput = (event: Event) => {
+  emit('input', event)
 }
 </script>

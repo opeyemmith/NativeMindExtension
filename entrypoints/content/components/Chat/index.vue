@@ -67,7 +67,7 @@
                 ? 'Ask anything...'
                 : 'Ask follow up...'
               "
-              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-3 text-sm"
+              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-5 text-sm wrap-anywhere"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"

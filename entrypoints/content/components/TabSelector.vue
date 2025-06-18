@@ -191,7 +191,7 @@ const toggleSelect = (tab: TabInfo) => {
     vSelectedTabs.value.splice(index, 1)
   }
   else {
-    vSelectedTabs.value.push(tab)
+    vSelectedTabs.value.unshift(tab)
   }
   tabStore.contextTabIds.value = vSelectedTabs.value.map((tab) => tab.tabId)
 }

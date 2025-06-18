@@ -1,0 +1,32 @@
+{
+  "settings": {
+    "webllm-desc": "Using WebLLM for quick tryout. For full model support and better performance, please install Ollama.",
+    "translation": {
+      "title": "Translation Language"
+    },
+    "get_ollama": "Get Ollama",
+    "test": "Test",
+    "ollama": {
+      "already_installed": "Already installed and run Ollama?",
+      "need_help": "Need help?",
+      "follow_guide": "Follow our installation guide",
+      "re_scan": "Re-scan",
+      "setup": "Setup"
+    },
+    "choose_model": "Choose Model",
+    "download": "Download",
+    "prompts": {
+      "title": "Prompt",
+      "translation_system_prompt": "Translator System Prompt",
+      "chat_system_prompt": "Chat System Prompt"
+    },
+    "models": {
+      "title": "Active Model"
+    }
+  },
+  "chat": {
+    "messages": {
+      "thought_for_seconds": "Thought for {second} second | Thought for {second} seconds"
+    }
+  }
+}

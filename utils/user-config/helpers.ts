@@ -1,26 +1,14 @@
+import { ref } from 'vue'
+
 import { storage } from '#imports'
 
-const getLocalItem = async <T>(key: string) => {
-  const item = await storage.getItem<T>(`local:${key}`)
+const getItem = async <T>(key: StorageItemKey) => {
+  const item = await storage.getItem<T>(key)
   return item
 }
 
-const setLocalItem = async <T>(key: string, value: T) => {
-  await storage.setItem(`local:${key}`, value)
-}
-
-const getSessionItem = async <T>(key: string) => {
-  const item = await storage.getItem<T>(`session:${key}`)
-  return item
-}
-
-const setSessionItem = async <T>(key: string, value: T) => {
-  await storage.setItem(`session:${key}`, value)
-}
-
-export interface ConfigAccessor<T> {
-  get: () => Promise<T>
-  set: (value: T) => Promise<void>
+const setItem = async <T>(key: StorageItemKey, value: T) => {
+  await storage.setItem(key, value)
 }
 
 export class ValidateError extends Error {
@@ -33,8 +21,15 @@ export class Config<Value, DefaultValue extends Value | undefined> {
   defaultValue?: DefaultValue
   isSession = false
   transformer?: (value: Value | DefaultValue) => Value | DefaultValue
-  validator?: (value: Value | DefaultValue) => { isValid: boolean; displayMessage?: string }
+  validator?: (value: Value | DefaultValue) => { isValid: boolean, displayMessage?: string }
   constructor(private key: string) {}
+
+  get areaKey() {
+    if (this.isSession) {
+      return `session:${this.key}` as const
+    }
+    return `local:${this.key}` as const
+  }
 
   session() {
     this.isSession = true
@@ -51,38 +46,66 @@ export class Config<Value, DefaultValue extends Value | undefined> {
     return this
   }
 
-  validate(validator: (value: Value | DefaultValue) => { isValid: boolean; displayMessage?: string }) {
+  validate(validator: (value: Value | DefaultValue) => { isValid: boolean, displayMessage?: string }) {
     this.validator = validator
     return this
   }
 
-  build(): ConfigAccessor<Value | DefaultValue> {
-    const snapshots: (Value | DefaultValue)[] = []
-    const getItem = this.isSession ? getSessionItem : getLocalItem
-    const setItem = this.isSession ? setSessionItem : setLocalItem
-    return {
-      get: async () => {
-        const value = await getItem<Value | undefined>(this.key)
-        if (this.transformer) {
-          return this.transformer(value ?? (this.defaultValue as DefaultValue))
-        }
-        return value ?? (this.defaultValue as DefaultValue)
-      },
-      set: async (value: Value | DefaultValue) => {
-        if (import.meta.env.DEV) {
-          snapshots.push(value)
-          console.log(`[${this.key}] set to ${value}`, snapshots)
-        }
-        if (this.validator) {
-          const { isValid, displayMessage } = this.validator(value)
-          if (!isValid) {
-            throw new ValidateError(displayMessage ?? 'Invalid value')
+  private getItem() {
+    return getItem<Value | DefaultValue>(this.areaKey)
+  }
+
+  private setItem(value: Value | DefaultValue) {
+    return setItem(this.areaKey, value)
+  }
+
+  async build() {
+    const defaultValue = this.defaultValue
+    const clonedDefaultValue = structuredClone(defaultValue)
+    const v = (await this.getItem()) ?? clonedDefaultValue
+    const refValue = ref(v)
+    watch(refValue, async (newValue) => {
+      this.setItem(toRaw(newValue))
+    }, { deep: true })
+    const r = customRef<Value | DefaultValue>((track, trigger) => {
+      return {
+        get() {
+          track()
+          return refValue.value
+        },
+        set: (value) => {
+          if (this.transformer) {
+            value = this.transformer(value)
           }
-        }
-        if (this.transformer) {
-          value = this.transformer(value)
-        }
-        await setItem(this.key, value)
+          if (this.validator) {
+            const { isValid, displayMessage } = this.validator(value)
+            if (!isValid) {
+              throw new ValidateError(displayMessage || 'Invalid value')
+            }
+          }
+          refValue.value = value
+          trigger()
+        },
+      }
+    })
+
+    storage.watch(this.areaKey, async (newValue, oldValue) => {
+      if (newValue !== oldValue) {
+        refValue.value = newValue
+      }
+    })
+
+    return {
+      getDefault() {
+        return structuredClone(defaultValue) as DefaultValue
+      },
+      resetDefault() {
+        r.value = structuredClone(defaultValue) as DefaultValue
+      },
+      toRef: () => r,
+      get: () => r.value,
+      set: (value: Value | DefaultValue) => {
+        r.value = value
       },
     }
   }

@@ -1,8 +1,8 @@
 {
   "extName": {
-    "message": "NativeMind"
+    "message": "NativeMind: Your fully private, open-source, on-device AI assistant"
   },
   "extDesc": {
-    "message": "NativeMind is a browser extension that allows you to use NativeMind in your browser."
+    "message": "Summarize, translate, and search webpages with AI models running securely on your device."
   }
 }

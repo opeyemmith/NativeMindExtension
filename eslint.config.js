@@ -1,9 +1,61 @@
 import eslint from '@eslint/js'
-import tseslint from 'typescript-eslint'
+import stylistic from '@stylistic/eslint-plugin'
+import simpleImportSort from 'eslint-plugin-simple-import-sort'
+import eslintPluginVue from 'eslint-plugin-vue'
+import globals from 'globals'
+import typescriptEslint from 'typescript-eslint'
 
-export default tseslint.config(
-  eslint.configs.recommended,
-  ...tseslint.configs.recommended,
+export default typescriptEslint.config(
+  { ignores: ['*.d.ts', '**/coverage', '**/.output', '**/.wxt', '**/node_modules'] },
+  {
+    plugins: {
+      '@stylistic': stylistic,
+      '@typescript-eslint': typescriptEslint.plugin,
+    },
+  },
+  {
+    plugins: {
+      'simple-import-sort': simpleImportSort,
+    },
+    rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
+    },
+  },
+  stylistic.configs.customize({
+    indent: 2,
+    quotes: 'single',
+    semi: false,
+    jsx: true,
+    arrowParens: 'always',
+  }),
+  {
+    extends: [
+      eslint.configs.recommended,
+      ...typescriptEslint.configs.recommended,
+      ...eslintPluginVue.configs['flat/recommended'],
+    ],
+    files: ['**/*.{ts,vue}'],
+    languageOptions: {
+      ecmaVersion: 'latest',
+      sourceType: 'module',
+      globals: globals.browser,
+      parserOptions: {
+        parser: typescriptEslint.parser,
+        ecmaVersion: 'latest',
+        sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
+      },
+    },
+    rules: {
+      'vue/attribute-hyphenation': ['error', 'never'],
+      'vue/multi-word-component-names': ['off'],
+      'vue/no-v-html': ['off'],
+      'vue/require-default-prop': ['off'],
+    },
+  },
   {
     rules: {
       'no-console': ['error'],
@@ -21,12 +73,23 @@ export default tseslint.config(
       ],
       '@typescript-eslint/ban-ts-comment': [
         'error',
-        { 'ts-expect-error': 'allow-with-description', 'ts-ignore': 'allow-with-description' },
+        {
+          'ts-expect-error': 'allow-with-description',
+          'ts-ignore': 'allow-with-description',
+        },
       ],
       '@typescript-eslint/no-explicit-any': ['error', { ignoreRestArgs: true }],
+      '@typescript-eslint/no-unused-expressions': [
+        'error',
+        {
+          allowShortCircuit: true,
+          allowTernary: true,
+          allowTaggedTemplates: true,
+        },
+      ],
     },
   },
   {
-    ignores: ['node_modules', '**/*.test.ts'],
-  }
+    ignores: ['node_modules', '**/*.test.ts', 'wxt.config.ts'],
+  },
 )

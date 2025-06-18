@@ -1,23 +1,63 @@
-import ollama from "ollama";
+import { Ollama } from 'ollama/browser'
+
+import logger from '@/utils/logger'
+
+import { getUserConfig } from '../user-config'
+
+async function getOllamaClient() {
+  const userConfig = await getUserConfig()
+  const baseUrl = userConfig.llm.baseUrl.get()
+  const origin = new URL(baseUrl).origin
+  const ollama = new Ollama({ host: origin })
+  return ollama
+}
 
 export function getDefaultModelList() {
-  return ["qwen3:8b", "deepseek-r1:1.5b"];
+  return ['qwen3:8b', 'deepseek-r1:1.5b']
 }
 
-export function getLocalModelList() {
-  return ollama.list();
+export async function getLocalModelList() {
+  try {
+    const ollama = await getOllamaClient()
+    const response = await ollama.list()
+    const usageResponse = await ollama.ps()
+    const models = response.models.map((model) => {
+      const usage = usageResponse.models.find((m) => m.model === model.model)
+      return {
+        ...model,
+        ...usage,
+      }
+    })
+    return { models }
+  }
+  catch (error) {
+    logger.error('Error fetching local model list:', error)
+    return {
+      models: [],
+      error: 'Failed to fetch local model list',
+    }
+  }
 }
 
-export function getModelInfo(modelId: string) {
+export async function getModelInfo(modelId: string) {
+  const ollama = await getOllamaClient()
   return ollama.show({
     model: modelId,
-  });
+  })
+}
+
+export async function deleteModel(modelId: string) {
+  const ollama = await getOllamaClient()
+  return ollama.delete({
+    model: modelId,
+  })
 }
 
 export async function pullModel(modelId: string) {
+  const ollama = await getOllamaClient()
   const pulling = await ollama.pull({
     model: modelId,
     stream: true,
-  });
-  return pulling;
+  })
+  return pulling
 }

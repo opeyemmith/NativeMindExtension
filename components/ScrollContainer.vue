@@ -38,6 +38,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useElementBounding, useScroll } from '@vueuse/core'
 import { computed, ref, watch } from 'vue'

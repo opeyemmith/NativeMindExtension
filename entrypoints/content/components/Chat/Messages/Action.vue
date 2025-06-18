@@ -37,6 +37,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import Text from '@/components/ui/Text.vue'
 import { Chat } from '@/entrypoints/content/utils/chat'

@@ -287,6 +287,7 @@
     </ScrollContainer>
   </div>
 </template>
+
 <script setup lang="tsx">
 import { useCountdown } from '@vueuse/core'
 import { computed, onMounted, ref, toRef, watch } from 'vue'

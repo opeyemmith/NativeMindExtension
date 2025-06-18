@@ -95,6 +95,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useCountdown } from '@vueuse/core'
 import { watch } from 'vue'

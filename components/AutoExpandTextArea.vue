@@ -7,6 +7,7 @@
     @input="onInput"
   />
 </template>
+
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
 

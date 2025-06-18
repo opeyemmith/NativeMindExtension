@@ -16,6 +16,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import ImageElements from '@/assets/images/onboarding/elements.svg'
 import Text from '@/components/ui/Text.vue'

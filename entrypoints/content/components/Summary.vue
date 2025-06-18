@@ -9,6 +9,7 @@
     </button>
   </div>
 </template>
+
 <script setup lang="tsx">
 import IconMenu from '@/assets/icons/menu.svg?component'
 

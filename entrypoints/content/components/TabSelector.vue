@@ -106,6 +106,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useEventListener, useVModel } from '@vueuse/core'
 import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
@@ -235,6 +236,7 @@ onBeforeUnmount(() => {
   cleanUpTabRemovedListener()
 })
 </script>
+
 <style lang="scss">
 .selector-enter-active,
 .selector-leave-active {

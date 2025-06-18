@@ -27,6 +27,7 @@
     </SideContainer>
   </Suspense>
 </template>
+
 <script setup lang="tsx">
 import { computed, onMounted } from 'vue'
 
@@ -107,6 +108,7 @@ onMounted(async () => {
   if (tabInfo.faviconUrl) tabStore.tabInfo.value.faviconUrl = tabInfo.faviconUrl
 })
 </script>
+
 <style lang="scss">
 .wrapper-enter-active,
 .wrapper-leave-active {

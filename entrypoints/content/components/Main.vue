@@ -58,6 +58,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="tsx">
 import { useElementBounding } from '@vueuse/core'
 import { computed, ref } from 'vue'
@@ -96,6 +97,7 @@ const onClickSetting = () => {
   tabStore.showSetting.value = !tabStore.showSetting.value
 }
 </script>
+
 <style lang="scss">
 .fade-enter-active,
 .fade-leave-active {

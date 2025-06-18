@@ -4,6 +4,7 @@
     v-html="html"
   />
 </template>
+
 <script setup lang="ts">
 import dompurify from 'dompurify'
 import hljs from 'highlight.js'
@@ -204,9 +205,11 @@ watchEffect(async () => {
   html.value = await renderMarkdown(props.text)
 })
 </script>
+
 <style lang="scss">
 @import 'highlight.js/styles/atom-one-light.css';
 </style>
+
 <style scoped lang="scss">
 .markdown-viewer {
   line-height: 1.25;

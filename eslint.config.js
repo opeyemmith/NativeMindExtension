@@ -39,6 +39,11 @@ export default typescriptEslint.config(
       'vue/multi-word-component-names': ['off'],
       'vue/no-v-html': ['off'],
       'vue/require-default-prop': ['off'],
+      'vue/padding-line-between-blocks': ['error'],
+      'vue/array-bracket-spacing': ['error'],
+      'vue/block-spacing': ['error'],
+      'vue/arrow-spacing': ['error'],
+      'template-curly-spacing': ['error'],
     },
   },
   stylistic.configs.customize({

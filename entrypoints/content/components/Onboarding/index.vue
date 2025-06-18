@@ -60,6 +60,7 @@
     </ScrollContainer>
   </div>
 </template>
+
 <script setup lang="tsx">
 import { computed, onMounted, ref } from 'vue'
 

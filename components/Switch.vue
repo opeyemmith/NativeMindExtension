@@ -66,6 +66,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts" generic="T extends unknown, Key extends string | boolean, Item extends SwitchItem<T, Key>">
 import { useElementBounding } from '@vueuse/core'
 import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, type UnwrapRef, type VNode, watch } from 'vue'

@@ -6,6 +6,7 @@
     <slot />
   </div>
 </template>
+
 <script setup lang="ts">
 import { computed } from 'vue'
 
@@ -44,6 +45,7 @@ const sizeClass = computed(() => {
 })
 
 </script>
+
 <style scoped>
 .text-container {
   display: contents;

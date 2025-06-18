@@ -34,6 +34,7 @@
     </Text>
   </div>
 </template>
+
 <script setup lang="ts">
 import Loading from '@/components/Loading.vue'
 import Text from '@/components/ui/Text.vue'

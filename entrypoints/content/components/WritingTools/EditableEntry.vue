@@ -62,6 +62,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useElementBounding, useEventListener } from '@vueuse/core'
 import { computed, ref, UnwrapRef } from 'vue'

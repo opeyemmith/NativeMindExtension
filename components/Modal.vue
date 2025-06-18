@@ -57,6 +57,7 @@
     </div>
   </Teleport>
 </template>
+
 <script lang="ts">
 import { useElementBounding } from '@vueuse/core'
 import { computed, reactive, ref, watch } from 'vue'
@@ -75,6 +76,7 @@ const onEscPressed = (e: KeyboardEvent) => {
 
 window.addEventListener('keydown', onEscPressed, false)
 </script>
+
 <script setup lang="ts">
 import IconClose from '@/assets/icons/close.svg?component'
 import { useZIndex } from '@/composables/useZIndex'
@@ -202,6 +204,7 @@ const onClose = () => {
   props.onClose?.()
 }
 </script>
+
 <style lang="scss" scoped>
 @keyframes fade-in {
   from {

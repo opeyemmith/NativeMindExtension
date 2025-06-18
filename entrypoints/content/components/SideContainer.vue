@@ -41,6 +41,7 @@ const isShowSidebar = computed(() => {
   return pinSidebar.value || tabStore.showContainer.value
 })
 </script>
+
 <style lang="scss">
 .side-enter-active,
 .side-leave-active {

@@ -4,19 +4,23 @@
       ref="topRef"
       class="bg-[#E9E9EC]"
     >
-      <div class="h-13 px-3 flex items-center justify-between border-b border-gray-200 ">
+      <div class="h-15 px-4 flex items-center justify-between border-b border-gray-200 ">
         <div class="left flex items-center gap-2">
           <Logo
-            showText
             class="font-bold text-base"
           />
+          <ModelSelector
+            containerClass="h-7"
+            class="max-w-44"
+            dropdownAlign="left"
+          />
+        </div>
+        <div class="right flex items-center gap-4">
           <IconAdd
             v-if="!chat.historyManager.onlyHasDefaultMessages()"
             class="w-4 cursor-pointer hover:text-gray-500"
             @click="onNewChat"
           />
-        </div>
-        <div class="right flex items-center gap-4">
           <IconSetting
             class="w-4 cursor-pointer hover:text-gray-500 ml-1"
             @click="onClickSetting"
@@ -37,15 +41,6 @@
             @click="tabStore.showContainer.value = false"
           />
         </div>
-      </div>
-      <div
-        class="w-full flex justify-end px-4 pb-px"
-        :style="{ top: `${topBounding.height.value}px` }"
-      >
-        <ModelSelector
-          class="max-w-44"
-          dropdownAlign="right"
-        />
       </div>
     </div>
     <div class="px-5 py-2">

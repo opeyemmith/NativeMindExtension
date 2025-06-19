@@ -14,14 +14,12 @@
         :key="idx"
         class="mt-1 text-sm rounded-lg relative inline-block max-w-full bg-white p-2 text-text-primary cursor-pointer hover:bg-gray-100 transition-all"
         :class="disabled ? 'opacity-50 pointer-events-none' : ''"
+        @click="
+          (ev) =>
+            Chat.createActionEventDispatcher(action.type)(action.data, ev.target)
+        "
       >
-        <div
-          class="flex items-center gap-2"
-          @click="
-            (ev) =>
-              Chat.createActionEventDispatcher(action.type)(action.data, ev.target)
-          "
-        >
+        <div class="flex items-center gap-2">
           <div
             v-if="action.icon"
             class="shrink-0 grow-0"

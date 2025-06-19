@@ -12,7 +12,7 @@
         bottom: { color: '#E9E9EC', size: 36 }
       }"
     >
-      <div class="flex flex-col gap-2 px-4 py-4 pt-11">
+      <div class="flex flex-col gap-2 px-4 py-4 pt-2">
         <div
           v-for="(item, index) in chat.historyManager.history.value"
           :key="index"

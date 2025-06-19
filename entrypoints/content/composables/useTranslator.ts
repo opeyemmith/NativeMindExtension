@@ -1,5 +1,5 @@
 import { createSharedComposable, useEventListener } from '@vueuse/core'
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 
 import { getTranslatorEnv, handleTranslatorEnvUpdated, init, setTranslatorEnv, toggleTranslation, translation } from '@/entrypoints/content/utils/translator'
 import { LanguageCode } from '@/utils/language/detect'
@@ -44,6 +44,10 @@ async function _useTranslator() {
       }
     })
   }
+
+  onMounted(() => {
+    setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
+  })
 
   useEventListener(document, 'visibilitychange', async () => {
     if (document.visibilityState === 'visible') {

@@ -15,7 +15,6 @@
         <div
           v-if="message.reasoning && message.reasoningTime"
           class="text-gray-400 text-sm flex items-center justify-between"
-          :title="message.reasoning"
         >
           <div
             v-if="message.content || message.done"

@@ -10,6 +10,7 @@
 
 <img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
+### 🚀 [Visit Official Website](https://nativemind.app/)
 
 [![Privacy First](https://img.shields.io/badge/Privacy-First-brightgreen?style=flat-square&logo=security&logoColor=white)]()
 [![No Tracking](https://img.shields.io/badge/Tracking-None-success?style=flat-square&logo=shield&logoColor=white)]()
@@ -45,6 +46,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 <div align="center">
 <img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
 <br>
+For more details, visit our official website: **[nativemind.app](https://nativemind.app/)**
 </div>
 
 ## ✨ Core Features

@@ -8,7 +8,7 @@
 
 *Experience powerful AI capabilities with zero cloud dependencies*
 
-<img src="assets/images/demo-screenshot.jpg" alt="NativeMind in Action" width="800">
+<img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
 
 [![Privacy First](https://img.shields.io/badge/Privacy-First-brightgreen?style=flat-square&logo=security&logoColor=white)]()

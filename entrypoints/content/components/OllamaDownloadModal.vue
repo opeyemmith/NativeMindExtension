@@ -60,12 +60,16 @@
     </div>
   </Modal>
 </template>
+
 <script setup lang="ts">
+import { computed, onBeforeUnmount, ref } from 'vue'
+
 import IconWarning from '@/assets/icons/warning.svg?component'
 import Modal from '@/components/Modal.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
+import { useInjectContext } from '@/composables/useInjectContext'
 import { formatSize } from '@/utils/formatter'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 import logger from '@/utils/logger'

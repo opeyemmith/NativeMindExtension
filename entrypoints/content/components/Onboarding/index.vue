@@ -60,8 +60,9 @@
     </ScrollContainer>
   </div>
 </template>
+
 <script setup lang="tsx">
-import { computed } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
 import IconPin from '@/assets/icons/pin.svg?component'

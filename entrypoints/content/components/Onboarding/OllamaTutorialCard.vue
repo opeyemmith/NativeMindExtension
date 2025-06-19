@@ -95,17 +95,21 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import { useCountdown } from '@vueuse/core'
+import { watch } from 'vue'
 
 import IconTick from '@/assets/icons/tick.svg?component'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
 import { OLLAMA_HOMEPAGE_URL, OLLAMA_TUTORIAL_URL } from '@/utils/constants'
+import logger from '@/utils/logger'
 
 import { useOllamaStatusStore } from '../../store'
 
+const log = logger.child('OllamaTutorialCard')
 const emit = defineEmits(['installed', 'settings'])
 const ollamaStatusStore = useOllamaStatusStore()
 
@@ -123,7 +127,7 @@ const onClickInstall = () => {
 
 const reScanOllama = async () => {
   const success = await ollamaStatusStore.updateConnectionStatus()
-  logger.info('Ollama connection test result:', success)
+  log.info('Ollama connection test result:', success)
   if (success) emit('installed')
 }
 

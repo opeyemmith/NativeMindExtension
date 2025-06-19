@@ -1,5 +1,11 @@
+import { INVALID_URLS } from '@/utils/constants'
+import { parseDocument } from '@/utils/document-parser'
+import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
 import { getTabStore } from '@/utils/tab-store'
+import { timeout } from '@/utils/timeout'
+
+const log = logger.child('tabs')
 
 export type TabInfo = {
   tabId: number
@@ -14,7 +20,10 @@ export type TabContent = TabInfo & {
 
 export async function getValidTabs(): Promise<TabInfo[]> {
   const tabs = await c2bRpc.getAllTabs()
-  return tabs.filter((tab) => tab.url?.startsWith('http') && tab.tabId) as TabInfo[]
+  return tabs.filter((tab) => {
+    const { url, tabId } = tab
+    return url && url.startsWith('http') && tabId && !INVALID_URLS.some((regex) => regex.test(url))
+  }) as TabInfo[]
 }
 
 export async function getTabInfo(tabId: number) {
@@ -23,7 +32,10 @@ export async function getTabInfo(tabId: number) {
 }
 
 export async function getDocumentContentOfTabs(tabIds: number[]) {
-  const contents = await Promise.all(tabIds.map((tabId) => c2bRpc.getDocumentContentOfTab(tabId)))
+  const contents = await Promise.all(tabIds.map((tabId) => timeout(c2bRpc.getDocumentContentOfTab(tabId), 5000).catch(() => {
+    log.error(`Failed to get content for tab ${tabId}, it might not be a valid HTML page or the tab is closed.`)
+    return undefined
+  })))
   return contents
 }
 

@@ -1,6 +1,5 @@
-import { ref } from 'vue'
-
-import { storage } from '#imports'
+import { customRef, ref, toRaw, watch } from 'vue'
+import { storage, StorageItemKey } from 'wxt/utils/storage'
 
 const getItem = async <T>(key: StorageItemKey) => {
   const item = await storage.getItem<T>(key)

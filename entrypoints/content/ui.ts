@@ -1,9 +1,11 @@
 import { createPinia } from 'pinia'
 import type { Component } from 'vue'
 import { createApp } from 'vue'
+import { ContentScriptContext } from 'wxt/utils/content-script-context'
+import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
 
+import { initToast } from '@/composables/useToast'
 import { i18n } from '@/utils/i18n'
-import type { ContentScriptContext } from '#imports'
 
 export async function createShadowRootOverlay(ctx: ContentScriptContext, component: Component<{ rootElement: HTMLDivElement }>) {
   const ui = await createShadowRootUi(ctx, {

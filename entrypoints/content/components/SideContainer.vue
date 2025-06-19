@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import { useTemplateRef } from 'vue'
+import { computed, useTemplateRef } from 'vue'
 
 import { useInjectContext } from '@/composables/useInjectContext'
 import { registerContentScriptRpcEvent } from '@/utils/rpc'
@@ -41,6 +41,7 @@ const isShowSidebar = computed(() => {
   return pinSidebar.value || tabStore.showContainer.value
 })
 </script>
+
 <style lang="scss">
 .side-enter-active,
 .side-leave-active {

@@ -6,7 +6,10 @@
     <slot />
   </div>
 </template>
+
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 
 type Color = 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'placeholder'
@@ -42,6 +45,7 @@ const sizeClass = computed(() => {
 })
 
 </script>
+
 <style scoped>
 .text-container {
   display: contents;

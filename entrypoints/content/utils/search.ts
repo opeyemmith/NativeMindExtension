@@ -1,3 +1,6 @@
+import { browser } from 'wxt/browser'
+
+import { toAsyncIter } from '@/utils/async'
 import { c2bRpc } from '@/utils/rpc'
 import { SearchingMessage } from '@/utils/search'
 

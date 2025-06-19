@@ -5,6 +5,7 @@
     <slot name="button" />
   </div>
 </template>
+
 <script setup lang="ts">
 import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 

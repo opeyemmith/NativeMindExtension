@@ -1,3 +1,5 @@
+import { onScopeDispose, ref } from 'vue'
+
 interface WatchItem {
   el: HTMLElement
   observer: ResizeObserver

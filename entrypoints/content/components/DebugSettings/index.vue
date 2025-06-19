@@ -359,11 +359,15 @@
     </div>
   </div>
 </template>
+
 <script setup lang="tsx">
+import { ref, watch } from 'vue'
+
 import IconDelete from '@/assets/icons/delete.svg?component'
 import Input from '@/components/Input.vue'
 import Selector from '@/components/Selector.vue'
 import Switch from '@/components/Switch.vue'
+import { parseDocument } from '@/utils/document-parser'
 import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'

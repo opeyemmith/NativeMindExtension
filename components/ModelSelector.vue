@@ -10,7 +10,7 @@
       class="text-xs max-w-full"
       :disabled="modelList.length === 0"
       dropdownClass="text-xs text-black w-52"
-      containerClass="max-w-full"
+      :containerClass="classNames('max-w-full', containerClass)"
       :dropdownAlign="dropdownAlign"
     >
       <template #button="{ option }">
@@ -72,8 +72,9 @@
     </Selector>
   </div>
 </template>
+
 <script setup lang="ts">
-import { toRefs } from 'vue'
+import { computed, onMounted, toRefs, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'
@@ -83,6 +84,7 @@ import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
 import { getTabStore } from '@/utils/tab-store'
 import { getUserConfig } from '@/utils/user-config'
+import { classNames } from '@/utils/vue/utils'
 
 import Selector from './Selector.vue'
 
@@ -90,6 +92,7 @@ defineProps<{
   showDetails?: boolean
   allowDelete?: boolean
   dropdownAlign?: 'left' | 'center' | 'right' | 'stretch' | undefined
+  containerClass?: string
 }>()
 
 const { modelList: ollamaModelList } = toRefs(useOllamaStatusStore())

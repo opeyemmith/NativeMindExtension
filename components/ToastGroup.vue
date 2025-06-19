@@ -27,7 +27,10 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
+import { ref } from 'vue'
+
 import IconClose from '@/assets/icons/close.svg?component'
 import IconWarning from '@/assets/icons/warning.svg?component'
 

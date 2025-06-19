@@ -2,7 +2,9 @@ import '@/utils/polyfill'
 import '@/utils/rpc'
 
 import { browser } from 'wxt/browser'
+import { defineBackground } from 'wxt/utils/define-background'
 
+import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
@@ -35,7 +37,7 @@ export default defineBackground(() => {
 
   const setPopupStatusBasedOnUrl = async (tabId: number, url: string) => {
     const isValidUrl = /https?:\/\//.test(url ?? '')
-    if (!isValidUrl || unAttachedTabs.has(tabId)) {
+    if (!isValidUrl || unAttachedTabs.has(tabId) || INVALID_URLS.some((regex) => regex.test(url))) {
       await browser.action.setPopup({ popup: 'popup.html' })
     }
     else {

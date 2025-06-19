@@ -1,9 +1,10 @@
 import { InitProgressReport } from '@mlc-ai/web-llm'
 import { TextStreamPart, ToolSet } from 'ai'
 import type { ProgressResponse } from 'ollama/browser'
+import { browser } from 'wxt/browser'
 
 import { toAsyncIter } from '@/utils/async'
-import { AbortError, ModelRequestTimeoutError } from '@/utils/error'
+import { AbortError, fromError, ModelRequestTimeoutError } from '@/utils/error'
 import { SchemaName } from '@/utils/llm/output-schema'
 import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'

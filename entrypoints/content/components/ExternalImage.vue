@@ -11,12 +11,15 @@
     />
   </div>
 </template>
+
 <script lang="ts">
 import { LRUCache } from 'lru-cache'
+import { ref, watchEffect } from 'vue'
 const imageCache = new LRUCache<string, string>({
   max: 50,
 })
 </script>
+
 <script setup lang="ts">
 import { c2bRpc } from '@/utils/rpc'
 

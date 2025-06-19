@@ -1,4 +1,4 @@
-export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError'
+export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError'
 
 export abstract class AppError<Code extends ErrorCode> extends Error {
   private _appError = true
@@ -58,11 +58,23 @@ export class AbortError extends AppError<'abortError'> {
   }
 }
 
+// common timeout error for various operations
+export class TimeoutError extends AppError<'timeoutError'> {
+  constructor(message: string) {
+    super('timeoutError', message)
+  }
+
+  toLocaleMessage(): string {
+    return 'Operation timed out: ' + this.message
+  }
+}
+
 const errors = {
   unknown: UnknownError,
   requestError: ModelRequestError,
   requestTimeout: ModelRequestTimeoutError,
   abortError: AbortError,
+  timeoutError: TimeoutError,
 } satisfies Record<ErrorCode, typeof AppError<ErrorCode>>
 
 export function fromError(error: unknown): AppError<ErrorCode> {

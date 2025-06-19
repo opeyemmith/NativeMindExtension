@@ -4,12 +4,14 @@
     v-html="html"
   />
 </template>
+
 <script setup lang="ts">
 import dompurify from 'dompurify'
 import hljs from 'highlight.js'
 import { Marked, Renderer, Tokens } from 'marked'
 import { createDirectives, type DirectiveConfig } from 'marked-directive'
 import { markedHighlight } from 'marked-highlight'
+import { ref, watchEffect } from 'vue'
 
 import IconMDLink from '@/assets/icons/md-link.svg?raw'
 import logger from '@/utils/logger'
@@ -203,9 +205,11 @@ watchEffect(async () => {
   html.value = await renderMarkdown(props.text)
 })
 </script>
+
 <style lang="scss">
 @import 'highlight.js/styles/atom-one-light.css';
 </style>
+
 <style scoped lang="scss">
 .markdown-viewer {
   line-height: 1.25;

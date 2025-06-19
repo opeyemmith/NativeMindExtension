@@ -96,7 +96,10 @@
 
 <script setup lang="tsx" generic="Id extends string, OptionValue, Option extends { id: Id; value?: OptionValue; label: string | Component, textLabel?: string, disabled?: boolean }">
 import { useElementBounding, useEventListener, useVModel } from '@vueuse/core'
-import { Component, computed, FunctionalComponent, ref, watch } from 'vue'
+import { Component, computed, FunctionalComponent, Ref, ref, watch, watchEffect } from 'vue'
+
+import { useInjectContext } from '@/composables/useInjectContext'
+import { useZIndex } from '@/composables/useZIndex'
 
 import ScrollContainer from './ScrollContainer.vue'
 import Button from './ui/Button.vue'

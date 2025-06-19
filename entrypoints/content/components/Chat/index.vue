@@ -47,7 +47,7 @@
     </ScrollContainer>
     <div
       ref="inputContainerRef"
-      class="p-3 absolute bottom-0 left-0 right-0 flex flex-col gap-3 z-50"
+      class="p-4 pt-2 absolute bottom-0 left-0 right-0 flex flex-col gap-3 z-50"
     >
       <div>
         <TabSelector v-model:selectedTabs="contextTabs" />
@@ -55,7 +55,7 @@
       <div class="flex gap-1">
         <ScrollContainer
           class="max-h-72 grow shadow-02 bg-white rounded-md"
-          itemContainerClass="p-2"
+          itemContainerClass="p-1"
         >
           <div class="flex gap-1 items-stretch">
             <AutoExpandTextArea
@@ -67,7 +67,7 @@
                 ? 'Ask anything...'
                 : 'Ask follow up...'
               "
-              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-3 text-sm"
+              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-5 text-sm wrap-anywhere"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
@@ -98,6 +98,8 @@
 
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
+import { onMounted } from 'vue'
+import { computed, onBeforeUnmount, ref } from 'vue'
 
 import IconSendFill from '@/assets/icons/send-fill.svg?component'
 import AutoExpandTextArea from '@/components/AutoExpandTextArea.vue'

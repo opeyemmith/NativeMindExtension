@@ -6,7 +6,10 @@
     />
   </div>
 </template>
+
 <script setup lang="ts">
+import { computed } from 'vue'
+
 import LogoCohere from '@/assets/icons/model-logo-cohere.svg?component'
 import LogoDeepseek from '@/assets/icons/model-logo-deepseek.svg?component'
 import LogoFallback from '@/assets/icons/model-logo-fallback.svg?component'

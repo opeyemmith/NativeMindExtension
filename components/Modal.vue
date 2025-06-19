@@ -57,10 +57,12 @@
     </div>
   </Teleport>
 </template>
+
 <script lang="ts">
 import { useElementBounding } from '@vueuse/core'
-import { reactive } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 
+import { useInjectContext } from '@/composables/useInjectContext'
 import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 
 const modalStack: { close(): void, canCloseByEsc(): boolean }[] = reactive([])
@@ -74,6 +76,7 @@ const onEscPressed = (e: KeyboardEvent) => {
 
 window.addEventListener('keydown', onEscPressed, false)
 </script>
+
 <script setup lang="ts">
 import IconClose from '@/assets/icons/close.svg?component'
 import { useZIndex } from '@/composables/useZIndex'
@@ -201,6 +204,7 @@ const onClose = () => {
   props.onClose?.()
 }
 </script>
+
 <style lang="scss" scoped>
 @keyframes fade-in {
   from {

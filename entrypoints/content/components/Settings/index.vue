@@ -287,9 +287,10 @@
     </ScrollContainer>
   </div>
 </template>
+
 <script setup lang="tsx">
 import { useCountdown } from '@vueuse/core'
-import { computed } from 'vue'
+import { computed, onMounted, ref, toRef, watch } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
 import IconOllama from '@/assets/icons/ollama.png'
@@ -312,6 +313,7 @@ import { useI18n } from '@/utils/i18n'
 import { SUPPORTED_LANGUAGES } from '@/utils/language/detect'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
+import logger from '@/utils/logger'
 import { getTabStore } from '@/utils/tab-store'
 import { DEFAULT_CHAT_SYSTEM_PROMPT, DEFAULT_TRANSLATOR_SYSTEM_PROMPT, getUserConfig } from '@/utils/user-config'
 
@@ -323,6 +325,7 @@ import DownloadWebLLMModel from '../WebLLMDownloadModal.vue'
 import Block from './Block.vue'
 import Section from './Section.vue'
 
+const log = logger.child('Settings')
 const DEFAULT_WEBLLM_MODEL = SUPPORTED_MODELS[0]
 
 const { t } = useI18n()
@@ -413,7 +416,7 @@ const setupOllama = async () => {
 
 const reScanOllama = async () => {
   const success = await ollamaStatusStore.updateConnectionStatus()
-  logger.info('Ollama connection test result:', success)
+  log.info('Ollama connection test result:', success)
   if (success) {
     endpointType.value = 'ollama'
     stopCheckConnection()

@@ -1,3 +1,4 @@
+import { onScopeDispose } from 'vue'
 import { makeShadow } from 'vue-shadow-dom'
 
 export function useShadow(attachedEl: HTMLElement) {

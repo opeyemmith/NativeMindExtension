@@ -1,11 +1,13 @@
 import { createBirpc } from 'birpc'
 
-import { only } from '../runtime'
+import { Entrypoint, only } from '../runtime'
 import { backgroundFunctions } from './background-fns'
 import { contentFunctions } from './content-fns'
 import { popupFunctions } from './popup-fns'
 export { registerContentScriptRpcEvent } from './content-fns'
 export { registerPopupRpcEvent } from './popup-fns'
+import { browser } from 'wxt/browser'
+
 import logger from '@/utils/logger'
 
 import { contentFnsForMainWorld } from './content-main-world-fns'

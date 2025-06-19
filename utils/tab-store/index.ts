@@ -1,8 +1,8 @@
-import { customRef } from 'vue'
-
-import { storage } from '#imports'
+import { customRef, ref, toRaw, watch } from 'vue'
+import { storage } from 'wxt/utils/storage'
 
 import { lazyInitialize } from '../cache'
+import { debounce } from '../debounce'
 import { c2bRpc } from '../rpc'
 import type { HistoryItemV1 } from './history'
 

@@ -1,3 +1,5 @@
+import { Browser, browser } from 'wxt/browser'
+
 import logger from '@/utils/logger'
 
 export function waitForTabLoaded(tabId: number, options: { timeout?: number, matchUrl?: (url: string) => boolean, errorIfTimeout?: boolean } = {}) {

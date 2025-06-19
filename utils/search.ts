@@ -1,3 +1,5 @@
+import { browser } from 'wxt/browser'
+
 import logger from '@/utils/logger'
 
 import { Tab } from './tab'

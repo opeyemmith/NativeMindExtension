@@ -1,3 +1,4 @@
+import { lazyInitialize } from '../cache'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
 import { Config } from './helpers'

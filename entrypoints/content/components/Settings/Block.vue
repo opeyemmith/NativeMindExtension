@@ -14,6 +14,7 @@
     </div>
   </div>
 </template>
+
 <script setup lang="ts">
 import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'

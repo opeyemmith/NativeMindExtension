@@ -6,36 +6,21 @@ import globals from 'globals'
 import typescriptEslint from 'typescript-eslint'
 
 export default typescriptEslint.config(
-  { ignores: ['*.d.ts', '**/coverage', '**/.output', '**/.wxt', '**/node_modules'] },
+  { ignores: ['*.d.ts', '**/coverage', '**/.output', '**/.wxt', '**/node_modules', '**/*.test.ts'] },
   {
     plugins: {
       '@stylistic': stylistic,
       '@typescript-eslint': typescriptEslint.plugin,
-    },
-  },
-  {
-    plugins: {
       'simple-import-sort': simpleImportSort,
     },
-    rules: {
-      'simple-import-sort/imports': 'error',
-      'simple-import-sort/exports': 'error',
-    },
   },
-  stylistic.configs.customize({
-    indent: 2,
-    quotes: 'single',
-    semi: false,
-    jsx: true,
-    arrowParens: 'always',
-  }),
   {
+    files: ['**/*.{ts,tsx,vue}'],
     extends: [
       eslint.configs.recommended,
       ...typescriptEslint.configs.recommended,
       ...eslintPluginVue.configs['flat/recommended'],
     ],
-    files: ['**/*.{ts,vue}'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -54,11 +39,33 @@ export default typescriptEslint.config(
       'vue/multi-word-component-names': ['off'],
       'vue/no-v-html': ['off'],
       'vue/require-default-prop': ['off'],
+      'vue/padding-line-between-blocks': ['error'],
+      'vue/array-bracket-spacing': ['error'],
+      'vue/block-spacing': ['error'],
+      'vue/arrow-spacing': ['error'],
+      'template-curly-spacing': ['error'],
     },
   },
+  stylistic.configs.customize({
+    indent: 2,
+    quotes: 'single',
+    semi: false,
+    jsx: true,
+    arrowParens: 'always',
+  }),
   {
     rules: {
+      'simple-import-sort/imports': 'error',
+      'simple-import-sort/exports': 'error',
       'no-console': ['error'],
+      'no-restricted-imports': [
+        'error',
+        {
+          paths: [
+            { name: '#imports', message: `please use "import * from 'wxt/xxx' instead" ` },
+          ],
+        },
+      ],
       '@typescript-eslint/no-unused-vars': [
         'error',
         {
@@ -88,8 +95,5 @@ export default typescriptEslint.config(
         },
       ],
     },
-  },
-  {
-    ignores: ['node_modules', '**/*.test.ts', 'wxt.config.ts'],
   },
 )

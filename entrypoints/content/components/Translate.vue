@@ -14,6 +14,7 @@
     </button>
   </div>
 </template>
+
 <script setup lang="tsx">
 import IconTranslate from '@/assets/icons/translate.svg?component'
 import Loading from '@/components/Loading.vue'

@@ -1,4 +1,4 @@
-import { defineAppConfig } from '#imports'
+import { defineAppConfig } from 'wxt/utils/define-app-config'
 
 // Define types for your config
 declare module 'wxt/utils/define-app-config' {

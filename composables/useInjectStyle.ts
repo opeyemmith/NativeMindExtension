@@ -1,3 +1,5 @@
+import { onScopeDispose } from 'vue'
+
 export function useInjectStyle(inlineCss: string) {
   const styleElement = document.createElement('style')
   styleElement.textContent = inlineCss

@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 
 export function useRefSnapshot<T>(refValue: Ref<T>) {
   const snapshot = ref(refValue.value)

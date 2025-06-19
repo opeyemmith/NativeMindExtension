@@ -1,6 +1,8 @@
 import { EventEmitter } from 'events'
+import { Browser } from 'wxt/browser'
 
 import { ContextMenuId } from '../context-menu'
+import { parseDocument } from '../document-parser'
 import { logger } from '../logger'
 
 const eventEmitter = new EventEmitter()

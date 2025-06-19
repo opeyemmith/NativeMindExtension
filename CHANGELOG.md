@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.4...v1.2.0-beta.5)
+
+### 🚀 Enhancements
+
+- **chat): enhance send button positioning and styling in chat component chore(i18n:** Update extension description for clarity and accuracy ([d49c3bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d49c3bc))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.3...v1.2.0-beta.4)

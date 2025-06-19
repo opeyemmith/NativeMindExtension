@@ -52,7 +52,7 @@
       <div>
         <TabSelector v-model:selectedTabs="contextTabs" />
       </div>
-      <div class="flex gap-1">
+      <div class="flex gap-1 relative">
         <ScrollContainer
           class="max-h-72 grow shadow-02 bg-white rounded-md"
           itemContainerClass="p-1"
@@ -68,29 +68,35 @@
                 : 'Ask follow up...'
               "
               class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-5 text-sm wrap-anywhere"
+              :style="{ paddingRight: `${sendButtonContainerWidth}px` }"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
             />
-            <Button
-              v-if="chat.isAnswering()"
-              variant="secondary"
-              class="px-2 grow-0 shrink-0"
-              @click="onStop"
-            >
-              {{ "Stop" }}
-            </Button>
-            <Button
-              v-else
-              variant="primary"
-              class="px-2 grow-0 shrink-0"
-              :disabled="!allowAsk"
-              @click="onSubmit"
-            >
-              <IconSendFill class="w-4 h-4 text-white" />
-            </Button>
           </div>
         </ScrollContainer>
+        <div
+          ref="sendButtonContainerRef"
+          class="absolute right-0 top-0 bottom-0 p-1"
+        >
+          <Button
+            v-if="chat.isAnswering()"
+            variant="secondary"
+            class="px-2 grow-0 shrink-0 h-full"
+            @click="onStop"
+          >
+            {{ "Stop" }}
+          </Button>
+          <Button
+            v-else
+            variant="primary"
+            class="px-2 grow-0 shrink-0 h-full"
+            :disabled="!allowAsk"
+            @click="onSubmit"
+          >
+            <IconSendFill class="w-4 h-4 text-white" />
+          </Button>
+        </div>
       </div>
     </div>
   </div>
@@ -118,7 +124,9 @@ import MessageAssistant from './Messages/Assistant.vue'
 import MessageTask from './Messages/Task.vue'
 
 const inputContainerRef = ref<HTMLDivElement>()
+const sendButtonContainerRef = ref<HTMLDivElement>()
 const { height: inputContainerHeight } = useElementBounding(inputContainerRef)
+const { width: sendButtonContainerWidth } = useElementBounding(sendButtonContainerRef)
 
 const userInput = ref('')
 const isComposing = ref(false)

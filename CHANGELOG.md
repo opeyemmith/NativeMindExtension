@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v1.2.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.5...v1.2.0-beta.6)
+
+### 🚀 Enhancements
+
+- **docs:** Add links to official website in README ([85dfca3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/85dfca3))
+- **translator): improve text content formatting in prompts and add skip target selector fix(translator:** Some pages become unresponsive when using the translation ([7d60f69](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7d60f69))
+
+### 🩹 Fixes
+
+- **readme:** Update demo screenshot ([944ae52](https://github.com/NativeMindBrowser/NativeMindExtension/commit/944ae52))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
 ## v1.2.0-beta.5
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.4...v1.2.0-beta.5)

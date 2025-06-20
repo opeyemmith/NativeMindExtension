@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.7...v1.2.0-beta.8)
+
+### 🏡 Chore
+
+- **release:** Add environment specification for release job ([efc7e4d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/efc7e4d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.7
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.6...v1.2.0-beta.7)

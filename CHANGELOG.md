@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.12
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.11...v1.2.0-beta.12)
+
+### 🩹 Fixes
+
+- **popup:** Show reload message in popup on unattached tabs ([3e4f0f8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3e4f0f8))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.11
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.10...v1.2.0-beta.11)

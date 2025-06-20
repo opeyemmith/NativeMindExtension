@@ -69,6 +69,7 @@ import { getTabStore } from '@/utils/tab-store'
 import { getUserConfig } from '@/utils/user-config'
 
 import { Chat as ChatManager } from '../utils/chat/index'
+import { showSettings } from '../utils/settings'
 import Chat from './Chat/index.vue'
 
 const topRef = ref<HTMLDivElement>()
@@ -89,7 +90,7 @@ const showCloseButton = computed(() => {
 })
 
 const onClickSetting = () => {
-  tabStore.showSetting.value = !tabStore.showSetting.value
+  showSettings((show) => !show)
 }
 </script>
 

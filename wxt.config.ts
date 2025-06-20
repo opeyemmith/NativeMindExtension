@@ -83,7 +83,7 @@ export default defineConfig({
     },
     web_accessible_resources: [
       {
-        resources: ['/tutorial.html', '/main-world-injected.js'],
+        resources: ['/main-world-injected.js'],
         matches: ['<all_urls>'],
       },
     ],

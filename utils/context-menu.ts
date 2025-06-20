@@ -10,27 +10,28 @@ type ContextMenuItem = {
   contexts: ContextTypeList
 }
 
+export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = {
+  id: 'native-mind-selection-translate',
+  title: 'NativeMind: Translate selected text',
+  contexts: [ContextType.SELECTION],
+}
+
+export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = {
+  id: 'native-mind-page-translate',
+  title: 'NativeMind: Translate this page',
+  contexts: [ContextType.PAGE],
+}
+
+export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = {
+  id: 'native-mind-settings',
+  title: 'Settings',
+  contexts: [ContextType.ACTION],
+}
+
 export const CONTEXT_MENU: ContextMenuItem[] = [
-  {
-    id: 'native-mind-page-translate',
-    title: 'NativeMind: Translate this page',
-    contexts: [ContextType.PAGE],
-  },
-  {
-    id: 'native-mind-selection-translate',
-    title: 'NativeMind: Translate selected text',
-    contexts: [ContextType.SELECTION],
-  },
-  {
-    id: 'native-mind-settings',
-    title: 'Settings',
-    contexts: [ContextType.ACTION],
-  },
-  // {
-  //   id: 'native-mind-selection-translate',
-  //   title: 'NativeMind: Writing Tools',
-  //   contexts: [ContextType.EDITABLE],
-  // },
+  CONTEXT_MENU_ITEM_TRANSLATE_PAGE,
+  CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT,
+  CONTEXT_MENU_ITEM_SETTINGS,
 ]
 
 export type ContextMenu = typeof CONTEXT_MENU

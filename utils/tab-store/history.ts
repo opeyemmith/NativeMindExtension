@@ -40,21 +40,25 @@ export interface TaskMessageV1 extends BaseMessage {
   subTasks?: TaskMessageV1[]
 }
 
+// Action is a type that defines the structure of interactive buttons/links or anything that can by clicked by the user
 export type ActionV1 = {
   customInput: { prompt: string }
 }
 
 export type ActionTypeV1 = keyof ActionV1
 
+export interface ActionItemV1<ActionType extends ActionTypeV1 = ActionTypeV1> {
+  type: ActionType
+  data: ActionV1[ActionType]
+  content: string
+  icon?: IconName
+}
+
 export interface ActionMessageV1<ActionType extends ActionTypeV1 = ActionTypeV1> extends BaseMessage {
   role: 'action'
   title?: string
-  actions: {
-    type: ActionType
-    data: ActionV1[ActionType]
-    content: string
-    icon?: IconName
-  }[]
+  titleAction?: ActionItemV1<ActionType>
+  actions: ActionItemV1<ActionType>[]
   timestamp: number
 }
 

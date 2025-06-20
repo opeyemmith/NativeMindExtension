@@ -19,6 +19,7 @@ const emit = defineEmits<{
 
 const props = defineProps<{
   modelValue?: string
+  minHeight?: number
 }>()
 
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
@@ -30,11 +31,12 @@ watch(inputValue, async () => {
   await nextTick()
   const textarea = textareaRef.value as HTMLTextAreaElement
   if (!textarea) return
-  textarea.style.height = 'auto' // Reset height to auto to shrink if needed
+  textarea.style.height = '0px' // Reset height to auto to shrink if needed
   // force a reflow to ensure the height is recalculated
   const _ = textarea.offsetHeight
   const scrollHeight = textarea.scrollHeight
-  textarea.style.height = `${scrollHeight}px` // Set height to scrollHeight to expand
+  const height = Math.max(props.minHeight || 0, scrollHeight)
+  textarea.style.height = `${height}px` // Set height to scrollHeight to expand
 })
 
 const onInput = (event: Event) => {

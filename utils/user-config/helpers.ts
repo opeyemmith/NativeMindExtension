@@ -63,9 +63,11 @@ export class Config<Value, DefaultValue extends Value | undefined> {
     const clonedDefaultValue = structuredClone(defaultValue)
     const v = (await this.getItem()) ?? clonedDefaultValue
     const refValue = ref(v)
+    let ignoreSetLocalStorage = false
     watch(refValue, async (newValue) => {
+      if (ignoreSetLocalStorage) return
       this.setItem(toRaw(newValue))
-    }, { deep: true })
+    }, { deep: true, flush: 'sync' })
     const r = customRef<Value | DefaultValue>((track, trigger) => {
       return {
         get() {
@@ -89,8 +91,11 @@ export class Config<Value, DefaultValue extends Value | undefined> {
     })
 
     storage.watch(this.areaKey, async (newValue, oldValue) => {
+      newValue = newValue ?? undefined
       if (newValue !== oldValue) {
+        ignoreSetLocalStorage = true
         refValue.value = newValue
+        ignoreSetLocalStorage = false
       }
     })
 

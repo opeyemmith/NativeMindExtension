@@ -26,7 +26,7 @@
           <IconTick class="w-4 h-4 inline-block mr-2" />
         </Text>
         <Text color="secondary">
-          Run advanced models like Deepseek, Qwen, Llama
+          Run advanced models like DeepSeek, Qwen, Llama
         </Text>
       </li>
       <li class="list-none flex items-center">

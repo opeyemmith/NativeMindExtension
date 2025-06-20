@@ -12,7 +12,7 @@
         bottom: { color: '#E9E9EC', size: 36 }
       }"
     >
-      <div class="flex flex-col gap-2 px-4 py-4 pt-11">
+      <div class="flex flex-col gap-2 px-4 py-4 pt-2">
         <div
           v-for="(item, index) in chat.historyManager.history.value"
           :key="index"
@@ -52,12 +52,13 @@
       <div>
         <TabSelector v-model:selectedTabs="contextTabs" />
       </div>
-      <div class="flex gap-1">
+      <div class="flex gap-1 relative">
         <ScrollContainer
-          class="max-h-72 grow shadow-02 bg-white rounded-md"
-          itemContainerClass="p-1"
+          class="max-h-72 grow shadow-02 bg-white rounded-md overflow-hidden"
+          itemContainerClass="px-2 py-[7px]"
+          :style="{ paddingRight: `${sendButtonContainerWidth}px` }"
         >
-          <div class="flex gap-1 items-stretch">
+          <div class="h-max min-h-[30px] grid place-items-center">
             <AutoExpandTextArea
               v-model="userInput"
               maxlength="2000"
@@ -67,30 +68,35 @@
                 ? 'Ask anything...'
                 : 'Ask follow up...'
               "
-              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-5 text-sm wrap-anywhere"
+              class="w-full block outline-none border-none resize-none field-sizing-content leading-5 text-sm wrap-anywhere"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
             />
-            <Button
-              v-if="chat.isAnswering()"
-              variant="secondary"
-              class="px-2 grow-0 shrink-0"
-              @click="onStop"
-            >
-              {{ "Stop" }}
-            </Button>
-            <Button
-              v-else
-              variant="primary"
-              class="px-2 grow-0 shrink-0"
-              :disabled="!allowAsk"
-              @click="onSubmit"
-            >
-              <IconSendFill class="w-4 h-4 text-white" />
-            </Button>
           </div>
         </ScrollContainer>
+        <div
+          ref="sendButtonContainerRef"
+          class="absolute right-0 top-0 bottom-0 p-2 pl-0"
+        >
+          <Button
+            v-if="chat.isAnswering()"
+            variant="secondary"
+            class="px-[6px] grow-0 shrink-0 h-7"
+            @click="onStop"
+          >
+            {{ "Stop" }}
+          </Button>
+          <Button
+            v-else
+            variant="primary"
+            class="px-[6px] grow-0 shrink-0 h-7"
+            :disabled="!allowAsk"
+            @click="onSubmit"
+          >
+            <IconSendFill class="w-4 h-4 text-white" />
+          </Button>
+        </div>
       </div>
     </div>
   </div>
@@ -118,7 +124,9 @@ import MessageAssistant from './Messages/Assistant.vue'
 import MessageTask from './Messages/Task.vue'
 
 const inputContainerRef = ref<HTMLDivElement>()
+const sendButtonContainerRef = ref<HTMLDivElement>()
 const { height: inputContainerHeight } = useElementBounding(inputContainerRef)
+const { width: sendButtonContainerWidth } = useElementBounding(sendButtonContainerRef)
 
 const userInput = ref('')
 const isComposing = ref(false)

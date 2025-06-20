@@ -5,9 +5,10 @@ import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
 
 import { INVALID_URLS } from '@/utils/constants'
-import { CONTEXT_MENU } from '@/utils/context-menu'
+import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
+import { registerBackgroundRpcEvent } from '@/utils/rpc/background-fns'
 import { isTabValid } from '@/utils/tab'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
@@ -50,6 +51,11 @@ export default defineBackground(() => {
   }
 
   browser.tabs.onActivated.addListener(async ({ tabId }) => {
+    // reset the translate context menu to default
+    await browser.contextMenus.update(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
+      title: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.title,
+      contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
+    })
     const tab = await browser.tabs.get(tabId)
     const url = tab.url
     url && (await setPopupStatusBasedOnUrl(tabId, url))
@@ -64,9 +70,8 @@ export default defineBackground(() => {
     })
   })
 
-  browser.tabs.onUpdated.addListener(async (tabId, _changeInfo, tab) => {
-    logger.info('tab updated', { tabId, changeInfo: _changeInfo, tab })
-    unAttachedTabs.delete(tabId)
+  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    logger.info('tab updated', { tabId, changeInfo, tab })
     if (tab.url) {
       await setPopupStatusBasedOnUrl(tabId, tab.url)
     }
@@ -105,6 +110,10 @@ export default defineBackground(() => {
         ...info,
       })
     }
+  })
+
+  registerBackgroundRpcEvent('ready', (tabId) => {
+    unAttachedTabs.delete(tabId)
   })
 
   logger.info('Hello background!', { id: browser.runtime.id })

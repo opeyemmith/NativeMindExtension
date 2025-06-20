@@ -2,12 +2,12 @@
   <div
     v-if="toasts.length"
     data-nativemind-toast-group
-    class="fixed left-0 top-0 right-0 flex flex-col items-center gap-2 p-4 z-50"
+    class="fixed left-0 top-0 right-0 flex flex-col items-center gap-2 p-4 z-[calc(infinity-1)]"
   >
     <div
       v-for="toast in toasts"
       :key="toast.id"
-      class="max-w-80 bg-white shadow-md rounded-md p-3 transition-all duration-300 text-xs flex items-center gap-2 justify-between"
+      class="max-w-80 bg-white text-black shadow-md rounded-md p-3 transition-all duration-300 text-xs flex items-center gap-2 justify-between"
     >
       <div class="flex items-center gap-2">
         <div>

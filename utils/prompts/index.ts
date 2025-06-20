@@ -15,9 +15,10 @@ export const chatWithPageContent = definePrompt(async (question: string, pages: 
     ? `<search_results>
 ${onlineInfo
   .map((page, idx) => {
+    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
     return `<search_result id="${idx + 1}">
 Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${page.textContent ?? ''}
+${text}
 </search_result>
 `
   })
@@ -28,9 +29,10 @@ ${page.textContent ?? ''}
   const tabContext = `<tabs_context>
 ${pages
   .map((page, _idx) => {
+    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
     return `<tab>
 Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${page.textContent ?? ''}
+${text}
 </tab>
 `
   })
@@ -48,10 +50,11 @@ Question: ${question}`
 export const summarizeWithPageContent = definePrompt(async (page: Page, question: string) => {
   const userConfig = await getUserConfig()
   const system = userConfig.llm.summarizeSystemPrompt.get()
+  const pageText = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
 
   const user = `<tab_context>
 Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${page.textContent ?? ''}
+${pageText}
 </tab_context>
 
 Question: ${question}`
@@ -85,7 +88,7 @@ Note: Each tab content shows only the first 1000 characters. Consider whether th
 
 ${pages
   .map((page) => {
-    const text = page.textContent?.replace(/\s+/g, ' ').trim() ?? ''
+    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
     const length = text?.length ?? 0
     const truncatedText = length > 1000 ? text.slice(0, 1000) + '...[content truncated]' : text
     return `<tab>
@@ -124,7 +127,7 @@ Return only the keywords in a JSON array without any explanations.`
       ? `<tabs_context>
 ${pages
   .map((page) => {
-    const text = page.textContent?.replace(/\s+/g, ' ').trim() ?? ''
+    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
     const length = text?.length ?? 0
     const truncatedText = length > 1000 ? text.slice(0, 1000) + '...[content truncated]' : text
     return `<tab>

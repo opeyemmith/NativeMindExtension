@@ -39,6 +39,7 @@ const translationIgnoreSelectorMap = transformSelectorMap({
     '.graph-before-activity-overview',
     '.contribution-activity-listing',
     '.pinned-item-list-item-content > div:first-child',
+    '[data-skip-target-assigned]',
   ],
 })
 

@@ -8,6 +8,7 @@ import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
+import { registerBackgroundRpcEvent } from '@/utils/rpc/background-fns'
 import { isTabValid } from '@/utils/tab'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
@@ -69,9 +70,8 @@ export default defineBackground(() => {
     })
   })
 
-  browser.tabs.onUpdated.addListener(async (tabId, _changeInfo, tab) => {
-    logger.info('tab updated', { tabId, changeInfo: _changeInfo, tab })
-    unAttachedTabs.delete(tabId)
+  browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+    logger.info('tab updated', { tabId, changeInfo, tab })
     if (tab.url) {
       await setPopupStatusBasedOnUrl(tabId, tab.url)
     }
@@ -110,6 +110,10 @@ export default defineBackground(() => {
         ...info,
       })
     }
+  })
+
+  registerBackgroundRpcEvent('ready', (tabId) => {
+    unAttachedTabs.delete(tabId)
   })
 
   logger.info('Hello background!', { id: browser.runtime.id })

@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.14
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.13...v1.2.0-beta.14)
+
+### 🩹 Fixes
+
+- **translator:** Ensure translation menu updates only when document is visible and improve context menu handling ([2f8ad72](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2f8ad72))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.13
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.12...v1.2.0-beta.13)

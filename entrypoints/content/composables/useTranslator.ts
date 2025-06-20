@@ -74,12 +74,13 @@ async function _useTranslator() {
       if (!(await ollamaStatusStore.updateConnectionStatus())) {
         toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
         showSettings(true, 'server-address-section')
+        return
       }
       else if ((await ollamaStatusStore.updateModelList()).length === 0) {
         toast('No model found, please download a model.', { duration: 2000 })
         showSettings(true, 'model-download-section')
+        return
       }
-      return
     }
     if (e.menuItemId === 'native-mind-page-translate') {
       await onInit()

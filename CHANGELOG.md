@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.8...v1.2.0-beta.9)
+
+### 🩹 Fixes
+
+- Translation context menu ([9eb62a1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9eb62a1))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.8
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.7...v1.2.0-beta.8)

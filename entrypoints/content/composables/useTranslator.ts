@@ -69,7 +69,7 @@ async function _useTranslator() {
   })
 
   registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
-    if (userConfig.llm.endpointType.get() === 'ollama') {
+    if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
       if (!(await ollamaStatusStore.updateConnectionStatus())) {
         toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
         showSettings(true, 'server-address-section')

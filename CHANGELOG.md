@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.11
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.10...v1.2.0-beta.11)
+
+### 🚀 Enhancements
+
+- **context-menu:** Refactor context menu items and update translation menu on tab activation ([d23dea6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d23dea6))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.10
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.9...v1.2.0-beta.10)

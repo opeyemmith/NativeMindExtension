@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.13
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.12...v1.2.0-beta.13)
+
+### 🩹 Fixes
+
+- **translator:** Prevent connection attempt to Ollama when translation is disabled ([9b7943f](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9b7943f))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.12
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.11...v1.2.0-beta.12)

@@ -16,6 +16,9 @@ import { showSettings } from '../utils/settings'
 async function _useTranslator() {
   // useToast must be called before the first await
   const toast = useToast()
+  onMounted(() => {
+    setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
+  })
   const userConfig = await getUserConfig()
   const targetLocale = userConfig.translation.targetLocale.toRef()
   const ollamaStatusStore = useOllamaStatusStore()
@@ -50,10 +53,6 @@ async function _useTranslator() {
       }
     })
   }
-
-  onMounted(() => {
-    setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
-  })
 
   useEventListener(document, 'visibilitychange', async () => {
     if (document.visibilityState === 'visible') {

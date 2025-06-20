@@ -5,7 +5,7 @@ import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
 
 import { INVALID_URLS } from '@/utils/constants'
-import { CONTEXT_MENU } from '@/utils/context-menu'
+import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
 import { isTabValid } from '@/utils/tab'
@@ -50,6 +50,11 @@ export default defineBackground(() => {
   }
 
   browser.tabs.onActivated.addListener(async ({ tabId }) => {
+    // reset the translate context menu to default
+    await browser.contextMenus.update(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
+      title: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.title,
+      contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
+    })
     const tab = await browser.tabs.get(tabId)
     const url = tab.url
     url && (await setPopupStatusBasedOnUrl(tabId, url))

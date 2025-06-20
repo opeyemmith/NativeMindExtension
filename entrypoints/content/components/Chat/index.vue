@@ -54,10 +54,11 @@
       </div>
       <div class="flex gap-1 relative">
         <ScrollContainer
-          class="max-h-72 grow shadow-02 bg-white rounded-md"
-          itemContainerClass="p-1"
+          class="max-h-72 grow shadow-02 bg-white rounded-md overflow-hidden"
+          itemContainerClass="px-2 py-[7px]"
+          :style="{ paddingRight: `${sendButtonContainerWidth}px` }"
         >
-          <div class="flex gap-1 items-stretch">
+          <div class="h-max min-h-[30px] grid place-items-center">
             <AutoExpandTextArea
               v-model="userInput"
               maxlength="2000"
@@ -67,8 +68,7 @@
                 ? 'Ask anything...'
                 : 'Ask follow up...'
               "
-              class="w-full block outline-none border-none resize-none p-2 field-sizing-content leading-5 text-sm wrap-anywhere"
-              :style="{ paddingRight: `${sendButtonContainerWidth}px` }"
+              class="w-full block outline-none border-none resize-none field-sizing-content leading-5 text-sm wrap-anywhere"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
@@ -77,12 +77,12 @@
         </ScrollContainer>
         <div
           ref="sendButtonContainerRef"
-          class="absolute right-0 top-0 bottom-0 p-1"
+          class="absolute right-0 top-0 bottom-0 p-2 pl-0"
         >
           <Button
             v-if="chat.isAnswering()"
             variant="secondary"
-            class="px-2 grow-0 shrink-0 h-full"
+            class="px-[6px] grow-0 shrink-0 h-7"
             @click="onStop"
           >
             {{ "Stop" }}
@@ -90,7 +90,7 @@
           <Button
             v-else
             variant="primary"
-            class="px-2 grow-0 shrink-0 h-full"
+            class="px-[6px] grow-0 shrink-0 h-7"
             :disabled="!allowAsk"
             @click="onSubmit"
           >

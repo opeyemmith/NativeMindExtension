@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.10
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.9...v1.2.0-beta.10)
+
+### 🚀 Enhancements
+
+- **chat:** Send button style ([243eae7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/243eae7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.9
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.8...v1.2.0-beta.9)

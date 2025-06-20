@@ -1,4 +1,4 @@
-export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError'
+export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError' | 'modelNotFound'
 
 export abstract class AppError<Code extends ErrorCode> extends Error {
   private _appError = true
@@ -31,6 +31,16 @@ export class UnknownError extends AppError<'unknown'> {
 export class ModelRequestError extends AppError<'requestError'> {
   constructor(message: string) {
     super('requestError', message)
+  }
+
+  toLocaleMessage(): string {
+    return 'Oops! Something went wrong. Please check your Ollama connection in settings and try again.'
+  }
+}
+
+export class ModelNotFoundError extends AppError<'modelNotFound'> {
+  constructor(public model?: string) {
+    super('modelNotFound')
   }
 
   toLocaleMessage(): string {
@@ -75,6 +85,7 @@ const errors = {
   requestTimeout: ModelRequestTimeoutError,
   abortError: AbortError,
   timeoutError: TimeoutError,
+  modelNotFound: ModelNotFoundError,
 } satisfies Record<ErrorCode, typeof AppError<ErrorCode>>
 
 export function fromError(error: unknown): AppError<ErrorCode> {

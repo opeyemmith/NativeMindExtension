@@ -1,6 +1,7 @@
 import { createSharedComposable, useEventListener } from '@vueuse/core'
 import { onMounted, ref, watch } from 'vue'
 
+import { useToast } from '@/composables/useToast'
 import { getTranslatorEnv, handleTranslatorEnvUpdated, init, setTranslatorEnv, toggleTranslation, translation } from '@/entrypoints/content/utils/translator'
 import { LanguageCode } from '@/utils/language/detect'
 import logger from '@/utils/logger'
@@ -8,11 +9,16 @@ import { registerContentScriptRpcEvent } from '@/utils/rpc'
 import { getCommonAncestorElement } from '@/utils/selection'
 import { getUserConfig } from '@/utils/user-config'
 
+import { useOllamaStatusStore } from '../store'
 import { setTranslationMenuTargetLanguage } from '../utils/context-menu'
+import { showSettings } from '../utils/settings'
 
 async function _useTranslator() {
+  // useToast must be called before the first await
+  const toast = useToast()
   const userConfig = await getUserConfig()
   const targetLocale = userConfig.translation.targetLocale.toRef()
+  const ollamaStatusStore = useOllamaStatusStore()
   watch(targetLocale, async (targetLocale) => {
     logger.debug('targetLocale changed', targetLocale)
     const curEnv = await getTranslatorEnv()
@@ -64,6 +70,17 @@ async function _useTranslator() {
   })
 
   registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
+    if (userConfig.llm.endpointType.get() === 'ollama') {
+      if (!(await ollamaStatusStore.updateConnectionStatus())) {
+        toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
+        showSettings(true, 'server-address-section')
+      }
+      else if ((await ollamaStatusStore.updateModelList()).length === 0) {
+        toast('No model found, please download a model.', { duration: 2000 })
+        showSettings(true, 'model-download-section')
+      }
+      return
+    }
     if (e.menuItemId === 'native-mind-page-translate') {
       await onInit()
       enabled.value = toggleTranslation(!enabled.value)

@@ -112,7 +112,7 @@ async function _getUserConfig() {
     llm: {
       endpointType: await new Config('llm.endpointType').default('web-llm' as LLMEndpointType).build(),
       baseUrl: await new Config('llm.baseUrl').default('http://localhost:11434/api').build(),
-      model: await new Config('llm.model').default('qwen3:8b').build(),
+      model: await new Config<string, undefined>('llm.model').build(),
       apiKey: await new Config('llm.apiKey').default('ollama').build(),
       numCtx: await new Config('llm.numCtx').default(1024 * 8).build(),
       chatSystemPrompt: await new Config('llm.chatSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),

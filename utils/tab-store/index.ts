@@ -4,6 +4,7 @@ import { storage } from 'wxt/utils/storage'
 import { lazyInitialize } from '../cache'
 import { debounce } from '../debounce'
 import { c2bRpc } from '../rpc'
+import type { SettingsScrollTarget } from '../scroll-targets'
 import type { HistoryItemV1 } from './history'
 
 export { HistoryItemV1 }
@@ -16,20 +17,18 @@ async function defineTabValue<T>(key: string, defaultValue: T) {
   }
   const valueInStorageStr = await storage.getItem<string>(sessionKey)
   const valueInStorage = valueInStorageStr ? JSON.parse(valueInStorageStr) : defaultValue
+  const v = ref(valueInStorage)
+  watch(
+    v,
+    () => debounceSetItem(),
+    { deep: true },
+  )
+
+  const debounceSetItem = debounce(() => {
+    storage.setItem(sessionKey, JSON.stringify(toRaw(v.value)))
+  }, 1000)
+
   return customRef<T>((track, trigger) => {
-    const v = ref(valueInStorage)
-    watch(
-      v,
-      () => {
-        debounceSetItem()
-      },
-      { deep: true },
-    )
-
-    const debounceSetItem = debounce(() => {
-      storage.setItem(sessionKey, JSON.stringify(toRaw(v.value)))
-    }, 1000)
-
     return {
       get() {
         track()
@@ -53,13 +52,15 @@ export type PageSummary = {
   done: boolean
 }
 
+type ShowSettingsParams = { show: boolean, scrollTarget?: SettingsScrollTarget }
+
 async function _getTabStore() {
   const { tabId, faviconUrl, url, title } = await c2bRpc.getTabInfo()
   if (!tabId) throw new Error('no tab id')
   return {
     currentTabId: await defineTabValue('currentTabId', tabId),
     showContainer: await defineTabValue(`showContainer-${tabId}`, false),
-    showSetting: await defineTabValue(`showSetting-${tabId}`, false),
+    showSetting: await defineTabValue<ShowSettingsParams>(`showSetting-${tabId}`, { show: false }),
     chatHistory: await defineTabValue(`chatHistory-${tabId}`, [] as ChatHistory),
     pageSummary: await defineTabValue(`summary-${tabId}`, { content: '', summary: '' } as PageSummary),
     contextTabIds: await defineTabValue(`contextTabs-${tabId}`, [tabId] as number[]),

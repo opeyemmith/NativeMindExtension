@@ -8,7 +8,8 @@
 ### 🚀 Enhancements
 
 - **docs:** Add links to official website in README ([85dfca3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/85dfca3))
-- **translator): improve text content formatting in prompts and add skip target selector fix(translator:** Some pages become unresponsive when using the translation ([7d60f69](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7d60f69))
+- **translator:** improve text content formatting in prompts and add skip target selector
+- **translator:** Some pages become unresponsive when using the translation ([7d60f69](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7d60f69))
 
 ### 🩹 Fixes
 
@@ -25,7 +26,8 @@
 
 ### 🚀 Enhancements
 
-- **chat): enhance send button positioning and styling in chat component chore(i18n:** Update extension description for clarity and accuracy ([d49c3bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d49c3bc))
+- **chat:** enhance send button positioning and styling in chat component chore
+- **i18n:** Update extension description for clarity and accuracy ([d49c3bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d49c3bc))
 
 ### ❤️ Contributors
 

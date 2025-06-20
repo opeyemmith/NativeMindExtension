@@ -4,6 +4,7 @@ import { browser } from 'wxt/browser'
 
 import { toAsyncIter } from '../async'
 import { logger } from '../logger'
+import { SettingsScrollTarget } from '../scroll-targets'
 import { getTabStore } from '../tab-store'
 import { getUserConfig } from '../user-config'
 import { c2bRpc } from '.'
@@ -90,13 +91,19 @@ export async function toggleContainer(show?: boolean) {
   }
 }
 
-export async function toggleSetting(show?: boolean) {
+export async function toggleSetting(show?: boolean, scrollTarget?: SettingsScrollTarget) {
   const tabStore = await getTabStore()
   if (show === undefined) {
-    tabStore.showSetting.value = !tabStore.showSetting.value
+    tabStore.showSetting.value = {
+      show: !tabStore.showSetting.value.show,
+      scrollTarget: scrollTarget,
+    }
   }
   else {
-    tabStore.showSetting.value = show
+    tabStore.showSetting.value = {
+      show: show,
+      scrollTarget: scrollTarget,
+    }
   }
 }
 

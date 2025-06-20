@@ -3,6 +3,7 @@ import { createOllama } from 'ollama-ai-provider'
 
 import { getUserConfig } from '@/utils/user-config'
 
+import { ModelNotFoundError } from '../error'
 import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
 import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
 
@@ -14,10 +15,13 @@ const reasoningMiddleware = extractReasoningMiddleware({
 
 export async function getModelUserConfig() {
   const userConfig = await getUserConfig()
-  const baseUrl = userConfig.llm.baseUrl.get()
   const model = userConfig.llm.model.get()
+  const baseUrl = userConfig.llm.baseUrl.get()
   const apiKey = userConfig.llm.apiKey.get()
   const numCtx = userConfig.llm.numCtx.get()
+  if (!model) {
+    throw new ModelNotFoundError()
+  }
   return {
     baseUrl,
     model,

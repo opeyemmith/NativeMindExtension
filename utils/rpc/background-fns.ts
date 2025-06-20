@@ -1,5 +1,6 @@
 import { deleteModelInCache, hasModelInCache } from '@mlc-ai/web-llm'
 import { generateObject as originalGenerateObject, GenerateObjectResult, generateText as originalGenerateText, streamObject as originalStreamObject, streamText as originalStreamText } from 'ai'
+import { EventEmitter } from 'events'
 import { Browser, browser } from 'wxt/browser'
 import { z } from 'zod'
 
@@ -460,7 +461,26 @@ async function initCurrentModel() {
   }
 }
 
+const eventEmitter = new EventEmitter()
+
+export type Events = {
+  ready: (tabId: number) => void
+}
+
+export type EventKey = keyof Events
+
+export function registerBackgroundRpcEvent<E extends EventKey>(ev: E, fn: (...args: Parameters<Events[E]>) => void) {
+  logger.debug('registering background rpc event', ev)
+  eventEmitter.on(ev, fn)
+  return () => {
+    eventEmitter.off(ev, fn)
+  }
+}
+
 export const backgroundFunctions = {
+  emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
+    eventEmitter.emit(ev, ...args)
+  },
   getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as { tabId: number, title: string, faviconUrl?: string, url: string }, // a trick to get tabId
   generateText,
   generateTextAsync,

@@ -45,19 +45,24 @@
             </div>
           </div>
         </Block>
-        <Block title="Quick Actions">
-          <div class="flex gap-2 flex-col justify-start items-start text-xs">
-            <EditCard
-              v-for="(action, index) in quickActions"
-              :key="index"
-              v-model:title="action.title"
-              v-model:prompt="action.prompt"
-              v-model:showInContextMenu="action.showInContextMenu"
-              :defaultTitle="defaultQuickActions[index].title"
-              :defaultPrompt="defaultQuickActions[index].prompt"
-            />
-          </div>
-        </Block>
+        <ScrollTarget
+          :autoScrollIntoView="scrollTarget === 'quick-actions-block'"
+          showHighlight
+        >
+          <Block title="Quick Actions">
+            <div class="flex gap-2 flex-col justify-start items-start text-xs">
+              <EditCard
+                v-for="(action, index) in quickActions"
+                :key="index"
+                v-model:title="action.title"
+                v-model:prompt="action.prompt"
+                v-model:showInContextMenu="action.showInContextMenu"
+                :defaultTitle="defaultQuickActions[index].title"
+                :defaultPrompt="defaultQuickActions[index].prompt"
+              />
+            </div>
+          </Block>
+        </ScrollTarget>
         <Block title="Models">
           <div class="flex gap-3 justify-start items-center">
             Provider
@@ -365,6 +370,7 @@ import { ref, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import Input from '@/components/Input.vue'
+import ScrollTarget from '@/components/ScrollTarget.vue'
 import Selector from '@/components/Selector.vue'
 import Switch from '@/components/Switch.vue'
 import { parseDocument } from '@/utils/document-parser'
@@ -372,11 +378,16 @@ import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
+import { SettingsScrollTarget } from '@/utils/scroll-targets'
 import { getUserConfig } from '@/utils/user-config'
 
 import { pullOllamaModel } from '../../utils/llm'
 import EditCard from '../Settings/QuickAction/EditCard.vue'
 import Block from './Block.vue'
+
+defineProps<{
+  scrollTarget?: SettingsScrollTarget
+}>()
 
 const userConfig = await getUserConfig()
 const enabledDebug = userConfig.debug.enabled.toRef()

@@ -12,14 +12,14 @@
       </Transition>
       <Main />
       <Modal
-        v-model="isShowSettings"
+        v-model="tabStore.showSetting.value.show"
         :mountPoint="rootElement"
         noCloseButton
         closeByMask
         class="fixed"
       >
         <Settings
-          v-if="isShowSettings"
+          :scrollTarget="tabStore.showSetting.value.scrollTarget"
           class="bg-[#E9E9EC] text-black text-xs"
           :style="{ zIndex: settingsPanelZIndex }"
         />
@@ -29,12 +29,12 @@
 </template>
 
 <script setup lang="tsx">
-import { computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
 
 import Modal from '@/components/Modal.vue'
 import { useToast } from '@/composables/useToast'
 import { useZIndex } from '@/composables/useZIndex'
-import { registerContentScriptRpcEvent } from '@/utils/rpc'
+import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
 import { registerContentScriptRpcEventFromMainWorld } from '@/utils/rpc/content-main-world-fns'
 import { getTabStore } from '@/utils/tab-store'
 import { getUserConfig } from '@/utils/user-config'
@@ -48,26 +48,19 @@ import { useRootElement } from './composables/useRootElement'
 import { useTranslator } from './composables/useTranslator'
 import { Chat } from './utils/chat'
 import { initContextMenu } from './utils/context-menu'
+import { showSettings } from './utils/settings'
 import { getCurrentTabInfo } from './utils/tabs'
 
-const tabStore = await getTabStore()
-const userConfig = await getUserConfig()
-const rootElement = useRootElement()
 // init translator global event listeners
 useTranslator()
 initContextMenu()
+const tabStore = await getTabStore()
+const userConfig = await getUserConfig()
+const rootElement = useRootElement()
 
 const toast = useToast()
 const { index: settingsPanelZIndex } = useZIndex('settings')
 const { index: onboardingPanelZIndex } = useZIndex('settings')
-const isShowSettings = computed({
-  get() {
-    return tabStore.showSetting.value
-  },
-  set(value) {
-    tabStore.showSetting.value = value
-  },
-})
 
 registerContentScriptRpcEvent('tabUpdated', async (tabInfo) => {
   if (tabInfo.tabId === tabStore.currentTabId.value) {
@@ -79,7 +72,7 @@ registerContentScriptRpcEvent('tabUpdated', async (tabInfo) => {
 
 registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
   if (e.menuItemId === 'native-mind-settings') {
-    tabStore.showSetting.value = true
+    showSettings(true)
     tabStore.showContainer.value = true
   }
   else if (e.menuItemId.startsWith('native-mind-quick-actions-')) {
@@ -87,7 +80,7 @@ registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
     const action = userConfig.chat.quickActions.actions.get()[actionIdx]
     const chat = await Chat.getInstance()
     tabStore.showContainer.value = true
-    tabStore.showSetting.value = false
+    showSettings(false)
     if (action && !chat.isAnswering()) {
       chat.ask(action.prompt)
     }
@@ -106,6 +99,7 @@ onMounted(async () => {
   if (tabInfo.title) tabStore.tabInfo.value.title = tabInfo.title
   if (tabInfo.url) tabStore.tabInfo.value.url = tabInfo.url
   if (tabInfo.faviconUrl) tabStore.tabInfo.value.faviconUrl = tabInfo.faviconUrl
+  await c2bRpc.emit('ready', tabInfo.tabId)
 })
 </script>
 

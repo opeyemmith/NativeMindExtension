@@ -70,19 +70,18 @@ import IconUnPin from '@/assets/icons/unpin.svg?component'
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import Logo from '@/components/Logo.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
-import { getTabStore } from '@/utils/tab-store'
 import { getUserConfig, TARGET_ONBOARDING_VERSION } from '@/utils/user-config'
 
 import { useOllamaStatusStore } from '../../store'
 import { Chat } from '../../utils/chat'
 import { makeContainer, makeParagraph } from '../../utils/markdown/content'
+import { showSettings } from '../../utils/settings'
 import OllamaModelDownloader from './OllamaModelDownloader.vue'
 import OllamaTutorialCard from './OllamaTutorialCard.vue'
 import SloganCard from './SloganCard.vue'
 import WebLLMTutorialCard from './WebLLMTutorialCard.vue'
 
 const userConfig = await getUserConfig()
-const tabStore = await getTabStore()
 const chat = await Chat.getInstance()
 const ollamaStatusStore = useOllamaStatusStore()
 const endpointType = userConfig.llm.endpointType.toRef()
@@ -107,7 +106,7 @@ const onOllamaInstalled = async () => {
 const onOpenSettings = async () => {
   endpointType.value = 'ollama'
   close()
-  tabStore.showSetting.value = true
+  showSettings(true)
 }
 
 const onModelDownloaderFinished = async () => {

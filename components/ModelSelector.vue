@@ -80,9 +80,9 @@ import IconDelete from '@/assets/icons/delete.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'
 import { useOllamaStatusStore } from '@/entrypoints/content/store'
 import { deleteOllamaModel } from '@/entrypoints/content/utils/llm'
+import { showSettings } from '@/entrypoints/content/utils/settings'
 import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
-import { getTabStore } from '@/utils/tab-store'
 import { getUserConfig } from '@/utils/user-config'
 import { classNames } from '@/utils/vue/utils'
 
@@ -122,7 +122,6 @@ defineExpose({
 
 const userConfig = await getUserConfig()
 const baseUrl = userConfig.llm.baseUrl.toRef()
-const tabStore = await getTabStore()
 const selectedModel = userConfig.llm.model.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
 
@@ -142,16 +141,16 @@ const onClickDelete = async (model: string) => {
 
 const onClick = () => {
   if (modelList.value.length === 0) {
-    tabStore.showSetting.value = true
+    showSettings(true, 'model-download-section')
   }
 }
 
 watch(modelList, (modelList) => {
   if (modelList.length === 0) {
-    selectedModel.value = ''
+    selectedModel.value = undefined
     return
   }
-  const newSelectedModel = modelList.find((m) => m.model === selectedModel.value) ?? modelList[0]
+  const newSelectedModel = modelList.find((m) => m.model === selectedModel.value) ?? modelList[0] ?? undefined
   selectedModel.value = newSelectedModel.model
 })
 

@@ -12,7 +12,7 @@ import { createShadowRootOverlay } from './ui'
 
 export default defineContentScript({
   matches: ['*://*/*'],
-  cssInjectionMode: 'ui',
+  cssInjectionMode: 'manual',
   runAt: 'document_start',
   async main(ctx) {
     const ui = await createShadowRootOverlay(ctx, ({ rootElement }) => {

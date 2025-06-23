@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.2.0-beta.15
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.14...v1.2.0-beta.15)
+
+### 🚀 Enhancements
+
+- **wxt:** Add module to expose web resources and update config ([93c5d03](https://github.com/NativeMindBrowser/NativeMindExtension/commit/93c5d03))
+
+### 🩹 Fixes
+
+- **styles:** Enhance style injection and loading mechanism for shadow DOM ([e947697](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e947697))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.14
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.13...v1.2.0-beta.14)

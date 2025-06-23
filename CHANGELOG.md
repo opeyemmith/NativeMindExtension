@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.2.0-beta.16
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.15...v1.2.0-beta.16)
+
+### 🚀 Enhancements
+
+- **background:** Inject content script on installation ([a9b410d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a9b410d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.15
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.14...v1.2.0-beta.15)

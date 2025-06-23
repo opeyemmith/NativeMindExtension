@@ -8,9 +8,12 @@
 
 *Experience powerful AI capabilities with zero cloud dependencies*
 
-<img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
+### 🏆 We're launching on ProductHunt! 
+[![Product Hunt](https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=nativemind&theme=light)](https://www.producthunt.com/products/nativemind)
 
-### 🚀 [Visit Official Website](https://nativemind.app/)
+**Vote to help more people discover private, convenient AI** 🙏
+
+<img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
 [![Privacy First](https://img.shields.io/badge/Privacy-First-brightgreen?style=flat-square&logo=security&logoColor=white)]()
 [![No Tracking](https://img.shields.io/badge/Tracking-None-success?style=flat-square&logo=shield&logoColor=white)]()
@@ -29,6 +32,8 @@
 
 *Finally, **AI that truly belongs to you**. NativeMind delivers cutting-edge intelligence without cloud dependencies—**faster responses, zero tracking, unlimited usage**—all running quietly in your browser while you stay in complete control.*
 
+### 🚀 [Visit Official Website](https://nativemind.app/)
+
 </div>
 
 ## 📦 Quick Start
@@ -46,7 +51,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 <div align="center">
 <img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
 <br>
-For more details, visit our official website: **[nativemind.app](https://nativemind.app/)**
+<em>For more details, visit our official website: <strong><a href="https://nativemind.app/">nativemind.app</a></strong></em>
 </div>
 
 ## ✨ Core Features

@@ -1,13 +1,13 @@
 import { onScopeDispose } from 'vue'
 
-export function useInjectStyle(inlineCss: string) {
+export function useInjectStyle(inlineCss: string, attachedElement?: HTMLElement) {
   const styleElement = document.createElement('style')
   styleElement.textContent = inlineCss
   styleElement.setAttribute('data-nativemind-style', 'true')
   styleElement.setAttribute('data-nativemind-style-injected', 'true')
 
   // Append the style element to the head
-  document.head.appendChild(styleElement)
+  ;(attachedElement ?? document.head).appendChild(styleElement)
 
   onScopeDispose(() => {
     styleElement.remove()

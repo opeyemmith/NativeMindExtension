@@ -39,12 +39,15 @@ svgLoaderPlugin.name = 'svg-loader'
 // See https://wxt.dev/api/config.html
 export default defineConfig({
   imports: false,
-  modules: ['@wxt-dev/module-vue', './wxt-modules/auto-icons/index.mjs'],
+  modules: ['@wxt-dev/module-vue', './wxt-modules/auto-icons/index.mjs', './wxt-modules/expose-web-resources/index.mjs'],
   webExt: {
     chromiumArgs: ['--user-data-dir=./.wxt/chrome-data'],
   },
   zip: {
     artifactTemplate: '{{name}}-{{packageVersion}}-{{browser}}-{{mode}}.zip',
+  },
+  exposeWebResources: {
+    paths: ['/assets/*.woff2', '/content-scripts/*.css', '/main-world-injected.js'],
   },
   hooks: {
     // replace the default svg-loader plugin provided by wxt with our custom one
@@ -81,12 +84,6 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: 'script-src \'self\' \'wasm-unsafe-eval\'; object-src \'self\';',
     },
-    web_accessible_resources: [
-      {
-        resources: ['/main-world-injected.js'],
-        matches: ['<all_urls>'],
-      },
-    ],
     content_scripts: [
       {
         matches: ['<all_urls>'],

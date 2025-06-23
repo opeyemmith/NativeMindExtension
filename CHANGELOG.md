@@ -1,6 +1,46 @@
 # Changelog
 
 
+## v1.2.0-beta.16
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.15...v1.2.0-beta.16)
+
+### 🚀 Enhancements
+
+- **background:** Inject content script on installation ([a9b410d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a9b410d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.2.0-beta.15
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.14...v1.2.0-beta.15)
+
+### 🚀 Enhancements
+
+- **wxt:** Add module to expose web resources and update config ([93c5d03](https://github.com/NativeMindBrowser/NativeMindExtension/commit/93c5d03))
+
+### 🩹 Fixes
+
+- **styles:** Enhance style injection and loading mechanism for shadow DOM ([e947697](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e947697))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.2.0-beta.14
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.13...v1.2.0-beta.14)
+
+### 🩹 Fixes
+
+- **translator:** Ensure translation menu updates only when document is visible and improve context menu handling ([2f8ad72](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2f8ad72))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.2.0-beta.13
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.12...v1.2.0-beta.13)

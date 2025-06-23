@@ -61,35 +61,51 @@ async function _useTranslator() {
   })
 
   watch(enabled, async (newVal) => {
-    await setTranslationMenuTargetLanguage(newVal, targetLocale.value)
+    if (document.visibilityState === 'visible') {
+      await setTranslationMenuTargetLanguage(newVal, targetLocale.value)
+    }
   })
 
   watch(targetLocale, async (newVal) => {
-    await setTranslationMenuTargetLanguage(enabled.value, newVal)
+    if (document.visibilityState === 'visible') {
+      await setTranslationMenuTargetLanguage(enabled.value, newVal)
+    }
   })
 
+  let isWaiting = false
+
   registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
-    if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
-      if (!(await ollamaStatusStore.updateConnectionStatus())) {
-        toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
-        showSettings(true, 'server-address-section')
-        return
+    if (isWaiting) return
+    isWaiting = true
+    try {
+      if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
+        if (!(await ollamaStatusStore.updateConnectionStatus())) {
+          toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
+          showSettings(true, 'server-address-section')
+          return
+        }
+        else if ((await ollamaStatusStore.updateModelList()).length === 0) {
+          toast('No model found, please download a model.', { duration: 2000 })
+          showSettings(true, 'model-download-section')
+          return
+        }
       }
-      else if ((await ollamaStatusStore.updateModelList()).length === 0) {
-        toast('No model found, please download a model.', { duration: 2000 })
-        showSettings(true, 'model-download-section')
-        return
+      if (e.menuItemId === 'native-mind-page-translate') {
+        await onInit()
+        enabled.value = toggleTranslation(!enabled.value)
+      }
+      else if (e.menuItemId === 'native-mind-selection-translate') {
+        await onInit()
+        const selection = window.getSelection()
+        const commonAncestor = getCommonAncestorElement(selection)
+        commonAncestor && translation.translateElement(commonAncestor)
       }
     }
-    if (e.menuItemId === 'native-mind-page-translate') {
-      await onInit()
-      enabled.value = toggleTranslation(!enabled.value)
+    catch (error) {
+      logger.error('Error handling context menu click', error)
     }
-    else if (e.menuItemId === 'native-mind-selection-translate') {
-      await onInit()
-      const selection = window.getSelection()
-      const commonAncestor = getCommonAncestorElement(selection)
-      commonAncestor && translation.translateElement(commonAncestor)
+    finally {
+      isWaiting = false
     }
   })
 

@@ -8,7 +8,6 @@ import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
-import { registerBackgroundRpcEvent } from '@/utils/rpc/background-fns'
 import { isTabValid } from '@/utils/tab'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
@@ -37,8 +36,7 @@ export default defineBackground(() => {
   })
 
   const setPopupStatusBasedOnUrl = async (tabId: number, url: string) => {
-    const isValidUrl = /https?:\/\//.test(url ?? '')
-    if (!isValidUrl || unAttachedTabs.has(tabId) || INVALID_URLS.some((regex) => regex.test(url))) {
+    if (INVALID_URLS.some((regex) => regex.test(url))) {
       await browser.action.setPopup({ popup: 'popup.html' })
     }
     else {
@@ -84,14 +82,8 @@ export default defineBackground(() => {
     })
   })
 
-  const unAttachedTabs = new Set<number>()
-
   browser.runtime.onInstalled.addListener(async () => {
     logger.debug('Extension Installed')
-    const tabs = await browser.tabs.query({ currentWindow: true })
-    for (const tab of tabs) {
-      tab.id && unAttachedTabs.add(tab.id)
-    }
     await browser.contextMenus.removeAll()
     for (const menu of CONTEXT_MENU) {
       browser.contextMenus.create({
@@ -99,6 +91,23 @@ export default defineBackground(() => {
         title: menu.title,
         contexts: menu.contexts,
       })
+    }
+    // inject content script into all tabs which are opened before the extension is installed
+    const tabs = await browser.tabs.query({})
+    for (const tab of tabs) {
+      if (tab.id && tab.url) {
+        const tabUrl = tab.url
+        if (INVALID_URLS.some((regex) => regex.test(tabUrl))) continue
+        await browser.scripting.executeScript({
+          files: ['/content-scripts/content.js'],
+          target: { tabId: tab.id },
+          world: 'ISOLATED',
+        }).then(() => {
+          logger.info('Content script injected', { tabId: tab.id })
+        }).catch((error) => {
+          logger.error('Failed to inject content script', { tabId: tab.id, error })
+        })
+      }
     }
   })
 
@@ -110,10 +119,6 @@ export default defineBackground(() => {
         ...info,
       })
     }
-  })
-
-  registerBackgroundRpcEvent('ready', (tabId) => {
-    unAttachedTabs.delete(tabId)
   })
 
   logger.info('Hello background!', { id: browser.runtime.id })

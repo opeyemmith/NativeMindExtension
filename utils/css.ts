@@ -1,0 +1,68 @@
+import { browser } from 'wxt/browser'
+
+import logger from './logger'
+
+export function convertPropertiesIntoSimpleVariables(sheet: CSSStyleSheet, scopeInShadowDom = true) {
+  const properties = []
+  for (const rule of sheet.cssRules) {
+    if (rule instanceof CSSPropertyRule) {
+      if (rule.initialValue) {
+        properties.push(`${rule.name}: ${rule.initialValue}`)
+      }
+    }
+  }
+  const scope = scopeInShadowDom ? ':host' : ':root'
+  sheet.insertRule(`${scope} { ${properties.join('; ')} }`)
+  return sheet
+}
+
+export function scopeStyleIntoShadowRoot(cssText: string) {
+  const sheet = createStyleSheetByCssText(cssText.replaceAll(':root', ':host'))
+  return sheet
+}
+
+export async function loadContentScriptCss(name: string): Promise<string> {
+  // @ts-expect-error - css output files is not defined in the types
+  const url = browser.runtime.getURL(`/content-scripts/${name}.css`)
+  try {
+    const res = await fetch(url)
+    return await res.text()
+  }
+  catch (err) {
+    logger.warn(
+      `Failed to load styles @ ${url}. Did you forget to import the stylesheet in your entrypoint?`,
+      err,
+    )
+    return ''
+  }
+}
+
+export function createStyleSheetByCssText(cssText: string) {
+  const sheet = new CSSStyleSheet()
+  try {
+    sheet.replaceSync(cssText)
+  }
+  catch (err) {
+    logger.error('Failed to create stylesheet from css text', err)
+  }
+  return sheet
+}
+
+export function replaceFontFaceUrl(sheet: CSSStyleSheet, converter: (url: string) => string) {
+  for (const rule of sheet.cssRules) {
+    if (rule instanceof CSSFontFaceRule) {
+      const src = rule.style.getPropertyValue('src')
+      if (src) {
+        const newSrc = src.split(',').map((url) => {
+          const match = url.match(/url\(['"]?([^'"]+)['"]?\)/)
+          if (match && match[1]) {
+            return `url('${converter(match[1])}')`
+          }
+          return url
+        }).join(', ')
+        rule.style.setProperty('src', newSrc)
+      }
+    }
+  }
+  return sheet
+}

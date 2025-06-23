@@ -1,11 +1,25 @@
 import { createPinia } from 'pinia'
 import type { Component } from 'vue'
 import { createApp } from 'vue'
+import { browser } from 'wxt/browser'
 import { ContentScriptContext } from 'wxt/utils/content-script-context'
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
+import { splitShadowRootCss } from 'wxt/utils/split-shadow-root-css'
 
 import { initToast } from '@/composables/useToast'
+import { FONT_FACE_CSS } from '@/utils/constants'
+import { convertPropertiesIntoSimpleVariables, createStyleSheetByCssText, loadContentScriptCss, replaceFontFaceUrl, scopeStyleIntoShadowRoot } from '@/utils/css'
 import { i18n } from '@/utils/i18n'
+
+async function loadStyleSheet(shadowRoot: ShadowRoot) {
+  const contentScriptCss = await loadContentScriptCss(import.meta.env.ENTRYPOINT)
+  const fontFaceCss = await loadContentScriptCss(FONT_FACE_CSS)
+  const { shadowCss, documentCss } = splitShadowRootCss(contentScriptCss)
+  shadowRoot.adoptedStyleSheets.push(scopeStyleIntoShadowRoot(shadowCss))
+  shadowRoot.adoptedStyleSheets.push(convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(documentCss), true))
+  // font-face can only be applied to the document, not the shadow root
+  document.adoptedStyleSheets.push(replaceFontFaceUrl(createStyleSheetByCssText(fontFaceCss), (url) => browser.runtime.getURL(url as Parameters<typeof browser.runtime.getURL>[0])))
+}
 
 export async function createShadowRootOverlay(ctx: ContentScriptContext, component: Component<{ rootElement: HTMLDivElement }>) {
   const ui = await createShadowRootUi(ctx, {
@@ -14,7 +28,8 @@ export async function createShadowRootOverlay(ctx: ContentScriptContext, compone
     isolateEvents: true,
     mode: 'open',
     anchor: 'html',
-    onMount(uiContainer, _shadow, shadowHost) {
+    async onMount(uiContainer, shadowRoot, shadowHost) {
+      await loadStyleSheet(shadowRoot)
       const rootElement = document.createElement('div')
       const toastRoot = document.createElement('div')
       uiContainer.appendChild(rootElement)
@@ -31,8 +46,8 @@ export async function createShadowRootOverlay(ctx: ContentScriptContext, compone
       app.mount(rootElement)
       return app
     },
-    onRemove(app) {
-      app?.unmount()
+    async onRemove(app) {
+      (await app)?.unmount()
     },
   })
   return ui

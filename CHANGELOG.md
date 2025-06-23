@@ -1,6 +1,21 @@
 # Changelog
 
 
+## v1.2.0-beta.17
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0-beta.17)
+
+### 🚀 Enhancements
+
+- **readme:** Add ProductHunt launch announcement and update demo ([83bf9e9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/83bf9e9))
+- **fonts:** Add Inter and InterDisplay font files and integrate into the project ([fc6749e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/fc6749e))
+- **parser:** Add document cleanup logic for document parser ([1a66f38](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1a66f38))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
 ## v1.2.0-beta.16
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.15...v1.2.0-beta.16)

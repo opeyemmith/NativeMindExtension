@@ -46,7 +46,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 <div align="center">
 <img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
 <br>
-For more details, visit our official website: **[nativemind.app](https://nativemind.app/)**
+<em>For more details, visit our official website: <strong><a href="https://nativemind.app/">nativemind.app</a></strong></em>
 </div>
 
 ## ✨ Core Features

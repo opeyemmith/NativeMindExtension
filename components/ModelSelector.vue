@@ -36,7 +36,10 @@
             v-if="showDetails"
             class="flex items-center gap-[6px]"
           >
-            <ModelLogo :modelId="option.model.model" />
+            <ModelLogo
+              :modelId="option.model.model"
+              class="shrink-0 grow-0"
+            />
             <div>
               <div class="text-left wrap-anywhere">
                 {{ option.label }}
@@ -56,7 +59,10 @@
           </div>
           <div v-else>
             <div class="flex items-center gap-[6px]">
-              <ModelLogo :modelId="option.model.model" />
+              <ModelLogo
+                :modelId="option.model.model"
+                class="shrink-0 grow-0"
+              />
               <div class="text-left wrap-anywhere">
                 {{ option.label }}
               </div>
@@ -64,7 +70,7 @@
           </div>
           <IconDelete
             v-if="allowDelete"
-            class="w-3 h-3 hover:text-red-400 cursor-pointer"
+            class="w-3 h-3 hover:text-red-400 cursor-pointer shrink-0 grow-0"
             @click="onClickDelete(option.model.model)"
           />
         </div>

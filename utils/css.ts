@@ -66,3 +66,21 @@ export function replaceFontFaceUrl(sheet: CSSStyleSheet, converter: (url: string
   }
   return sheet
 }
+
+export function extractFontFace(sheet: CSSStyleSheet) {
+  const fontFaces: string[] = []
+  for (const rule of sheet.cssRules) {
+    if (rule instanceof CSSFontFaceRule) {
+      fontFaces.push(rule.cssText)
+    }
+  }
+  const cssText = fontFaces.join('\n')
+  const newSheet = new CSSStyleSheet()
+  try {
+    newSheet.replaceSync(cssText)
+  }
+  catch (err) {
+    logger.error('Failed to extract font-face from stylesheet', err)
+  }
+  return newSheet
+}

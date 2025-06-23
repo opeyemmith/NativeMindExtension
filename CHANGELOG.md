@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v1.3.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.17...v1.3.0-beta.1)
+
+### 🚀 Enhancements
+
+- **readme:** Add ProductHunt launch announcement and update demo ([3ebe603](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3ebe603))
+
+### 🩹 Fixes
+
+- **readme:** Enhance website link formatting for clarity ([ae8384f](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ae8384f))
+
+### 🏡 Chore
+
+- **release:** V1.2.0 ([b1d9aa9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/b1d9aa9))
+- **release:** Update version to v1.3.0-beta.0 in changelog and package.json ([312ac64](https://github.com/NativeMindBrowser/NativeMindExtension/commit/312ac64))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
 ## v1.3.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0-beta.17)

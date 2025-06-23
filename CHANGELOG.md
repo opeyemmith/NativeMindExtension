@@ -1,7 +1,7 @@
 # Changelog
 
 
-## v1.2.0-beta.17
+## v1.3.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0-beta.17)
 
@@ -15,6 +15,10 @@
 
 - Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
 - Xukecheng <kecheng@xmind.org>
+
+## v1.2.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0)
 
 ## v1.2.0-beta.16
 

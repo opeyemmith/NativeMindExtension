@@ -11,4 +11,5 @@ export const FONT_FACE_CSS = 'content2'
 export const INVALID_URLS = [
   /^https:\/\/chromewebstore.google.com/,
   /^https:\/\/chrome.google.com\/webstore\//,
+  /^(?!https?:\/\/).+/,
 ]

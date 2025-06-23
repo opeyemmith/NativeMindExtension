@@ -1,10 +1,16 @@
 import { Readability } from '@mozilla/readability'
 
+import { translationTargetClass, translationTargetDividerClass, translationTargetInnerClass } from '@/entrypoints/content/utils/translator/utils/constant'
+
+function cleanupDocument(doc: Document) {
+  const elements = doc.querySelectorAll(`.${translationTargetClass}, .${translationTargetDividerClass}, .${translationTargetInnerClass}`)
+  elements.forEach((el) => el.remove())
+  return doc
+}
+
 export function parseDocument(doc: Document) {
-  const clonedDoc = doc.cloneNode(true) as Document
-  let article = new Readability(clonedDoc, {
-    // debug: import.meta.env.DEV,
-  }).parse()
+  const clonedDoc = cleanupDocument(doc.cloneNode(true) as Document)
+  let article = new Readability(clonedDoc, {}).parse()
   if (!article) {
     article = {
       title: document.title,

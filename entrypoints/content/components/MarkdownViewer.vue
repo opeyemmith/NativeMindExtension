@@ -11,7 +11,6 @@ import hljs from 'highlight.js'
 import { Marked, Renderer, Tokens } from 'marked'
 import { createDirectives, type DirectiveConfig } from 'marked-directive'
 import { markedHighlight } from 'marked-highlight'
-import markedKatex from 'marked-katex-extension'
 import { ref, watchEffect } from 'vue'
 
 import IconMDLink from '@/assets/icons/md-link.svg?raw'
@@ -160,7 +159,7 @@ const marked = new Marked(
   }),
 )
   .use(createDirectives([inlineDirective, blockDirective, containerDirective]))
-  .use(markedKatex({ throwOnError: false, nonStandard: true }))
+  // .use(markedKatex({ throwOnError: false, nonStandard: true })) // TODO: Enable this when we have a way to load KaTeX CSS in the content script
 
 renderer.link = ({ href, title, text }) => {
   const anchor = document.createElement('a')

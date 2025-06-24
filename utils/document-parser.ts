@@ -2,14 +2,16 @@ import { Readability } from '@mozilla/readability'
 
 import { translationTargetClass, translationTargetDividerClass, translationTargetInnerClass } from '@/entrypoints/content/utils/translator/utils/constant'
 
-function cleanupDocument(doc: Document) {
-  const elements = doc.querySelectorAll(`.${translationTargetClass}, .${translationTargetDividerClass}, .${translationTargetInnerClass}`)
-  elements.forEach((el) => el.remove())
-  return doc
-}
+import { deepCloneDocumentWithShadowDOM } from './dom'
 
-export function parseDocument(doc: Document) {
-  const clonedDoc = cleanupDocument(doc.cloneNode(true) as Document)
+export async function parseDocument(doc: Document) {
+  const clonedDoc = await deepCloneDocumentWithShadowDOM(
+    doc,
+    {
+      excludeClasses: [translationTargetClass, translationTargetDividerClass, translationTargetInnerClass],
+      excludeTags: ['nativemind-container', 'script', 'style', 'link', 'meta', 'svg', 'canvas', 'iframe', 'object', 'embed'],
+    },
+  )
   let article = new Readability(clonedDoc, {}).parse()
   if (!article) {
     article = {

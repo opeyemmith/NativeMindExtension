@@ -17,8 +17,8 @@ export type Events = {
 
 export type EventKey = keyof Events
 
-export function getDocumentContent(_: { _toTab?: number }) {
-  const article = parseDocument(window.document)
+export async function getDocumentContent(_: { _toTab?: number }) {
+  const article = await parseDocument(window.document)
   const url = window.location.href
   return {
     ...article,

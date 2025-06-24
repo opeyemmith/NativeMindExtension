@@ -53,6 +53,6 @@ export async function getCurrentDocumentContent(): Promise<TabContent> {
     title: document.title,
     url: window.location.href,
     faviconUrl: await getTabInfo(currentTabId).then((tab) => tab.faviconUrl),
-    textContent: parseDocument(document)?.textContent || '',
+    textContent: (await parseDocument(document))?.textContent || '',
   }
 }

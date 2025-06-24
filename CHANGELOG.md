@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.2...v1.3.0-beta.3)
+
+### 🚀 Enhancements
+
+- **textarea:** Update textarea focus style to improve text visibility ([3849741](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3849741))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.1...v1.3.0-beta.2)

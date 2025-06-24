@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.1...v1.3.0-beta.2)
+
+### 🩹 Fixes
+
+- **parser:** Update parseDocument to handle shadow dom ([60f4905](https://github.com/NativeMindBrowser/NativeMindExtension/commit/60f4905))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.17...v1.3.0-beta.1)

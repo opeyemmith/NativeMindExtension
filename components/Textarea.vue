@@ -8,7 +8,7 @@
       v-model="inputValue"
       :maxlength="maxLength"
       :style="{ height: textareaHeight + 'px' }"
-      class="w-full text-xs leading-4 px-2 pt-1.5 pb-[28px] text-[#6E757C] resize-none"
+      class="w-full text-xs leading-4 px-2 pt-1.5 pb-[28px] text-[#6E757C] focus:text-black resize-none"
       :class="classNames('outline-none', props.class)"
     />
 

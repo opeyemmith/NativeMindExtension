@@ -30,6 +30,7 @@ export async function createShadowRootOverlay(ctx: ContentScriptContext, compone
       const toastRoot = document.createElement('div')
       uiContainer.appendChild(rootElement)
       uiContainer.appendChild(toastRoot)
+      shadowHost.dataset.testid = 'nativemind-container'
       shadowHost.style.setProperty('position', 'fixed')
       shadowHost.style.setProperty('top', '0px')
       shadowHost.style.setProperty('left', '0px')

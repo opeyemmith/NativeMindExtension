@@ -1,4 +1,4 @@
-name: E2E Tests
+name: Unit Tests
 on:
   push:
     branches: "*"
@@ -36,17 +36,10 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
 
-      - name: Install Playwright Browsers
-        run: pnpm dlx playwright install --with-deps
-
       - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile
 
-      - name: Build production assets
+      - name: Run unit tests
         run: |
-          pnpm run build:prod
-
-      - name: Run E2E tests
-        run: |
-          pnpm run test:e2e
+          pnpm run test:unit

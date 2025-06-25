@@ -31,9 +31,9 @@ jobs:
           cache: "pnpm"
 
       - name: Run npm audit
-        run: pnpm audit --production
+        run: pnpm audit --production >> $GITHUB_STEP_SUMMARY
         continue-on-error: true
 
       - name: Check for outdated dependencies
-        run: pnpm outdated
+        run: pnpm outdated >> $GITHUB_STEP_SUMMARY
         continue-on-error: true

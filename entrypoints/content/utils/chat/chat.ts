@@ -420,7 +420,7 @@ export class Chat {
     const display = hint
 
     using _s = this.statusScope('pending')
-    const article = parseDocument(document)
+    const article = await parseDocument(document)
     const prompt = await summarizeWithPageContent({ ...article, url: location.href }, userPrompt)
     this.historyManager.appendUserMessage(display)
     await this.prepareModel()

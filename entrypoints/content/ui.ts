@@ -1,24 +1,20 @@
 import { createPinia } from 'pinia'
 import type { Component } from 'vue'
 import { createApp } from 'vue'
-import { browser } from 'wxt/browser'
 import { ContentScriptContext } from 'wxt/utils/content-script-context'
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
-import { splitShadowRootCss } from 'wxt/utils/split-shadow-root-css'
 
 import { initToast } from '@/composables/useToast'
-import { FONT_FACE_CSS } from '@/utils/constants'
-import { convertPropertiesIntoSimpleVariables, createStyleSheetByCssText, loadContentScriptCss, replaceFontFaceUrl, scopeStyleIntoShadowRoot } from '@/utils/css'
+import { convertPropertiesIntoSimpleVariables, extractFontFace, loadContentScriptCss, scopeStyleIntoShadowRoot } from '@/utils/css'
 import { i18n } from '@/utils/i18n'
 
 async function loadStyleSheet(shadowRoot: ShadowRoot) {
   const contentScriptCss = await loadContentScriptCss(import.meta.env.ENTRYPOINT)
-  const fontFaceCss = await loadContentScriptCss(FONT_FACE_CSS)
-  const { shadowCss, documentCss } = splitShadowRootCss(contentScriptCss)
-  shadowRoot.adoptedStyleSheets.push(scopeStyleIntoShadowRoot(shadowCss))
-  shadowRoot.adoptedStyleSheets.push(convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(documentCss), true))
+  const styleSheet = convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(contentScriptCss), true)
+  shadowRoot.adoptedStyleSheets.push(styleSheet)
   // font-face can only be applied to the document, not the shadow root
-  document.adoptedStyleSheets.push(replaceFontFaceUrl(createStyleSheetByCssText(fontFaceCss), (url) => browser.runtime.getURL(url as Parameters<typeof browser.runtime.getURL>[0])))
+  const fontFaceStyleSheet = extractFontFace(styleSheet)
+  document.adoptedStyleSheets.push(fontFaceStyleSheet)
 }
 
 export async function createShadowRootOverlay(ctx: ContentScriptContext, component: Component<{ rootElement: HTMLDivElement }>) {
@@ -34,6 +30,7 @@ export async function createShadowRootOverlay(ctx: ContentScriptContext, compone
       const toastRoot = document.createElement('div')
       uiContainer.appendChild(rootElement)
       uiContainer.appendChild(toastRoot)
+      shadowHost.dataset.testid = 'nativemind-container'
       shadowHost.style.setProperty('position', 'fixed')
       shadowHost.style.setProperty('top', '0px')
       shadowHost.style.setProperty('left', '0px')

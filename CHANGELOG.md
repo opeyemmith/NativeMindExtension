@@ -1,6 +1,67 @@
 # Changelog
 
 
+## v1.3.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.2...v1.3.0-beta.3)
+
+### 🚀 Enhancements
+
+- **textarea:** Update textarea focus style to improve text visibility ([3849741](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3849741))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.1...v1.3.0-beta.2)
+
+### 🩹 Fixes
+
+- **parser:** Update parseDocument to handle shadow dom ([60f4905](https://github.com/NativeMindBrowser/NativeMindExtension/commit/60f4905))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.17...v1.3.0-beta.1)
+
+### 🚀 Enhancements
+
+- **readme:** Add ProductHunt launch announcement and update demo ([3ebe603](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3ebe603))
+
+### 🩹 Fixes
+
+- **readme:** Enhance website link formatting for clarity ([ae8384f](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ae8384f))
+
+### 🏡 Chore
+
+- **release:** V1.2.0 ([b1d9aa9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/b1d9aa9))
+- **release:** Update version to v1.3.0-beta.0 in changelog and package.json ([312ac64](https://github.com/NativeMindBrowser/NativeMindExtension/commit/312ac64))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
+## v1.3.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0-beta.17)
+
+### 🚀 Enhancements
+
+- **readme:** Add ProductHunt launch announcement and update demo ([83bf9e9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/83bf9e9))
+- **fonts:** Add Inter and InterDisplay font files and integrate into the project ([fc6749e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/fc6749e))
+- **parser:** Add document cleanup logic for document parser ([1a66f38](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1a66f38))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
 ## v1.2.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.2.0-beta.16...v1.2.0)

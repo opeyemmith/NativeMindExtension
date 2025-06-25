@@ -1,10 +1,18 @@
 import { Readability } from '@mozilla/readability'
 
-export function parseDocument(doc: Document) {
-  const clonedDoc = doc.cloneNode(true) as Document
-  let article = new Readability(clonedDoc, {
-    // debug: import.meta.env.DEV,
-  }).parse()
+import { translationTargetClass, translationTargetDividerClass, translationTargetInnerClass } from '@/entrypoints/content/utils/translator/utils/constant'
+
+import { deepCloneDocumentWithShadowDOM } from './dom'
+
+export async function parseDocument(doc: Document) {
+  const clonedDoc = await deepCloneDocumentWithShadowDOM(
+    doc,
+    {
+      excludeClasses: [translationTargetClass, translationTargetDividerClass, translationTargetInnerClass],
+      excludeTags: ['nativemind-container', 'script', 'style', 'link', 'meta', 'svg', 'canvas', 'iframe', 'object', 'embed'],
+    },
+  )
+  let article = new Readability(clonedDoc, {}).parse()
   if (!article) {
     article = {
       title: document.title,

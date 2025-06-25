@@ -32,7 +32,7 @@
 
 *Finally, **AI that truly belongs to you**. NativeMind delivers cutting-edge intelligence without cloud dependencies—**faster responses, zero tracking, unlimited usage**—all running quietly in your browser while you stay in complete control.*
 
-### 🚀 [Visit Official Website](https://nativemind.app/)
+### 🚀 [Visit Official Website](https://nativemind.app/?utm_source=github)
 
 </div>
 
@@ -45,13 +45,13 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 ### ⚡ First-Time Setup
 
 1. **Pin the Extension**: Click the extension icon and pin it to your toolbar
-2. **Setup Ollama**: Follow the [Ollama Setup Guide](https://nativemind.app/blog/tutorial/ollama-setup) for full AI capabilities
+2. **Setup Ollama**: Follow the [Ollama Setup Guide](https://nativemind.app/blog/tutorial/ollama-setup?utm_source=github) for full AI capabilities
 3. **Start Using**: Click the NativeMind icon in your browser toolbar
 
 <div align="center">
 <img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
 <br>
-<em>For more details, visit our official website: <strong><a href="https://nativemind.app/">nativemind.app</a></strong></em>
+<em>For more details, visit our official website: <strong><a href="https://nativemind.app/?utm_source=github">nativemind.app</a></strong></em>
 </div>
 
 ## ✨ Core Features

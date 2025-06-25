@@ -121,5 +121,5 @@ export default defineBackground(() => {
     }
   })
 
-  logger.info('Hello background!', { id: browser.runtime.id })
+  logger.info('Hello from background!', { id: browser.runtime.id })
 })

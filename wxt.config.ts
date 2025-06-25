@@ -1,6 +1,5 @@
 import tailwindcss from '@tailwindcss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import webfontDownload from 'vite-plugin-webfont-dl'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
@@ -66,9 +65,6 @@ export default defineConfig({
   vite: (_env) => {
     return {
       plugins: [
-        webfontDownload([
-          'https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap',
-        ]),
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),
       ],

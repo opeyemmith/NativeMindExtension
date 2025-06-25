@@ -98,8 +98,12 @@ export class Config<Value, DefaultValue extends Value | undefined> {
         ignoreSetLocalStorage = false
       }
     })
+    const key = this.key
+    const areaKey = this.areaKey
 
     return {
+      get key() { return key },
+      get areaKey() { return areaKey },
       getDefault() {
         return structuredClone(defaultValue) as DefaultValue
       },

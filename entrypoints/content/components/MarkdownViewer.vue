@@ -159,6 +159,7 @@ const marked = new Marked(
   }),
 )
   .use(createDirectives([inlineDirective, blockDirective, containerDirective]))
+  // .use(markedKatex({ throwOnError: false, nonStandard: true })) // TODO: Enable this when we have a way to load KaTeX CSS in the content script
 
 renderer.link = ({ href, title, text }) => {
   const anchor = document.createElement('a')
@@ -208,10 +209,28 @@ watchEffect(async () => {
 
 <style lang="scss">
 @import 'highlight.js/styles/atom-one-light.css';
+@import 'katex/dist/katex.css';
 </style>
 
 <style scoped lang="scss">
 .markdown-viewer {
+  :deep(.katex) {
+    font: 1em / 1.2 KaTeX_Main, "Times New Roman", "Inter";
+    max-width: 100%;
+    overflow-x: auto;
+
+    &::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: #e4e4e7;
+      border-radius: 3px;
+    }
+  }
+
   line-height: 1.25;
   :deep(:not(pre)) {
     overflow-wrap: anywhere;

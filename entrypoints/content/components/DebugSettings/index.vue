@@ -412,7 +412,7 @@ const pulling = ref<{ modelId: string, total: number, completed: number, abort: 
 const webllmCacheStatus = ref<{ modelId: WebLLMSupportedModel, hasCache: boolean }[]>([])
 const defaultQuickActions = userConfig.chat.quickActions.actions.getDefault()
 
-const article = ref<ReturnType<typeof parseDocument>>()
+const article = ref<Awaited<ReturnType<typeof parseDocument>>>()
 const modelProviderOptions = [
   { id: 'ollama' as const, label: 'Ollama' },
   { id: 'web-llm' as const, label: 'Web LLM' },
@@ -442,8 +442,8 @@ const deleteWebLLMModelCache = async (model: WebLLMSupportedModel) => {
   await checkWebLLMCacheStatus()
 }
 
-const parseCurrentDocument = () => {
-  article.value = parseDocument(document)
+const parseCurrentDocument = async () => {
+  article.value = await parseDocument(document)
 }
 
 const onPullModel = async () => {

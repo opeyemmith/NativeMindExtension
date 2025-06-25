@@ -137,7 +137,7 @@ function clearLineClamp(element: HTMLElement) {
 export function clearLineClampForTranslationPiece(parent: HTMLElement) {
   const hostname = getPageHostName()
 
-  if (/^google.com$/.test(hostname)) {
+  if (/^google\.com$/.test(hostname)) {
     // Remove the line clamp of title and abstract block in google search result item.
     if (isHTMLElementNode(parent) && parent.style.webkitLineClamp) {
       clearLineClamp(parent)
@@ -147,14 +147,14 @@ export function clearLineClampForTranslationPiece(parent: HTMLElement) {
     }
   }
 
-  if (/bing.com/.test(hostname)) {
+  if (/bing\.com/.test(hostname)) {
     // Remove the line clamp of the bing search result item.
     if (isHTMLElementNode(parent.parentElement) && parent.parentElement.matches('.b_caption[role="contentinfo"]') && getComputedStyle(parent).webkitLineClamp) {
       clearLineClamp(parent)
     }
   }
 
-  if (/duckduckgo.com/.test(hostname)) {
+  if (/duckduckgo\.com/.test(hostname)) {
     if (isDescendantOf(parent, '[data-result=\'snippet\']')) {
       let target = parent
       if (isHTMLElementNode(parent.parentElement) && parent.parentElement.style.webkitLineClamp) {
@@ -174,13 +174,13 @@ export function clearLineClampForTranslationPiece(parent: HTMLElement) {
     }
   }
 
-  if (/kagi.com/.test(hostname)) {
+  if (/kagi\.com/.test(hostname)) {
     if (parent.matches('.__sri_title_link')) {
       clearLineClamp(parent)
     }
   }
 
-  if (/baidu.com/.test(hostname)) {
+  if (/baidu\.com/.test(hostname)) {
     const title = parent.closest('._paragraph_1bhnz_2')
     if (isHTMLElementNode(title)) {
       clearLineClamp(title)
@@ -193,7 +193,7 @@ export function clearLineClampForTranslationPiece(parent: HTMLElement) {
     }
   }
 
-  if (/reddit.com/.test(hostname)) {
+  if (/reddit\.com/.test(hostname)) {
     if (parent.matches('h3.line-clamp-2')) {
       clearLineClamp(parent)
     }
@@ -215,7 +215,7 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/^google.com$/.test(hostname)) {
+  if (/^google\.com$/.test(hostname)) {
     if (
       isHTMLElementNode(parent.parentElement)
       && parent.parentElement.matches('#appbar div[role=\'listitem\'] > a[role=\'link\'], #appbar div[role=\'listitem\'] > span')
@@ -225,7 +225,7 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/bing.com/.test(hostname)) {
+  if (/bing\.com/.test(hostname)) {
     // Force some elements to be inline.
     // Include:
     //  1. the result element under the bing navigation item
@@ -251,7 +251,7 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/economist.com/.test(hostname)) {
+  if (/economist\.com/.test(hostname)) {
     if (parent.classList.contains('ds-call-to-action')) {
       parent.style.setProperty('height', 'auto', 'important')
     }
@@ -263,26 +263,26 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/perplexity.ai/.test(hostname)) {
+  if (/perplexity\.ai/.test(hostname)) {
     if (isDescendantOf(parent, 'a[role=\'button\']') || isDescendantOf(parent, 'button[type=\'button\']')) {
       return 'inline'
     }
   }
 
-  if (/search.yahoo.com/.test(hostname)) {
+  if (/search\.yahoo\.com/.test(hostname)) {
     if (parent.matches('.btn-more')) {
       translateTextEle.style.setProperty('width', 'auto', 'important')
       translateTextEle.style.setProperty('background-image', 'none', 'important')
     }
   }
 
-  if (/kagi.com/.test(hostname)) {
+  if (/kagi\.com/.test(hostname)) {
     if (parent.matches('.inlineHeader')) {
       return 'inline'
     }
   }
 
-  if (/baidu.com/.test(hostname)) {
+  if (/baidu\.com/.test(hostname)) {
     if (parent.matches('.se-tablink-scroll-wrapper .se-tab-tx')) {
       parent.style.width = 'auto'
       if (parent.parentElement) {
@@ -304,27 +304,27 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/reddit.com/.test(hostname)) {
+  if (/reddit\.com/.test(hostname)) {
     if (parent.matches('.flair-content')) {
       return 'inline'
     }
   }
 
   // This will resolve that some pages wrap the paragraph in a span element.
-  if (/a16z.com|funraniumlabs.com/.test(hostname)) {
+  if (/a16z\.com|funraniumlabs\.com/.test(hostname)) {
     if (parent.matches('p > span, li > span')) {
       return 'block'
     }
   }
 
-  if (/cnbc.com/.test(hostname)) {
+  if (/cnbc\.com/.test(hostname)) {
     if (parent.matches('time[data-testid=\'published-timestamp\'], time[data-testid=\'lastpublished-timestamp\']')) {
       parent.style.whiteSpace = 'normal'
       parent.style.display = 'inline-block'
     }
   }
 
-  if (/friendshipcastle.zip/.test(hostname)) {
+  if (/friendshipcastle\.zip/.test(hostname)) {
     if (parent.closest('nav li')) {
       return 'block'
     }
@@ -583,7 +583,7 @@ export function repairWeridElement(element: HTMLElement) {
   // And the different parts of a single paragraph may locate in different `<span>`.
   // We remove the `<span>` wrapper if it has no effect on the style of the content.
   // Then we can get the correct translation pieces for each paragraph.
-  if (/^openai.com$/.test(hostname)) {
+  if (/^openai\.com$/.test(hostname)) {
     Array.from(element.childNodes).forEach((childNode) => {
       if (
         isHTMLElementNode(childNode)
@@ -600,7 +600,7 @@ export function repairWeridElement(element: HTMLElement) {
 
   // tikalon.com use the empted `<p>` to separate the content.
   // Add a `<br>` after the `<p>` and then we can process the content normally.
-  if (/^tikalon.com$/.test(hostname)) {
+  if (/^tikalon\.com$/.test(hostname)) {
     Array.from(element.childNodes).forEach((childNode) => {
       if (isHTMLElementNode(childNode) && childNode.tagName === 'P' && (!childNode.textContent || childNode.textContent.trim().length === 0)) {
         childNode.insertAdjacentElement('beforebegin', document.createElement('br'))
@@ -633,7 +633,7 @@ export function repairWeridElement(element: HTMLElement) {
 
   // businessinsider.com use the `<br>` to separate the content, but the `<br>` may under some elements like `<strong>`.
   // Move the `<br>` to the right position to make the content can be processed normally.
-  if (/^businessinsider.com$/.test(hostname)) {
+  if (/^businessinsider\.com$/.test(hostname)) {
     Array.from(element.childNodes).forEach((childNode) => {
       if (isHTMLElementNode(childNode) && childNode.querySelector('br') !== null) {
         const isAllChildNodesAreBr = Array.from(childNode.childNodes).every((node) => node.nodeName === 'BR')
@@ -646,7 +646,7 @@ export function repairWeridElement(element: HTMLElement) {
 
   // At duckduckgo.com, we explicit set the menu option element to display as block
   // This avoids all the menu options being combined into a single translation piece.
-  if (/duckduckgo.com/.test(hostname) && element.matches('[data-testid="dropdown-options"] > div:first-child')) {
+  if (/duckduckgo\.com/.test(hostname) && element.matches('[data-testid="dropdown-options"] > div:first-child')) {
     Array.from(element.childNodes).forEach((childNode) => {
       if (isHTMLElementNode(childNode) && childNode.tagName === 'SPAN') {
         childNode.style.display = 'block'
@@ -654,7 +654,7 @@ export function repairWeridElement(element: HTMLElement) {
     })
   }
 
-  if (/google.com/.test(hostname)) {
+  if (/google\.com/.test(hostname)) {
     Array.from(element.childNodes).forEach((childNode) => {
       if (isHTMLElementNode(childNode) && childNode.tagName === 'BLOCK-COMPONENT') {
         childNode.style.display = 'block'
@@ -679,7 +679,7 @@ export function getTextContentFromChildNodes(childNodes: NodeListOf<ChildNode>) 
 export function isSiteSpecificPartOfSentence(element: HTMLElement) {
   const hostName = getPageHostName()
 
-  if (/cnbc.com/.test(hostName)) {
+  if (/cnbc\.com/.test(hostName)) {
     // The text content under this element is a part of the sentence.
     // It can easily be combined by the AI translation model and cause errors.
     // So we need to combined them manually.
@@ -696,19 +696,19 @@ export function isSiteSpecificBlockElement(element: HTMLElement) {
     return isHTMLElementNode(element.parentElement) && element.parentElement.getAttribute('data-testid') === 'UserProfileHeader_Items'
   }
 
-  if (/reddit.com/.test(hostName)) {
+  if (/reddit\.com/.test(hostName)) {
     return ['REPORT-FLOW-PROVIDER', 'COMMENT-COMPOSER-HOST', 'SHREDDIT-ASYNC-LOADER', 'FACEPLATE-TRACKER'].indexOf(element.tagName) > -1
   }
 
-  if (/funraniumlabs.com/.test(hostName)) {
+  if (/funraniumlabs\.com/.test(hostName)) {
     return element.matches('.menu-main-nav-container, .main-menu-more')
   }
 
-  if (/cnbc.com/.test(hostName)) {
+  if (/cnbc\.com/.test(hostName)) {
     return element.matches('time[data-testid=\'published-timestamp\']')
   }
 
-  if (/friendshipcastle.zip/.test(hostName)) {
+  if (/friendshipcastle\.zip/.test(hostName)) {
     return element.matches('article small+span') && element.querySelector('p') !== null
   }
 }

@@ -10,7 +10,7 @@ const BETA_DESC = 'THIS EXTENSION IS FOR BETA TESTING'
 export default defineConfig(
   defu(
     {
-      mode: 'staging',
+      mode: 'beta',
       manifest: {
         name: `__MSG_extName__ ${BETA}`,
         description: `__MSG_extDesc__ ${BETA_DESC}`,

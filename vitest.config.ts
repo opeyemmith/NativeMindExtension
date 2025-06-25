@@ -1,10 +1,12 @@
+import vue from '@vitejs/plugin-vue'
 import { defineConfig } from 'vitest/config'
 import { WxtVitest } from 'wxt/testing'
 
 export default defineConfig({
-  plugins: [WxtVitest()],
+  plugins: [WxtVitest(), vue()],
   test: {
     // exclude e2e tests from unit tests
+    environment: 'happy-dom',
     exclude: [
       '**/node_modules/**',
       '**/dist/**',

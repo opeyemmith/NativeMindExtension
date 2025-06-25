@@ -58,7 +58,7 @@ const inlineDirective: DirectiveConfig = {
     }
     else if (token.meta.name === 'text') {
       const text = unescapeDirectiveText(token.text)
-      const size = token.attrs?.size ? `font-size: ${token.attrs.size};` : ''
+      const size = token.attrs?.size ? `font-size: ${token.attrs.size}px;` : ''
       const weight = token.attrs?.weight ? `font-weight: ${token.attrs.weight};` : ''
       const iconHtml = `<span class="inline-block" style="${size}${weight}">${text}</span>`
       return iconHtml

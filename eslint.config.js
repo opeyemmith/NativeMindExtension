@@ -6,7 +6,7 @@ import globals from 'globals'
 import typescriptEslint from 'typescript-eslint'
 
 export default typescriptEslint.config(
-  { ignores: ['*.d.ts', '**/coverage', '**/.output', '**/.wxt', '**/node_modules', '**/*.test.ts'] },
+  { ignores: ['*.d.ts', '**/coverage', '**/.output', '**/.wxt', '**/node_modules'] },
   {
     plugins: {
       '@stylistic': stylistic,

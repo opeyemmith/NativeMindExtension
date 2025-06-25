@@ -74,5 +74,7 @@ Logger.setLevel('debug')
 export const logger = new Logger()
 export default logger
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-;(self as any).__NATIVEMIND_LOGGER__ = Logger
+if (typeof self !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (self as any).__NATIVEMIND_LOGGER__ = Logger
+}

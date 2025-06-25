@@ -8,7 +8,6 @@ on:
     paths:
       - "package.json"
       - "pnpm-lock.yaml"
-      - ".nvmrc"
   workflow_dispatch:
 
 jobs:

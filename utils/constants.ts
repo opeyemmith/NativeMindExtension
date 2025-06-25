@@ -8,7 +8,7 @@ export const OLLAMA_HOMEPAGE_URL = 'https://ollama.com'
 export const NATIVEMIND_HOMEPAGE_URL = 'https://nativemind.app'
 
 export const INVALID_URLS = [
-  /^https:\/\/chromewebstore.google.com/,
-  /^https:\/\/chrome.google.com\/webstore\//,
+  /^https:\/\/chromewebstore\.google\.com/,
+  /^https:\/\/chrome\.google\.com\/webstore\//,
   /^(?!https?:\/\/).+/,
 ]

@@ -164,7 +164,7 @@ export function clearLineClampForTranslationPiece(parent: HTMLElement) {
     }
   }
 
-  if (/search.yahoo.com/.test(hostname)) {
+  if (/search\.yahoo\.com/.test(hostname)) {
     if (parent.matches('.s-title') && isHTMLElementNode(parent.parentElement) && parent.parentElement.matches('.title')) {
       clearLineClamp(parent.parentElement)
     }
@@ -257,7 +257,7 @@ function handleSiteTweaks(translateTextEle: HTMLElement, parent: HTMLElement): T
     }
   }
 
-  if (/newsletter.eng-leadership.com/.test(hostname)) {
+  if (/newsletter\.eng-leadership\.com/.test(hostname)) {
     if (isDescendantOf(parent, '.button')) {
       parent.style.setProperty('white-space', 'normal', 'important')
     }

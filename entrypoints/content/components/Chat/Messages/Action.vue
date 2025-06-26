@@ -4,9 +4,30 @@
       v-if="message.title"
       class="font-semibold mb-1"
     >
-      <Text size="medium">
+      <Text
+        size="medium"
+      >
         {{ message.title }}
       </Text>
+    </div>
+    <div
+      v-if="message.titleAction"
+      class="font-semibold mb-1 flex items-center gap-2"
+      :class="!message.titleAction.icon ? 'cursor-pointer' : ''"
+      @click="!message.titleAction.icon && Chat.createActionEventDispatcher(message.titleAction.type)(message.titleAction.data, $event.target)"
+    >
+      <Text
+        size="medium"
+        class="wrap-anywhere"
+      >
+        {{ message.titleAction.content }}
+      </Text>
+      <div
+        v-if="message.titleAction.icon"
+        class="cursor-pointer shrink-0"
+        @click="Chat.createActionEventDispatcher(message.titleAction.type)(message.titleAction.data, $event.target)"
+        v-html="getIconSvg(message.titleAction?.icon)"
+      />
     </div>
     <div class="flex flex-col gap-2 items-start">
       <div

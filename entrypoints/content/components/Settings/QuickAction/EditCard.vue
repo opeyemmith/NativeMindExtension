@@ -1,81 +1,97 @@
 <template>
-  <div>
+  <div :class="['rounded-lg', editing ? 'shadow-[0px_0px_0px_1px_#24B96080] p-4' : 'border border-[#DADADA] p-2']">
     <div
       v-if="editing"
       class="flex flex-col gap-2"
     >
-      <Input v-model="editTitle" />
-      <Textarea v-model="editPrompt" />
-    </div>
-    <div v-else>
-      <div class="text-[15px] font-semibold">
-        {{ props.title }}
+      <div class="flex flex-col gap-1">
+        <Text color="secondary">
+          Title
+        </Text>
+        <Text size="small">
+          <Input v-model="editTitle" />
+        </Text>
       </div>
-      <div class="mt-2 text-sm text-gray-600">
-        {{ props.prompt }}
+      <div class="flex flex-col gap-1">
+        <Text color="secondary">
+          Prompt
+        </Text>
+        <Textarea v-model="editPrompt" />
       </div>
-      <div v-if="props.showInContextMenu">
-        Show in context menu
-      </div>
-    </div>
-    <div
-      v-if="editing"
-      class="mt-2 flex gap-2 items-center"
-    >
-      <label class="flex items-center gap-2">
-        <Checkbox
-          v-model="editShowInContextMenu"
-          class="cursor-pointer"
-        />
-        <span class="text-sm text-gray-600">
-          Show in context menu
-        </span>
-      </label>
-      <Button
-        variant="primary"
-        class="p-1"
-        @click="onSave"
-      >
-        Save
-      </Button>
-      <Button
-        variant="secondary"
-        class="p-1"
-        @click="onCancel"
-      >
-        Cancel
-      </Button>
-      <Button
-        variant="secondary"
-        class="p-1"
-        @click="onReset"
-      >
-        Reset
-      </Button>
     </div>
     <div
       v-else
-      class="mt-2 flex gap-2 items-center"
+      class="flex items-center gap-2"
     >
-      <Button
-        class="p-1"
+      <Icon class="w-6 h-6 shrink-0" />
+      <div class="text-sm">
+        {{ props.title }}
+      </div>
+      <IconEdit
+        class="cursor-pointer text-gray-600 shrink-0"
         @click="editing = true"
-      >
-        Edit
-      </Button>
+      />
+    </div>
+    <div
+      v-if="editing"
+      class="mt-2 flex flex-col gap-2 items-center"
+    >
+      <div class="self-start">
+        <label
+          class="flex items-center gap-2 cursor-pointer"
+          @click="editShowInContextMenu = !editShowInContextMenu"
+        >
+          <Checkbox
+            :modelValue="editShowInContextMenu"
+            class="m-1"
+          />
+          <Text color="primary">
+            Show in right-click menu
+          </Text>
+        </label>
+      </div>
+      <div class="flex gap-2 h-8 items-stretch justify-end self-end">
+        <Button
+          variant="secondary"
+          class="p-1 px-[10px]"
+          @click="onCancel"
+        >
+          Cancel
+        </Button>
+        <Button
+          variant="secondary"
+          class="p-1 px-[10px]"
+          @click="onReset"
+        >
+          Reset
+        </Button>
+        <Button
+          variant="primary"
+          class="p-1 px-[10px]"
+          @click="onSave"
+        >
+          Save
+        </Button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue'
+import { computed, ref, watch } from 'vue'
 
+import IconEdit from '@/assets/icons/edit.svg?component'
+import IconQuickAction1 from '@/assets/icons/quick-action-1.svg?component'
+import IconQuickAction2 from '@/assets/icons/quick-action-2.svg?component'
+import IconQuickAction3 from '@/assets/icons/quick-action-3.svg?component'
 import Checkbox from '@/components/Checkbox.vue'
 import Input from '@/components/Input.vue'
 import Textarea from '@/components/Textarea.vue'
 import Button from '@/components/ui/Button.vue'
+import Text from '@/components/ui/Text.vue'
 
 const props = defineProps<{
+  iconIdx?: number
   title: string
   prompt: string
   defaultTitle: string
@@ -89,10 +105,18 @@ const emit = defineEmits<{
   (e: 'update:showInContextMenu', value: boolean): void
 }>()
 
+const icons = [
+  IconQuickAction1,
+  IconQuickAction2,
+  IconQuickAction3,
+]
 const editing = ref(false)
 const editTitle = ref(props.title)
 const editPrompt = ref(props.prompt)
 const editShowInContextMenu = ref(props.showInContextMenu)
+const Icon = computed(() => {
+  return icons[(props.iconIdx || 0) % icons.length]
+})
 
 watch(editing, (newEditing) => {
   if (newEditing) {

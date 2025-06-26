@@ -1,18 +1,20 @@
 <template>
-  <div class="flex items-center gap-2">
-    <input
-      v-model="checked"
-      type="checkbox"
-      :checked="modelValue"
-      class="cursor-pointer"
-      :class="classNames(disabled ? 'pointer-events-none opacity-50' : '')"
-    >
+  <div
+    class="h-4 w-4 rounded-[3px] cursor-pointer"
+    :class="classNames({
+      'bg-[#24B960] shadow-[0px_0px_0px_1px_#24B960]': checked,
+      'bg-bg-component shadow-[0px_0px_0px_1px_#00000014,0px_1px_2px_0px_#0000001F]': !checked,
+    }, props.class)"
+    @click="(checked = !checked)"
+  >
+    <IconTick v-if="checked" />
   </div>
 </template>
 
 <script setup lang="ts">
 import { useVModel } from '@vueuse/core'
 
+import IconTick from '@/assets/icons/checkbox-tick.svg?component'
 import { classNames, type ComponentClassAttr } from '@/utils/vue/utils'
 
 const props = defineProps<{

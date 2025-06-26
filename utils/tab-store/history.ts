@@ -2,6 +2,8 @@ import * as CSS from 'csstype'
 
 import { IconName } from '@/entrypoints/content/utils/markdown/content'
 
+import { SettingsScrollTarget } from '../scroll-targets'
+
 interface BaseMessage {
   role: string
   done: boolean
@@ -43,6 +45,7 @@ export interface TaskMessageV1 extends BaseMessage {
 // Action is a type that defines the structure of interactive buttons/links or anything that can by clicked by the user
 export type ActionV1 = {
   customInput: { prompt: string }
+  openSettings: { scrollTarget?: SettingsScrollTarget }
 }
 
 export type ActionTypeV1 = keyof ActionV1

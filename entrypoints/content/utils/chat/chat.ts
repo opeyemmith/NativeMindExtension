@@ -18,6 +18,8 @@ import { getCurrentTabInfo, getDocumentContentOfTabs, getValidTabs, TabInfo } fr
 
 const log = logger.child('chat')
 
+export type MessageIdScope = 'quickActions'
+
 export class ReactiveHistoryManager extends EventEmitter {
   constructor(public history: Ref<HistoryItemV1[]>, public systemMessage?: string) {
     super()
@@ -35,8 +37,13 @@ export class ReactiveHistoryManager extends EventEmitter {
     history.push(...newHistory)
   }
 
-  private generateId() {
-    return Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
+  generateId(scope?: MessageIdScope) {
+    const randomId = Date.now().toString(36) + Math.random().toString(36).slice(2, 10)
+    return scope ? `${scope}-${randomId}` : randomId
+  }
+
+  getMessagesByScope(scope: MessageIdScope) {
+    return this.history.value.filter((msg) => msg.id.startsWith(scope))
   }
 
   isEmpty() {

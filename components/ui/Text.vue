@@ -1,7 +1,8 @@
 <template>
   <div
     ref="containerRef"
-    :class="classNames('text-container', colorClass, sizeClass, props.class)"
+    :style="{ display: props.display }"
+    :class="classNames(colorClass, sizeClass, props.class)"
   >
     <slot />
   </div>
@@ -15,11 +16,14 @@ import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 type Color = 'primary' | 'secondary' | 'tertiary' | 'disabled' | 'placeholder'
 type Size = 'small' | 'medium' | 'large' | `xs`
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   color?: Color
   size?: Size
   class?: ComponentClassAttr
-}>()
+  display?: 'contents' | 'inline' | 'block'
+}>(), {
+  display: 'contents',
+})
 
 const colorMapping: Record<Color, string> = {
   primary: 'text-text-primary',
@@ -45,9 +49,3 @@ const sizeClass = computed(() => {
 })
 
 </script>
-
-<style scoped>
-.text-container {
-  display: contents;
-}
-</style>

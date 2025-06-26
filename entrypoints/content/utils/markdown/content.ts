@@ -1,4 +1,5 @@
 import IconDownload from '@/assets/icons/md-download.svg?raw'
+import IconEdit from '@/assets/icons/md-edit.svg?raw'
 import IconFileSuccess from '@/assets/icons/md-file-success.svg?raw'
 import IconFind from '@/assets/icons/md-find.svg?raw'
 import IconHighlightBoxed from '@/assets/icons/md-highlight-boxed.svg?raw'
@@ -30,6 +31,7 @@ const iconMap = {
   translationBoxed: IconTranslationBoxed,
   writingBoxed: IconWritingBoxed,
   highlightBoxed: IconHighlightBoxed,
+  edit: IconEdit,
 }
 
 export type IconName = keyof typeof iconMap

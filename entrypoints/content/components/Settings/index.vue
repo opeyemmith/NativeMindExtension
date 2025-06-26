@@ -277,6 +277,33 @@
             </Section>
           </div>
         </Block>
+        <ScrollTarget
+          :autoScrollIntoView="scrollTarget === 'quick-actions-block'"
+          showHighlight
+        >
+          <Block :title="t('settings.quick_actions.title')">
+            <div class="flex flex-col gap-4">
+              <div>
+                <Text
+                  color="secondary"
+                  size="xs"
+                >
+                  {{ t('settings.quick_actions.description') }}
+                </Text>
+              </div>
+              <EditCard
+                v-for="(action, index) in quickActions"
+                :key="index"
+                v-model:title="action.title"
+                v-model:prompt="action.prompt"
+                v-model:showInContextMenu="action.showInContextMenu"
+                :iconIdx="index"
+                :defaultTitle="defaultQuickActions[index].title"
+                :defaultPrompt="defaultQuickActions[index].prompt"
+              />
+            </div>
+          </Block>
+        </ScrollTarget>
         <Block title="Advanced">
           <Section :title="t('settings.translation.title')">
             <Selector
@@ -334,6 +361,7 @@ import { useOllamaStatusStore } from '../../store'
 import { showSettings } from '../../utils/settings'
 import DebugSettings from '../DebugSettings/index.vue'
 import DownloadConfirmModal from '../OllamaDownloadModal.vue'
+import EditCard from '../Settings/QuickAction/EditCard.vue'
 import DownloadWebLLMModel from '../WebLLMDownloadModal.vue'
 import Block from './Block.vue'
 import Section from './Section.vue'
@@ -371,6 +399,8 @@ const isShowDownloadOllamaModal = ref(false)
 const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const translationSystemPromptError = ref('')
 const chatSystemPrompt = userConfig.llm.chatSystemPrompt.toRef()
+const quickActions = userConfig.chat.quickActions.actions.toRef()
+const defaultQuickActions = userConfig.chat.quickActions.actions.getDefault()
 
 const onDownloadOllamaModelFinished = async () => {
   await ollamaStatusStore.updateModelList()

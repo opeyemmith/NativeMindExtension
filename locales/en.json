@@ -22,6 +22,10 @@
     },
     "models": {
       "title": "Active Model"
+    },
+    "quick_actions": {
+      "title": "Customize Quick Actions",
+      "description": "Set up Quick Actions to run your favorite prompts faster -- from New Chat or the right-click menu."
     }
   },
   "chat": {

@@ -45,24 +45,6 @@
             </div>
           </div>
         </Block>
-        <ScrollTarget
-          :autoScrollIntoView="scrollTarget === 'quick-actions-block'"
-          showHighlight
-        >
-          <Block title="Quick Actions">
-            <div class="flex gap-2 flex-col justify-start items-start text-xs">
-              <EditCard
-                v-for="(action, index) in quickActions"
-                :key="index"
-                v-model:title="action.title"
-                v-model:prompt="action.prompt"
-                v-model:showInContextMenu="action.showInContextMenu"
-                :defaultTitle="defaultQuickActions[index].title"
-                :defaultPrompt="defaultQuickActions[index].prompt"
-              />
-            </div>
-          </Block>
-        </ScrollTarget>
         <Block title="Models">
           <div class="flex gap-3 justify-start items-center">
             Provider
@@ -370,7 +352,6 @@ import { ref, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import Input from '@/components/Input.vue'
-import ScrollTarget from '@/components/ScrollTarget.vue'
 import Selector from '@/components/Selector.vue'
 import Switch from '@/components/Switch.vue'
 import { parseDocument } from '@/utils/document-parser'
@@ -382,7 +363,6 @@ import { SettingsScrollTarget } from '@/utils/scroll-targets'
 import { getUserConfig } from '@/utils/user-config'
 
 import { pullOllamaModel } from '../../utils/llm'
-import EditCard from '../Settings/QuickAction/EditCard.vue'
 import Block from './Block.vue'
 
 defineProps<{
@@ -404,13 +384,11 @@ const writingToolsRewritePrompt = userConfig.writingTools.rewrite.systemPrompt.t
 const writingToolsProofreadPrompt = userConfig.writingTools.proofread.systemPrompt.toRef()
 const writingToolsListPrompt = userConfig.writingTools.list.systemPrompt.toRef()
 const writingToolsSparklePrompt = userConfig.writingTools.sparkle.systemPrompt.toRef()
-const quickActions = userConfig.chat.quickActions.actions.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
 const translationSystemPromptError = ref('')
 const newModelId = ref('')
 const pulling = ref<{ modelId: string, total: number, completed: number, abort: () => void, status: string, error?: string }[]>([])
 const webllmCacheStatus = ref<{ modelId: WebLLMSupportedModel, hasCache: boolean }[]>([])
-const defaultQuickActions = userConfig.chat.quickActions.actions.getDefault()
 
 const article = ref<Awaited<ReturnType<typeof parseDocument>>>()
 const modelProviderOptions = [

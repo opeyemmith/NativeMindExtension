@@ -113,10 +113,12 @@ import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
 import Button from '@/components/ui/Button.vue'
 import {
+  ActionEvent,
   Chat,
   initChatSideEffects,
 } from '@/entrypoints/content/utils/chat/index'
 
+import { showSettings } from '../../utils/settings'
 import MarkdownViewer from '../MarkdownViewer.vue'
 import TabSelector from '../TabSelector.vue'
 import MessageAction from './Messages/Action.vue'
@@ -138,7 +140,11 @@ initChatSideEffects()
 
 const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   if (actionEvent.action === 'customInput') {
-    chat.ask(actionEvent.data.prompt)
+    chat.ask((actionEvent as ActionEvent<'customInput'>).data.prompt)
+  }
+  else if (actionEvent.action === 'openSettings') {
+    const scrollTarget = (actionEvent as ActionEvent<'openSettings'>).data.scrollTarget
+    showSettings(true, scrollTarget)
   }
   else {
     throw new Error(`Unknown action: ${actionEvent.action}`)

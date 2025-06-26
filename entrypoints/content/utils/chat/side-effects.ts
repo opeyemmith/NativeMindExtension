@@ -9,13 +9,18 @@ import { Chat } from './chat'
 async function appendOrUpdateQuickActionsIfNeeded(chat: Chat) {
   const userConfig = await getUserConfig()
   const actionsRef = userConfig.chat.quickActions.actions.toRef()
-  const icons = ['summarizeBoxed', 'highlightBoxed', 'writingBoxed'] as const
-  const actions: ActionMessageV1['actions'] = actionsRef.value.map((action, index) => ({
-    type: 'customInput' as const,
-    data: { prompt: action.prompt },
-    content: action.title,
-    icon: icons[index % icons.length],
-  }))
+  const icons = ['summarizeBoxed', 'highlightBoxed', 'searchBoxed'] as const
+  const actions: ActionMessageV1['actions'] = actionsRef.value.map((action, index) => {
+    const defaultTitle = actionsRef.defaultValue[index]?.title
+    const defaultPrompt = actionsRef.defaultValue[index]?.prompt
+    const isDefault = action.title === defaultTitle && action.prompt === defaultPrompt
+    return {
+      type: 'customInput' as const,
+      data: { prompt: action.prompt },
+      content: action.title,
+      icon: isDefault ? icons[index % icons.length] : 'quickActionModifiedBoxed',
+    }
+  })
   if (chat.historyManager.isEmpty()) {
     const actionMessage = chat.historyManager.appendActionMessage(actions)
     actionMessage.titleAction = {

@@ -181,14 +181,6 @@ const ask = async () => {
   userInput.value = ''
 }
 
-// const displayTimestamp = (timestamp: number) => {
-//   return dayjs(timestamp).tz(dayjs.tz.guess()).format('hh:mm a')
-// }
-
-// const displayFullTime = (timestamp: number) => {
-//   return dayjs(timestamp).tz(dayjs.tz.guess()).format('YYYY-MM-DD hh:mm a')
-// }
-
 onMounted(() => {
   scrollContainerRef.value?.snapToBottom()
 })

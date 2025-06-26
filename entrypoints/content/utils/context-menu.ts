@@ -12,12 +12,12 @@ export async function setTranslationMenuTargetLanguage(currentEnabled: boolean, 
   try {
     if (currentEnabled) {
       await c2bRpc.updateContextMenu('native-mind-page-translate', {
-        title: `NativeMind: Show Original`,
+        title: `Show Original`,
       })
     }
     else {
       await c2bRpc.updateContextMenu('native-mind-page-translate', {
-        title: `NativeMind: Translate this page into ${languageName}`,
+        title: `Translate this page into ${languageName}`,
       })
     }
   }
@@ -35,7 +35,7 @@ async function initQuickActionsContextMenu() {
     const showInContextMenuActions = actions.filter((action) => action.showInContextMenu)
     if (showInContextMenuActions.length > 0) {
       await c2bRpc.createContextMenu(parentId, {
-        title: 'NativeMind Quick Actions',
+        title: 'Quick Actions',
         contexts: ['all'],
       })
       for (let i = 0; i < actions.length; i++) {

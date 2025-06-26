@@ -81,9 +81,10 @@
 import { computed, ref, watch } from 'vue'
 
 import IconEdit from '@/assets/icons/edit.svg?component'
-import IconQuickAction1 from '@/assets/icons/quick-action-1.svg?component'
-import IconQuickAction2 from '@/assets/icons/quick-action-2.svg?component'
-import IconQuickAction3 from '@/assets/icons/quick-action-3.svg?component'
+import IconHighlightBoxed from '@/assets/icons/md-highlight-boxed.svg?component'
+import IconSearchBoxed from '@/assets/icons/md-search-boxed.svg?component'
+import IconSummarizeBoxed from '@/assets/icons/md-summarize-boxed.svg?component'
+import IconQuickModified from '@/assets/icons/quick-action-modified.svg?component'
 import Checkbox from '@/components/Checkbox.vue'
 import Input from '@/components/Input.vue'
 import Textarea from '@/components/Textarea.vue'
@@ -106,15 +107,18 @@ const emit = defineEmits<{
 }>()
 
 const icons = [
-  IconQuickAction1,
-  IconQuickAction2,
-  IconQuickAction3,
+  IconSummarizeBoxed,
+  IconHighlightBoxed,
+  IconSearchBoxed,
 ]
 const editing = ref(false)
 const editTitle = ref(props.title)
 const editPrompt = ref(props.prompt)
 const editShowInContextMenu = ref(props.showInContextMenu)
 const Icon = computed(() => {
+  if (props.defaultPrompt !== props.prompt || props.defaultTitle !== props.title) {
+    return IconQuickModified
+  }
   return icons[(props.iconIdx || 0) % icons.length]
 })
 

@@ -1,6 +1,38 @@
 # Changelog
 
 
+## v1.3.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.3...v1.3.0-beta.4)
+
+### 🚀 Enhancements
+
+- **readme:** Add UTM source parameter to website links ([56a8356](https://github.com/NativeMindBrowser/NativeMindExtension/commit/56a8356))
+- **test:** Playwright tests for action button functionality ([d9aa863](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d9aa863))
+- **tests:** Add vitest for unit test ([134a8e3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/134a8e3))
+- **tests:** Update unit test workflow to output results to summary ([1a3ddf7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1a3ddf7))
+- **workflow:** Include .nvmrc in security scan paths ([9e48ecf](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9e48ecf))
+- **workflow:** Redirect npm audit and outdated results to summary ([7dc4c5e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7dc4c5e))
+- **workflow:** Create codeql.yml ([1bf0479](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1bf0479))
+- **settings:** Add new quick action settings ([ae064ce](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ae064ce))
+
+### 🩹 Fixes
+
+- **security:** Fix vulnerability alerts ([72b3ea6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/72b3ea6))
+- **translator:** Regexp for host matching ([f192f31](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f192f31))
+
+### 🏡 Chore
+
+- **release:** Disable firefox build ([7327481](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7327481))
+- **tests:** Update test utils ([0ad59b8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0ad59b8))
+- **workflow:** Remove .nvmrc from security scan paths ([a55ca6a](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a55ca6a))
+- **workflow:** Remove security scan workflow file ([c56c468](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c56c468))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Xukecheng <kecheng@xmind.org>
+
 ## v1.3.0-beta.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.2...v1.3.0-beta.3)

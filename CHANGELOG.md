@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v1.3.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.5...v1.3.0-beta.6)
+
+### 🚀 Enhancements
+
+- **settings:** Update feedback messages ([0c81af1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0c81af1))
+- **i18n:** Add localization support for multiple languages ([7858b2e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7858b2e))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.5
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.4...v1.3.0-beta.5)

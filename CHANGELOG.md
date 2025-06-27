@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.6...v1.3.0-beta.7)
+
+### 🚀 Enhancements
+
+- **i18n:** Improve translations in multiple languages ([3b647f7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3b647f7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.6
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.5...v1.3.0-beta.6)

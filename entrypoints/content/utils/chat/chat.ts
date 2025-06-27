@@ -383,7 +383,7 @@ export class Chat {
       }
       else if (progress.type === 'page-finished') {
         if (msgs[progress.url]) {
-          msgs[progress.url].content = makeParagraph(`Reading: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 })
+          msgs[progress.url].content = makeParagraph(`${t('chat.messages.reading')}: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 })
           msgs[progress.url].done = true
         }
       }

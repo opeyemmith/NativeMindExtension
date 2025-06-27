@@ -90,7 +90,7 @@ import Input from '@/components/Input.vue'
 import Textarea from '@/components/Textarea.vue'
 import Button from '@/components/ui/Button.vue'
 import Text from '@/components/ui/Text.vue'
-import { useI18n } from '@/utils/i18n'
+import { useI18n } from '@/utils/i18n/index'
 
 const props = defineProps<{
   iconIdx?: number

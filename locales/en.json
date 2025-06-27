@@ -25,7 +25,15 @@
     },
     "quick_actions": {
       "title": "Customize Quick Actions",
-      "description": "Set up Quick Actions to run your favorite prompts faster -- from New Chat or the right-click menu."
+      "description": "Set up Quick Actions to run your favorite prompts faster -- from New Chat or the right-click menu.",
+      "edit": {
+        "title": "Title",
+        "prompt": "Prompt",
+        "show_in_context_menu": "Show in right-click menu",
+        "cancel": "Cancel",
+        "reset": "Reset",
+        "save": "Save"
+      }
     }
   },
   "chat": {

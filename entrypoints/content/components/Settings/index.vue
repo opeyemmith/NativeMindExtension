@@ -314,11 +314,24 @@
             />
           </Section>
         </Block>
-        <div class="font-light text-[10px] text-gray-500 mt-4">
-          📧 Need help? Reach out to us at <a
-            href="mailto:hi@nativemind.app"
-            class="underline"
-          >hi@nativemind.app</a>
+        <div class="font-light text-[10px] text-gray-500 flex flex-col gap-1">
+          <div>
+            📧Questions or feedback? Join our <a
+              href="https://discord.com/invite/cx5n4Jzs57"
+              target="_blank"
+              class="underline"
+            >Discord</a> or email us at <a
+              href="mailto:hi@nativemind.app"
+              class="underline"
+            >hi@nativemind.app</a>.
+          </div>
+          <div>
+            💼Want to use it at work? <a
+              href="https://docs.google.com/forms/d/e/1FAIpQLSf-U7Bur7670tnKnxUcO-7T1GsP-6YlaEeA3EA0fE9T3XQfAQ/viewform"
+              target="_blank"
+              class="underline"
+            >Join the waitlist</a> for enterprise updates.
+          </div>
         </div>
       </div>
       <DebugSettings :scrollTarget="scrollTarget" />

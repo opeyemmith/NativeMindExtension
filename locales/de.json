@@ -1,10 +1,10 @@
 {
   "chat": {
     "messages": {
-      "thought_for_seconds": "Gedanken für {Second} Second | \nGedanken für {zweite} Sekunden",
       "thinking": "Denken...",
       "reading": "Lektüre",
-      "search_locally": "Lokal im Browser suchen…"
+      "search_locally": "Lokal im Browser suchen…",
+      "thought_for_seconds": "Gedanke für {second} Sekunde | Gedanke für {second} Sekunden"
     },
     "quick_actions": {
       "title": "Schnelle Aktionen"
@@ -17,6 +17,17 @@
       "tab_selector": {
         "all_tabs": "Alle öffnen Registerkarten"
       }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "Wichtige Erkenntnisse hervorheben"
+      },
+      "search_more": {
+        "title": "Suchen Sie nach weiteren Inhalten wie diesem"
+      },
+      "summarize_page_content": {
+        "title": "Seite zusammenfassen"
+      }
     }
   },
   "onboarding": {
@@ -25,7 +36,7 @@
       "title": "KI On-Device, nur für Sie gebaut"
     },
     "guide": {
-      "alread_installed": "Bereits installiert und Ollama laufen?",
+      "already_installed": "Bereits installiert und Ollama laufen?",
       "features": {
         "1": "Führen Sie fortschrittliche Modelle wie Deepseek, Qwen, Lama aus",
         "2": "Passen Sie die Modelle mit voller Steuerung an und wechseln Sie sie",
@@ -110,7 +121,8 @@
     "general": {
       "system_language": "Systemsprache",
       "title": "Allgemein"
-    }
+    },
+    "title": "Einstellungen"
   },
   "context_menu": {
     "quick_actions": {

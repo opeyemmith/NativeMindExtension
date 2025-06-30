@@ -17,6 +17,17 @@
       "tab_selector": {
         "all_tabs": "Tất cả các tab mở"
       }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "Làm nổi bật những hiểu biết quan trọng"
+      },
+      "search_more": {
+        "title": "Tìm kiếm thêm nội dung như thế này"
+      },
+      "summarize_page_content": {
+        "title": "Tóm tắt trang"
+      }
     }
   },
   "onboarding": {
@@ -25,7 +36,7 @@
       "title": "AI trên thiết bị, được xây dựng chỉ dành cho bạn"
     },
     "guide": {
-      "alread_installed": "Bạn đã cài đặt và chạy Ollama?",
+      "already_installed": "Bạn đã cài đặt và chạy Ollama?",
       "features": {
         "1": "Chạy các mô hình nâng cao như Deepseek, Qwen, Llama",
         "2": "Tùy chỉnh và chuyển đổi các mô hình với toàn bộ điều khiển",
@@ -57,7 +68,7 @@
     "choose_model": "Chọn mô hình",
     "download": "Tải xuống",
     "feedback": {
-      "contact_msg": "Có câu hỏi hay phản hồi? Tham gia {discord} của chúng tôi hoặc gửi email cho chúng tôi tại {email}.",
+      "contact_msg": "📧 Có câu hỏi hay phản hồi? Tham gia {discord} của chúng tôi hoặc gửi email cho chúng tôi tại {email}.",
       "join_waitlist": "💼 Muốn sử dụng tại nơi làm việc? {join_waitlist_link} để nhận cập nhật doanh nghiệp.",
       "join_waitlist_link": "Tham gia danh sách chờ",
       "discord": "Discord"
@@ -110,7 +121,8 @@
     "general": {
       "system_language": "Ngôn ngữ hệ thống",
       "title": "Tổng quan"
-    }
+    },
+    "title": "Cài đặt"
   },
   "context_menu": {
     "quick_actions": {

@@ -72,7 +72,7 @@
           class="font-normal text-[11px] leading-5"
         >
           <div class="flex gap-1">
-            <span>{{ t('onboarding.guide.alread_installed') }}</span>
+            <span>{{ t('onboarding.guide.already_installed') }}</span>
             <button
               class="whitespace-nowrap hover:text-gray-800 text-blue-500 cursor-pointer"
               @click="onClickOpenSettings"

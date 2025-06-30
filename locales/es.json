@@ -1,131 +1,143 @@
 {
   "chat": {
-    "messages": {
-      "thought_for_seconds": "Pensamiento para {segundo} segundo | \nPensamiento por {segundo} segundos",
-      "thinking": "Pensamiento...",
-      "reading": "Lectura",
-      "search_locally": "Buscando localmente en el navegador ..."
-    },
-    "quick_actions": {
-      "title": "Acciones rápidas"
-    },
     "input": {
       "placeholder": {
-        "ask_anything": "Pregunta cualquier cosa ...",
-        "ask_follow_up": "Pregunte de seguimiento ..."
+        "ask_anything": "Pregunta lo que quieras...",
+        "ask_follow_up": "Haz una pregunta de seguimiento..."
       },
       "tab_selector": {
         "all_tabs": "Todas las pestañas abiertas"
       }
+    },
+    "messages": {
+      "reading": "Leyendo",
+      "search_locally": "Buscando localmente en el navegador...",
+      "thinking": "Pensando...",
+      "thought_for_seconds": "Pensando durante {second} segundo | Pensando durante {second} segundos"
+    },
+    "quick_actions": {
+      "title": "Acciones Rápidas"
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "Resalta las ideas clave"
+      },
+      "search_more": {
+        "title": "Busca más contenido como este"
+      },
+      "summarize_page_content": {
+        "title": "Resumir la página"
+      }
     }
+  },
+  "context_menu": {
+    "quick_actions": {
+      "title": "Acciones Rápidas"
+    },
+    "translation": {
+      "show_original": "Mostrar original",
+      "translate_page_into": "Traducir esta página a {language}"
+    }
+  },
+  "errors": {
+    "model_not_found": "¡Ups! Algo salió mal. Por favor, verifica tu conexión de Ollama en la configuración e inténtalo de nuevo.",
+    "model_request_error": "¡Ups! Algo salió mal. Por favor, verifica tu conexión de Ollama en la configuración e inténtalo de nuevo.",
+    "model_request_timeout": "Tiempo de espera agotado. Por favor verifica tu conexión de Ollama o considera iniciar una nueva sesión, ya que los contextos largos pueden afectar los tiempos de respuesta.",
+    "timeout_error": "La operación agotó el tiempo de espera: {message}",
+    "unknown_error": "Se produjo un error inesperado: {message}"
   },
   "onboarding": {
     "banner": {
-      "description": "Privado y seguro, con características potentes que se ejecutan completamente en su dispositivo.",
-      "title": "AI en el dispositivo, construido solo para ti"
+      "description": "Privado y seguro, con funciones potentes que se ejecutan completamente en tu dispositivo.",
+      "title": "IA en el dispositivo, creada solo para ti"
     },
     "guide": {
-      "alread_installed": "¿Ya instalado y ejecutado Ollama?",
+      "already_installed": "¿Ya instalaste y ejecutaste Ollama?",
       "features": {
-        "1": "Ejecutar modelos avanzados como Deepseek, Qwen, Llama",
-        "2": "Personalizar y cambiar modelos con control completo",
-        "3": "Sus datos permanecen privados, en su dispositivo"
+        "1": "Ejecuta modelos avanzados como DeepSeek, Qwen, Llama",
+        "2": "Personaliza y cambia modelos con control total",
+        "3": "Tus datos permanecen privados, en tu dispositivo"
       },
-      "follow_our_tutorial": "Siga nuestra guía de instalación",
+      "follow_our_tutorial": "Sigue nuestra guía de instalación",
       "get_ollama": "Obtener Ollama",
-      "install_desc": "Instale Ollama para configurar su IA local.",
-      "need_help": "¿Necesitar ayuda?",
-      "ollama_desc": "Desbloquee el poder de IA local completo con Ollama.",
+      "install_desc": "Instala Ollama para configurar tu IA local.",
+      "need_help": "¿Necesitas ayuda?",
+      "ollama_desc": "Desbloquea todo el poder de la IA local con Ollama.",
       "setup": "Configuración",
-      "step1": "Paso 1"
+      "step1": "PASO 1"
     },
     "webllm_tutorial": {
-      "desc": "Use un modelo liviano (qwen 0.6b) justo en su navegador, sin configuración, sin espera.",
-      "not_support_webllm": "WEBLLM no es compatible con su dispositivo",
-      "start_with_webllm": "Comience con el modelo web",
-      "title": "¿No está listo para instalar? \nPruébalo instantáneamente."
+      "desc": "Usa un modelo ligero (Qwen 0.6b) directamente en tu navegador — sin configuración, sin espera.",
+      "not_support_webllm": "WebLLM no es compatible con tu dispositivo",
+      "start_with_webllm": "Comenzar con Modelo Web",
+      "title": "¿No estás listo para instalar? Pruébalo al instante."
     },
     "welcome_msg": {
-      "title": "👋 Bienvenido a **NativeMind**",
-      "body": "Nativemind es una extensión del navegador AI de privacidad que lo ayuda a chatear, buscar y traducir, todo impulsado por modelos de idiomas en el dispositivo.\n\n\nEsto es lo que puedes hacer con Nativemind:\n\n\n\n- Chatea en múltiples pestañas para realizar un seguimiento de diferentes páginas.\n\n- Busque en la web directamente dentro del chat para obtener más contexto.\n\n- Haga clic derecho para traducir cualquier parte de la página al instante.\n\n- Cambie o descargue modelos en cualquier momento en la configuración.\n\n\nPuede comenzar probando las acciones rápidas a continuación."
+      "body": "NativeMind es una extensión de navegador con IA que prioriza la privacidad y te ayuda a chatear, buscar y traducir — todo impulsado por modelos de lenguaje en el dispositivo.\n\nEsto es lo que puedes hacer con NativeMind:\n\n- Chatear en múltiples pestañas para hacer seguimiento de diferentes páginas.\n- Buscar en la web directamente dentro del chat para más contexto.\n- Hacer clic derecho para traducir cualquier parte de la página al instante.\n- Cambiar o descargar modelos en cualquier momento en Configuración.\n\nPuedes empezar probando las acciones rápidas a continuación.",
+      "title": "👋 Bienvenido a **NativeMind**"
     }
   },
   "settings": {
     "advanced": {
       "title": "Avanzado"
     },
-    "choose_model": "Elija modelo",
+    "choose_model": "Elegir Modelo",
     "download": "Descargar",
     "feedback": {
-      "contact_msg": "📧Los cuestiones o comentarios? \nÚnase a nuestro {Discord} o envíenos un correo electrónico a {email}.",
-      "join_waitlist": "💼 ¡¿Lo usa en el trabajo? \n{Join_waitlist_link} para actualizaciones empresariales.",
-      "join_waitlist_link": "Únete a la lista de espera",
-      "discord": "Discordia"
+      "contact_msg": "📧¿Preguntas o comentarios? Únete a nuestro {discord} o envíanos un email a {email}.",
+      "discord": "Discord",
+      "join_waitlist": "💼¿Quieres usarlo en el trabajo? {join_waitlist_link} para actualizaciones empresariales.",
+      "join_waitlist_link": "Únete a la lista de espera"
+    },
+    "general": {
+      "system_language": "Idioma del Sistema",
+      "title": "General"
     },
     "get_ollama": "Obtener Ollama",
     "models": {
-      "title": "Modelo activo"
+      "title": "Modelo Activo"
     },
     "ollama": {
-      "already_installed": "¿Ya instalado y ejecutado Ollama?",
+      "already_installed": "¿Ya instalaste y ejecutaste Ollama?",
       "connected": "Conectado",
-      "connection_error": "Error de conexión",
-      "downloadable_model": "Modelo descargable",
-      "follow_guide": "Siga nuestra guía de instalación",
-      "learn_more_about_models": "Obtenga más información sobre los modelos",
-      "need_help": "¿Necesitar ayuda?",
+      "connection_error": "Error de Conexión",
+      "downloadable_model": "Modelo Descargable",
+      "follow_guide": "Sigue nuestra guía de instalación",
+      "learn_more_about_models": "Aprende más sobre modelos",
+      "need_help": "¿Necesitas ayuda?",
       "re_scan": "Volver a escanear",
-      "server_address": "Dirección del servidor",
+      "server_address": "Dirección del Servidor",
       "setup": "Configuración",
       "unconnected": "Desconectado"
     },
     "prompts": {
-      "chat_system_prompt": "Solicitante del sistema de chat",
-      "title": "Inmediato",
-      "translation_system_prompt": "Solicitante del sistema de traductor"
+      "chat_system_prompt": "Sistema de Indicaciones de Chat",
+      "title": "Instrucciones",
+      "translation_system_prompt": "Instrucción del Sistema de Traducción"
     },
     "provider": {
-      "title": "Proveedor de modelos"
+      "title": "Proveedor de Modelo"
     },
     "provider_model": {
-      "title": "Proveedor"
+      "title": "Proveedor y Modelo"
     },
     "quick_actions": {
-      "description": "Configure acciones rápidas para ejecutar sus indicaciones favoritas más rápido, desde el nuevo chat o el menú de clic derecho.",
+      "description": "Configura Acciones Rápidas para ejecutar tus instrucciones favoritas más rápido -- desde Nuevo Chat o el menú contextual.",
       "edit": {
         "cancel": "Cancelar",
-        "prompt": "Inmediato",
-        "reset": "Reiniciar",
-        "save": "Ahorrar",
-        "show_in_context_menu": "Mostrar en el menú de clic derecho",
+        "prompt": "Instrucción",
+        "reset": "Restablecer",
+        "save": "Guardar",
+        "show_in_context_menu": "Mostrar en menú contextual",
         "title": "Título"
       },
-      "title": "Personalizar acciones rápidas"
+      "title": "Personalizar Acciones Rápidas"
     },
     "test": "Prueba",
     "translation": {
-      "title": "Lenguaje de traducción"
+      "title": "Idioma de Traducción"
     },
-    "webllm-desc": "Usar WEBLLM para una prueba rápida. \nPara obtener soporte de modelo completo y mejor rendimiento, instale Ollama.",
-    "general": {
-      "system_language": "Lenguaje del sistema",
-      "title": "General"
-    }
-  },
-  "context_menu": {
-    "quick_actions": {
-      "title": "Acciones rápidas"
-    },
-    "translation": {
-      "show_original": "Mostrar original",
-      "translate_page_into": "Traducir esta página en {idioma}"
-    }
-  },
-  "errors": {
-    "model_not_found": "¡Ups! \nAlgo salió mal. \nConsulte su conexión Ollama en la configuración y vuelva a intentarlo.",
-    "model_request_error": "¡Ups! \nAlgo salió mal. \nConsulte su conexión Ollama en la configuración y vuelva a intentarlo.",
-    "model_request_timeout": "\"Solicite tiempo de espera, consulte su conexión Ollama o considere comenzar una nueva sesión, ya que los contextos largos pueden afectar los tiempos de respuesta\".",
-    "timeout_error": "Operación Tiempo de tiempo fuera: {message}",
-    "unknown_error": "Se produjo un error inesperado: {message}"
+    "webllm-desc": "Usando WebLLM para una prueba rápida. Para soporte completo de modelos y mejor rendimiento, por favor instala Ollama.",
+    "title": "Configuración"
   }
 }

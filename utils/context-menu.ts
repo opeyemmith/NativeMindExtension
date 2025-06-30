@@ -146,7 +146,6 @@ export class ContextMenuManager {
   }
 
   async updateContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) {
-    log.debug('Updating context menu', id, props)
     if (!this.currentMenuMap.has(id)) {
       log.warn('Context menu with id does not exist, creating instead', id)
       await this.createContextMenu(id, props)
@@ -169,11 +168,11 @@ export class ContextMenuManager {
     r.title = props.title
     r.contexts = props.contexts as ContextTypeList
     r.visible = props.visible ?? true
+    log.debug('Updating context menu', id, props, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()
   }
 
   async createContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) {
-    log.debug('Creating context menu', id, props)
     if (this.currentMenuMap.has(id)) {
       log.warn('Context menu with id already exists, updating instead', id)
       await this.updateContextMenu(id, props)
@@ -192,17 +191,26 @@ export class ContextMenuManager {
     this.currentMenuMap.set(id, item)
     if (parentId) {
       const parentItem = this.currentMenuMap.get(parentId)
-      if (parentItem) {
+      if (!parentItem) {
+        log.error('Parent context menu not found for', id, 'parentId:', parentId, structuredClone(this.currentMenuMap))
+      }
+      else {
         parentItem.children.push(id)
       }
     }
+    log.debug('Creating context menu', id, props, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()
   }
 
-  private recursiveDeleteContextMenu(id: ContextMenuId) {
+  private recursiveDeleteContextMenu(id: ContextMenuId, deleted = new Set<ContextMenuId>()) {
+    if (deleted.has(id)) {
+      log.error('Recursive deletion detected for context menu', id, structuredClone(this.currentMenuMap))
+      return
+    }
     const item = this.currentMenuMap.get(id)
     if (!item) return
     this.currentMenuMap.delete(id)
+    deleted.add(id)
     if (item.children.length) {
       for (const childId of item.children) {
         this.recursiveDeleteContextMenu(childId)
@@ -211,12 +219,14 @@ export class ContextMenuManager {
   }
 
   async deleteContextMenu(id: ContextMenuId) {
+    log.debug('Deleting context menu', id, structuredClone(this.currentMenuMap))
     const item = this.currentMenuMap.get(id)
     this.recursiveDeleteContextMenu(id)
     const parentItem = this.currentMenuMap.get(item?.parentId)
     if (parentItem) {
       parentItem.children = parentItem.children.filter((childId) => childId !== id)
     }
+    log.debug('Deleting context menu finished', id, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()
   }
 }

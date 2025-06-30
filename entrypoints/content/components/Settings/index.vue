@@ -14,7 +14,7 @@
           class="justify-self-center font-medium text-[15px] cursor-default"
           @click="onClickTitle"
         >
-          Settings
+          {{ t('settings.title') }}
         </div>
         <div class="justify-self-end">
           <IconClose
@@ -301,11 +301,12 @@
             <EditCard
               v-for="(action, index) in quickActions"
               :key="index"
-              v-model:title="action.title"
+              v-model:title="action.editedTitle"
               v-model:prompt="action.prompt"
               v-model:showInContextMenu="action.showInContextMenu"
+              v-model:edited="action.edited"
               :iconIdx="index"
-              :defaultTitle="defaultQuickActions[index].title"
+              :defaultTitle="t(defaultQuickActions[index].defaultTitleKey)"
               :defaultPrompt="defaultQuickActions[index].prompt"
             />
           </div>

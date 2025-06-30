@@ -32,7 +32,14 @@ async function initQuickActionsContextMenu() {
   const i18n = await useGlobalI18n()
   const userConfig = await getUserConfig()
   const actions = userConfig.chat.quickActions.actions.toRef()
-  watch(() => [actions, i18n.locale] as const, async ([actions]) => {
+  watch(() => {
+    const watchValues = actions.value.map((action) => {
+      return [action.edited, action.editedTitle, action.showInContextMenu, action.prompt]
+    }).flat()
+    return JSON.stringify([...watchValues, i18n.locale.value])
+  }, async (_, oldV) => {
+    // don't update context menu when the document is not visible, otherwise all tabs will update in the same time
+    if (oldV && document.visibilityState !== 'visible') return
     const parentId = 'native-mind-quick-actions'
     await c2bRpc.deleteContextMenu(parentId).catch((err) => log.debug(err))
     const showInContextMenuActions = actions.value.filter((action) => action.showInContextMenu)
@@ -45,13 +52,13 @@ async function initQuickActionsContextMenu() {
         const action = actions.value[i]
         if (!action.showInContextMenu) continue
         await c2bRpc.createContextMenu(`native-mind-quick-actions-${i}`, {
-          title: action.title,
+          title: action.edited ? action.editedTitle : i18n.t(action.defaultTitleKey),
           contexts: ['all'],
           parentId,
         })
       }
     }
-  }, { deep: true, immediate: true })
+  }, { immediate: true })
 }
 
 export async function initContextMenu() {

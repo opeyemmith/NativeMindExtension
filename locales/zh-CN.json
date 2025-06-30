@@ -42,8 +42,8 @@
       }
     },
     "feedback": {
-      "contact_msg": "📧有问题或反馈？加入我们的{discord}或发送邮件至{email}。",
-      "join_waitlist": "💼想在工作中使用？{join_waitlist_link}获取企业版更新。",
+      "contact_msg": "📧 有问题或反馈？加入我们的{discord}或发送邮件至{email}。",
+      "join_waitlist": "💼 想在工作中使用？{join_waitlist_link}获取企业版更新。",
       "join_waitlist_link": "加入等待名单",
       "discord": "Discord"
     },
@@ -59,7 +59,8 @@
     "general": {
       "system_language": "系统语言",
       "title": "常规设置"
-    }
+    },
+    "title": "设置"
   },
   "chat": {
     "messages": {
@@ -79,6 +80,17 @@
       "tab_selector": {
         "all_tabs": "所有已打开标签页"
       }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "突出关键洞察"
+      },
+      "search_more": {
+        "title": "搜索更多类似内容"
+      },
+      "summarize_page_content": {
+        "title": "总结页面"
+      }
     }
   },
   "onboarding": {
@@ -87,7 +99,7 @@
       "title": "为您打造的本地AI助手"
     },
     "guide": {
-      "alread_installed": "已安装并运行Ollama？",
+      "already_installed": "已安装并运行Ollama？",
       "features": {
         "1": "运行DeepSeek、Qwen、Llama等高级模型",
         "2": "完全掌控模型的自定义和切换",

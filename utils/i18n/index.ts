@@ -62,6 +62,6 @@ export const useI18n = only([Entrypoint.content], () => {
 // this i18n function can be used in any context, including outside Vue components and background scripts, but it's a async function
 export async function useGlobalI18n() {
   const i18n = await createI18nInstance()
-  const composer = i18n.global
+  const composer = i18n.global as unknown as ReturnType<typeof useI18n>
   return composer
 }

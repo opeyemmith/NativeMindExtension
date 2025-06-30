@@ -17,6 +17,17 @@
       "tab_selector": {
         "all_tabs": "แท็บที่เปิดทั้งหมด"
       }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "เน้นข้อมูลเชิงลึกที่สำคัญ"
+      },
+      "search_more": {
+        "title": "ค้นหาเนื้อหาที่คล้ายกันเพิ่มเติม"
+      },
+      "summarize_page_content": {
+        "title": "สรุปหน้าเว็บ"
+      }
     }
   },
   "onboarding": {
@@ -25,7 +36,7 @@
       "title": "AI บนอุปกรณ์ สร้างขึ้นเพื่อคุณ"
     },
     "guide": {
-      "alread_installed": "ได้ติดตั้งและกำลังใช้งาน Ollama อยู่แล้ว?",
+      "already_installed": "ได้ติดตั้งและกำลังใช้งาน Ollama อยู่แล้ว?",
       "features": {
         "1": "ใช้งานโมเดลขั้นสูง เช่น Deepseek, Qwen, Llama",
         "2": "ปรับแต่งและสลับโมเดลได้อย่างเต็มรูปแบบ",
@@ -110,7 +121,8 @@
     "general": {
       "system_language": "ภาษาระบบ",
       "title": "ทั่วไป"
-    }
+    },
+    "title": "การตั้งค่า"
   },
   "context_menu": {
     "quick_actions": {

@@ -25,7 +25,7 @@
     >
       <Icon class="w-6 h-6 shrink-0" />
       <div class="text-sm">
-        {{ props.title }}
+        {{ props.edited ? props.title : props.defaultTitle }}
       </div>
       <IconEdit
         class="cursor-pointer text-gray-600 shrink-0"
@@ -96,6 +96,7 @@ const props = defineProps<{
   iconIdx?: number
   title: string
   prompt: string
+  edited: boolean
   defaultTitle: string
   defaultPrompt: string
   showInContextMenu: boolean
@@ -104,6 +105,7 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: 'update:title', value: string): void
   (e: 'update:prompt', value: string): void
+  (e: 'update:edited', value: boolean): void
   (e: 'update:showInContextMenu', value: boolean): void
 }>()
 
@@ -113,20 +115,18 @@ const icons = [
   IconSearchBoxed,
 ]
 const editing = ref(false)
-const editTitle = ref(props.title)
+const editTitle = ref(props.edited ? props.title : props.defaultTitle)
 const editPrompt = ref(props.prompt)
 const editShowInContextMenu = ref(props.showInContextMenu)
 const Icon = computed(() => {
-  if (props.defaultPrompt !== props.prompt || props.defaultTitle !== props.title) {
-    return IconQuickModified
-  }
+  if (props.edited) return IconQuickModified
   return icons[(props.iconIdx || 0) % icons.length]
 })
 const { t } = useI18n()
 
 watch(editing, (newEditing) => {
   if (newEditing) {
-    editTitle.value = props.title
+    editTitle.value = props.edited ? props.title : props.defaultTitle
     editPrompt.value = props.prompt
     editShowInContextMenu.value = props.showInContextMenu
   }
@@ -141,6 +141,7 @@ const onSave = () => {
   emit('update:title', editTitle.value)
   emit('update:prompt', editPrompt.value)
   emit('update:showInContextMenu', editShowInContextMenu.value)
+  emit('update:edited', editTitle.value !== props.defaultTitle || editPrompt.value !== props.defaultPrompt)
   editing.value = false
 }
 

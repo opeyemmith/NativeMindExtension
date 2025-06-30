@@ -100,10 +100,10 @@ Examples of good emoji usage:
 
 export const TARGET_ONBOARDING_VERSION = 1
 
-export const DEFAULT_QUICK_ACTIONS = async () => [
-  { title: 'Summarize the page', prompt: 'Please summarize the main content of this page in a clear and concise manner.', showInContextMenu: false },
-  { title: 'Highlight key insights', prompt: 'Identify and highlight the key insights, important points, and takeaways from this content.', showInContextMenu: false },
-  { title: 'Search for more content like this', prompt: 'Help me find more content similar to this topic and provide relevant search suggestions.', showInContextMenu: false },
+export const DEFAULT_QUICK_ACTIONS = [
+  { editedTitle: '', defaultTitleKey: 'chat.prompt.summarize_page_content.title' as const, prompt: 'Please summarize the main content of this page in a clear and concise manner.', showInContextMenu: false, edited: false },
+  { editedTitle: '', defaultTitleKey: 'chat.prompt.highlight_key_insights.title' as const, prompt: 'Identify and highlight the key insights, important points, and takeaways from this content.', showInContextMenu: false, edited: false },
+  { editedTitle: '', defaultTitleKey: 'chat.prompt.search_more.title' as const, prompt: 'Help me find more content similar to this topic and provide relevant search suggestions.', showInContextMenu: false, edited: false },
 ]
 
 type OnlineSearchStatus = 'force' | 'disable' | 'auto'
@@ -133,7 +133,7 @@ async function _getUserConfig() {
         pageReadCount: await new Config('chat.onlineSearch.pageReadCount').default(5).build(), // how many pages to read when online search is enabled
       },
       quickActions: {
-        actions: await new Config('chat.quickActions.actions_2').default(await DEFAULT_QUICK_ACTIONS()).build(),
+        actions: await new Config('chat.quickActions.actions_4').default(DEFAULT_QUICK_ACTIONS).build(),
       },
     },
     translation: {

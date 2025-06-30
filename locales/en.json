@@ -43,8 +43,8 @@
     },
     "feedback": {
       "discord": "Discord",
-      "contact_msg": "📧Questions or feedback? Join our {discord} or email us at {email}.",
-      "join_waitlist": "💼Want to use it at work? {join_waitlist_link} for enterprise updates.",
+      "contact_msg": "📧 Questions or feedback? Join our {discord} or email us at {email}.",
+      "join_waitlist": "💼 Want to use it at work? {join_waitlist_link} for enterprise updates.",
       "join_waitlist_link": "Join the waitlist"
     },
     "provider": {
@@ -59,7 +59,8 @@
     "general": {
       "title": "General",
       "system_language": "System Language"
-    }
+    },
+    "title": "Settings"
   },
   "chat": {
     "messages": {
@@ -79,6 +80,17 @@
       "tab_selector": {
         "all_tabs": "All open tabs"
       }
+    },
+    "prompt": {
+      "summarize_page_content": {
+        "title": "Summarize the page"
+      },
+      "highlight_key_insights": {
+        "title": "Highlight key insights"
+      },
+      "search_more": {
+        "title": "Search for more content like this"
+      }
     }
   },
   "onboarding": {
@@ -96,7 +108,7 @@
         "3": "Your data stays private, on your device"
       },
       "get_ollama": "Get Ollama",
-      "alread_installed": "Already installed and run Ollama?",
+      "already_installed": "Already installed and run Ollama?",
       "setup": "Setup",
       "need_help": "Need help?",
       "follow_our_tutorial": "Follow our installation guide"

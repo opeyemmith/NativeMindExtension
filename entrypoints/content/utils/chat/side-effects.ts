@@ -13,14 +13,12 @@ async function appendOrUpdateQuickActionsIfNeeded(chat: Chat) {
   const actionsRef = userConfig.chat.quickActions.actions.toRef()
   const icons = ['summarizeBoxed', 'highlightBoxed', 'searchBoxed'] as const
   const actions: ActionMessageV1['actions'] = actionsRef.value.map((action, index) => {
-    const defaultTitle = actionsRef.defaultValue[index]?.title
-    const defaultPrompt = actionsRef.defaultValue[index]?.prompt
-    const isDefault = action.title === defaultTitle && action.prompt === defaultPrompt
+    const defaultTitle = t(actionsRef.defaultValue[index]?.defaultTitleKey)
     return {
       type: 'customInput' as const,
       data: { prompt: action.prompt },
-      content: action.title,
-      icon: isDefault ? icons[index % icons.length] : 'quickActionModifiedBoxed',
+      content: action.edited ? action.editedTitle : defaultTitle,
+      icon: action.edited ? 'quickActionModifiedBoxed' : icons[index % icons.length],
     }
   })
   const titleAction = {

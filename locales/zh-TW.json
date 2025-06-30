@@ -17,6 +17,17 @@
       "tab_selector": {
         "all_tabs": "所有打開的分頁"
       }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "突出重點洞察"
+      },
+      "search_more": {
+        "title": "搜尋更多類似內容"
+      },
+      "summarize_page_content": {
+        "title": "總結頁面"
+      }
     }
   },
   "onboarding": {
@@ -25,7 +36,7 @@
       "title": "裝置AI，專為您打造"
     },
     "guide": {
-      "alread_installed": "已經安裝並執行Ollama？",
+      "already_installed": "已經安裝並執行Ollama？",
       "features": {
         "1": "執行DeepSeek、Qwen、Llama等高級模型",
         "2": "自訂和切換模型完全控制",
@@ -57,8 +68,8 @@
     "choose_model": "選擇模型",
     "download": "下載",
     "feedback": {
-      "contact_msg": "📧有問題或反饋？加入我們的{discord}或透過{email}給我們發送電子郵件。",
-      "join_waitlist": "💼想在工作中使用它嗎？{join_waitlist_link}獲取企業版更新。",
+      "contact_msg": "📧 有問題或反饋？加入我們的{discord}或透過{email}給我們發送電子郵件。",
+      "join_waitlist": "💼 想在工作中使用它嗎？{join_waitlist_link}獲取企業版更新。",
       "join_waitlist_link": "加入等候名單",
       "discord": "Discord"
     },
@@ -110,7 +121,8 @@
     "general": {
       "system_language": "系統語言",
       "title": "一般"
-    }
+    },
+    "title": "設定"
   },
   "context_menu": {
     "quick_actions": {

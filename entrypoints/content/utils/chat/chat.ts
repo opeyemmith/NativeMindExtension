@@ -19,7 +19,7 @@ import { getCurrentTabInfo, getDocumentContentOfTabs, getValidTabs, TabInfo } fr
 
 const log = logger.child('chat')
 
-export type MessageIdScope = 'quickActions'
+export type MessageIdScope = 'quickActions' | 'welcomeMessage'
 
 export class ReactiveHistoryManager extends EventEmitter {
   constructor(public history: Ref<HistoryItemV1[]>, public systemMessage?: string) {

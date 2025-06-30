@@ -6,6 +6,7 @@ import { ActionMessageV1 } from '@/utils/tab-store/history'
 import { getUserConfig } from '@/utils/user-config'
 
 import { Chat } from './chat'
+import { welcomeMessage } from './texts'
 
 async function appendOrUpdateQuickActionsIfNeeded(chat: Chat) {
   const { t } = await useGlobalI18n()
@@ -44,6 +45,16 @@ async function appendOrUpdateQuickActionsIfNeeded(chat: Chat) {
   }
 }
 
+async function updateWelcomeMessageText(chat: Chat) {
+  const { t } = await useGlobalI18n()
+  const welcomeMessages = chat.historyManager.getMessagesByScope('welcomeMessage')
+  welcomeMessages.forEach((msg) => {
+    if (msg.role === 'assistant') {
+      msg.content = welcomeMessage(t)
+    }
+  })
+}
+
 function runInDetachedScope(fn: () => void) {
   const scope = effectScope(true)
   scope.run(() => {
@@ -58,6 +69,7 @@ async function _initChatSideEffects() {
   const quickActions = userConfig.chat.quickActions.actions.toRef()
   runInDetachedScope(() => watch(() => [chat.historyManager.history.value.length, quickActions, i18n.locale], () => {
     appendOrUpdateQuickActionsIfNeeded(chat)
+    updateWelcomeMessageText(chat)
   }, { immediate: true, deep: true }))
 }
 

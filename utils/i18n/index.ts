@@ -1,3 +1,4 @@
+import type { ComposerTranslation as OriginComposerTranslation } from 'vue-i18n'
 import { createI18n, useI18n as _useI18n } from 'vue-i18n'
 
 import de from '@/locales/de.json'
@@ -65,3 +66,5 @@ export async function useGlobalI18n() {
   const composer = i18n.global as unknown as ReturnType<typeof useI18n>
   return composer
 }
+
+export type ComposerTranslation = OriginComposerTranslation<MessageSchema, SupportedLocaleCode>

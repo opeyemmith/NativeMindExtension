@@ -75,7 +75,7 @@ import { getUserConfig, TARGET_ONBOARDING_VERSION } from '@/utils/user-config'
 
 import { useOllamaStatusStore } from '../../store'
 import { Chat } from '../../utils/chat'
-import { makeContainer, makeParagraph } from '../../utils/markdown/content'
+import { welcomeMessage } from '../../utils/chat/texts'
 import { showSettings } from '../../utils/settings'
 import OllamaModelDownloader from './OllamaModelDownloader.vue'
 import OllamaTutorialCard from './OllamaTutorialCard.vue'
@@ -124,17 +124,15 @@ const onWebLLMInstalled = () => {
 }
 
 const setWelcomeChatMessage = () => {
-  const msg = chat.historyManager.appendAssistantMessage(`
-${makeParagraph(t('onboarding.welcome_msg.title'), { class: 'text-base font-normal' })}
-
-${makeContainer(t('onboarding.welcome_msg.body'), { class: 'text-xs text-[#596066]' })}
-`.trim())
+  // FYI: this message will also be modified by side-effects.ts for locale changes
+  const msg = chat.historyManager.appendAssistantMessage(welcomeMessage(t))
   msg.style = {
     backgroundColor: 'transparent',
   }
   msg.isDefault = true
   msg.done = true
   msg.timestamp = undefined
+  msg.id = chat.historyManager.generateId('welcomeMessage')
   chat.historyManager.insertMessageAt(msg, 0)
 }
 

@@ -9,14 +9,20 @@
           {{ t('settings.quick_actions.edit.title') }}
         </Text>
         <Text size="small">
-          <Input v-model="editTitle" />
+          <Input
+            v-model="editTitle"
+            maxlength="40"
+          />
         </Text>
       </div>
       <div class="flex flex-col gap-1">
         <Text color="secondary">
           {{ t('settings.quick_actions.edit.prompt') }}
         </Text>
-        <Textarea v-model="editPrompt" />
+        <Textarea
+          v-model="editPrompt"
+          :maxLength="200"
+        />
       </div>
     </div>
     <div
@@ -24,7 +30,7 @@
       class="flex items-center gap-2"
     >
       <Icon class="w-6 h-6 shrink-0" />
-      <div class="text-sm">
+      <div class="text-sm wrap-anywhere">
         {{ props.edited ? props.title : props.defaultTitle }}
       </div>
       <IconEdit

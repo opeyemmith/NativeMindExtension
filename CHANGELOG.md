@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v1.3.0-beta.11
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.10...v1.3.0-beta.11)
+
+### 🚀 Enhancements
+
+- **settings:** Exclude embedding models in ollama.com ([58f3e5a](https://github.com/NativeMindBrowser/NativeMindExtension/commit/58f3e5a))
+- **writing-tools:** Enhance Writing Tools UI and functionality ([c89904c](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c89904c))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.10
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.8...v1.3.0-beta.10)

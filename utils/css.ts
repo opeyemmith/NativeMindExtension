@@ -37,6 +37,14 @@ export async function loadContentScriptCss(name: string): Promise<string> {
   }
 }
 
+export function convertStyleSheetToCssText(sheet: CSSStyleSheet) {
+  let cssText = ''
+  for (const rule of sheet.cssRules) {
+    cssText += rule.cssText + '\n'
+  }
+  return cssText
+}
+
 export function createStyleSheetByCssText(cssText: string) {
   const sheet = new CSSStyleSheet()
   try {
@@ -83,4 +91,27 @@ export function extractFontFace(sheet: CSSStyleSheet) {
     logger.error('Failed to extract font-face from stylesheet', err)
   }
   return newSheet
+}
+
+export function injectStyleSheetToDocument(doc: ShadowRoot | Document, sheet: CSSStyleSheet) {
+  if (import.meta.env.FIREFOX) {
+    // Firefox does not support adoptedStyleSheets in shadow roots
+    // so we need to inject the styles directly into the document
+    const cssText = convertStyleSheetToCssText(sheet)
+    const styleElement = document.createElement('style')
+    styleElement.textContent = cssText
+    if (doc instanceof ShadowRoot) {
+      doc.appendChild(styleElement)
+    }
+    else {
+      doc.head.appendChild(styleElement)
+    }
+  }
+  else {
+    if (doc.adoptedStyleSheets.includes(sheet)) {
+      logger.warn('StyleSheet is already adopted in the document', sheet)
+      return
+    }
+    doc.adoptedStyleSheets.push(sheet)
+  }
 }

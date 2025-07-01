@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "เพิ่มไปยัง NativeMind"
     }
+  },
+  "popup": {
+    "reload_page": "กรุณาโหลดหน้าเว็บใหม่เพื่อใช้ NativeMind",
+    "page_not_supported": "หน้านี้ไม่ได้รับการสนับสนุนโดย NativeMind"
+  },
+  "writing_tools": {
+    "processing": "กำลังประมวลผล...",
+    "rewrite_suggestion": "ข้อเสนอแนะในการเขียนใหม่",
+    "sparkle_text": "ข้อความเปล่งประกาย",
+    "key_points": "จุดสำคัญ",
+    "grammar_and_style": "ไวยากรณ์และรูปแบบ",
+    "proofread": "พิสูจน์อักษร",
+    "list": "รายการ",
+    "sparkle": "ประกาย",
+    "rewrite": "เขียนใหม่",
+    "apply": "สมัคร",
+    "dismiss": "ยกเลิก"
+  },
+  "textarea": {
+    "reset_to_default": "รีเซ็ตเป็นค่าเริ่มต้น"
   }
 }

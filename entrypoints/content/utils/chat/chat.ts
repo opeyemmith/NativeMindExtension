@@ -216,9 +216,10 @@ export class ReactiveHistoryManager extends EventEmitter {
 
 type ChatStatus = 'idle' | 'pending' | 'streaming'
 
-export class ActionEvent<ActionType extends ActionTypeV1> extends Event {
+const ACTION_EVENT_CONSTRUCT_TYPE = 'messageAction'
+export class ActionEvent<ActionType extends ActionTypeV1> extends CustomEvent<{ data: ActionV1[ActionType], action: ActionType }> {
   constructor(public action: ActionType, public data: ActionV1[ActionType]) {
-    super('messageAction', { bubbles: true })
+    super(ACTION_EVENT_CONSTRUCT_TYPE, { bubbles: true, detail: { action, data } })
   }
 }
 
@@ -256,10 +257,13 @@ export class Chat {
 
   static createActionEventHandler(handler: (ev: ActionEvent<ActionTypeV1>) => void) {
     return function actionHandler(ev: Event) {
-      log.debug('Handling action event', ev)
-      if (ev instanceof ActionEvent) {
-        log.debug('Action event triggered', ev.action, ev.data)
-        handler(ev)
+      if (ev.type === ACTION_EVENT_CONSTRUCT_TYPE && ev instanceof CustomEvent) {
+        log.debug('Action event triggered', ev)
+        // reconstruct the event to fix firefox issue
+        // firefox does not pass the origin event instance in the event bubbling
+        const event = ev as CustomEvent<{ action: ActionTypeV1, data: ActionV1[ActionTypeV1] }>
+        const actionEvent = new ActionEvent<ActionTypeV1>(event.detail.action, event.detail.data)
+        handler(actionEvent)
       }
     }
   }

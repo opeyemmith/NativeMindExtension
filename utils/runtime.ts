@@ -9,7 +9,7 @@ export enum Entrypoint {
 export const entrypointNames = {
   [Entrypoint.background]: ['background'],
   [Entrypoint.content]: ['content'],
-  [Entrypoint.popup]: [undefined], // entrypoint of popup is not undefined
+  [Entrypoint.popup]: [undefined, 'html'], // entrypoint of popup is not undefined
   [Entrypoint.unlisted]: ['content-injected'],
   [Entrypoint.mainWorld]: ['main-world-injected'],
 }

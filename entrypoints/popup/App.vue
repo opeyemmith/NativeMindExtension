@@ -3,7 +3,9 @@ import { ref } from 'vue'
 import { browser } from 'wxt/browser'
 
 import { INVALID_URLS } from '@/utils/constants'
+import { useI18n } from '@/utils/i18n'
 
+const { t } = useI18n()
 const isValidUrl = ref(false)
 browser.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
   if (tabs.length === 1) {
@@ -17,10 +19,10 @@ browser.tabs.query({ active: true, currentWindow: true }).then(async (tabs) => {
 <template>
   <div>
     <div v-if="isValidUrl">
-      Please reload the page to use NativeMind
+      {{ t('popup.reload_page') }}
     </div>
     <div v-else>
-      This page is not supported by NativeMind.
+      {{ t('popup.page_not_supported') }}
     </div>
   </div>
 </template>

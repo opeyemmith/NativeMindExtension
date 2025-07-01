@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "NativeMindに追加"
     }
+  },
+  "popup": {
+    "reload_page": "ページを再読み込みしてNativeMindを使用してください。",
+    "page_not_supported": "このページはNativeMindでサポートされていません。"
+  },
+  "writing_tools": {
+    "processing": "処理中...",
+    "rewrite_suggestion": "書き直しの提案",
+    "sparkle_text": "キラキラテキスト",
+    "key_points": "重要なポイント",
+    "grammar_and_style": "文法とスタイル",
+    "proofread": "校正",
+    "list": "リスト",
+    "sparkle": "キラキラ",
+    "apply": "適用",
+    "dismiss": "却下する",
+    "rewrite": "書き直す"
+  },
+  "textarea": {
+    "reset_to_default": "デフォルトにリセット"
   }
 }

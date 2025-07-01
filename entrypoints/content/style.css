@@ -107,3 +107,9 @@
   background: #e4e4e7;
   border-radius: 5px;
 }
+
+/* Firefox scrollbar styling */
+.nativemind-style-boundary * {
+  scrollbar-width: thin;
+  scrollbar-color: #e4e4e7 transparent;
+}

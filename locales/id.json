@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "Tambahkan ke NativeMind"
     }
+  },
+  "popup": {
+    "reload_page": "Silakan muat ulang halaman untuk menggunakan NativeMind.",
+    "page_not_supported": "Halaman ini tidak didukung oleh NativeMind."
+  },
+  "writing_tools": {
+    "processing": "Memproses...",
+    "rewrite_suggestion": "Saran Penulisan Ulang",
+    "sparkle_text": "Teks Berkilau",
+    "key_points": "Poin-Poin Utama",
+    "grammar_and_style": "Tata Bahasa & Gaya",
+    "proofread": "Koreksi",
+    "list": "Daftar",
+    "sparkle": "Berkilau",
+    "rewrite": "Tulis Ulang",
+    "apply": "Terapkan",
+    "dismiss": "Abaikan"
+  },
+  "textarea": {
+    "reset_to_default": "Atur ulang ke default"
   }
 }

@@ -66,6 +66,9 @@ export default defineConfig({
   },
   vite: (_env) => {
     return {
+      build: {
+        target: ['chrome124', 'firefox120', 'safari16'],
+      },
       plugins: [
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),

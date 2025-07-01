@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "新增至 NativeMind"
     }
+  },
+  "popup": {
+    "reload_page": "請重新載入頁面以使用 NativeMind。",
+    "page_not_supported": "此頁面不受 NativeMind 支援。"
+  },
+  "writing_tools": {
+    "processing": "處理中...",
+    "rewrite_suggestion": "重寫建議",
+    "sparkle_text": "閃爍文字",
+    "key_points": "重點",
+    "grammar_and_style": "語法與風格",
+    "proofread": "校對",
+    "list": "清單",
+    "sparkle": "閃耀",
+    "rewrite": "重寫",
+    "apply": "申請",
+    "dismiss": "關閉"
+  },
+  "textarea": {
+    "reset_to_default": "重設為預設值"
   }
 }

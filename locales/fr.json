@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "Ajouter à NativeMind"
     }
+  },
+  "popup": {
+    "reload_page": "Veuillez recharger la page pour utiliser NativeMind.",
+    "page_not_supported": "Cette page n'est pas prise en charge par NativeMind."
+  },
+  "writing_tools": {
+    "processing": "Traitement en cours...",
+    "rewrite_suggestion": "Suggestion de réécriture",
+    "sparkle_text": "Texte Scintillant",
+    "key_points": "Points clés",
+    "grammar_and_style": "Grammaire et style",
+    "proofread": "Relire",
+    "list": "Liste",
+    "sparkle": "Étincelle",
+    "rewrite": "Réécrire",
+    "apply": "Appliquer",
+    "dismiss": "Rejeter"
+  },
+  "textarea": {
+    "reset_to_default": "Rétablir par défaut"
   }
 }

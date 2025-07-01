@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "NativeMind에 추가"
     }
+  },
+  "popup": {
+    "reload_page": "페이지를 새로고침하여 NativeMind를 사용하세요.",
+    "page_not_supported": "이 페이지는 NativeMind에서 지원되지 않습니다."
+  },
+  "writing_tools": {
+    "processing": "처리 중...",
+    "rewrite_suggestion": "다시 쓰기 제안",
+    "sparkle_text": "반짝이는 텍스트",
+    "key_points": "주요 사항",
+    "grammar_and_style": "문법 및 문체",
+    "proofread": "교정하다",
+    "list": "목록",
+    "sparkle": "반짝임",
+    "rewrite": "다시 쓰기",
+    "apply": "적용",
+    "dismiss": "해제"
+  },
+  "textarea": {
+    "reset_to_default": "기본값으로 재설정"
   }
 }

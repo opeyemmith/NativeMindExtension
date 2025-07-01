@@ -6,49 +6,55 @@
     <div
       v-if="isShowToolBar"
       ref="toolBarRef"
-      class="toolbar bg-white fixed flex items-center p-[2px] gap-1 rounded-md text-xs shadow-md transition-[width,top,left]"
+      class="toolbar bg-white fixed flex items-center gap-1 rounded-md overflow-hidden text-xs shadow-md transition-[width,top,left]"
       :style="toolBarPos ? { top: toolBarPos.top + 'px', left: toolBarPos.left + 'px' } : {}"
       @mouseenter="onMouseEnterToolBar"
     >
-      <button
-        class="bg-white border-0 cursor-pointer p-2 rounded-md hover:bg-gray-100"
-        :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-        @click.stop="onAction('rewrite')"
-      >
-        Rewrite
-      </button>
-      <button
-        class="bg-white border-0 cursor-pointer p-2 rounded-md hover:bg-gray-100"
-        :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-        @click.stop="onAction('proofread')"
-      >
-        Proofread
-      </button>
-      <button
-        class="bg-white border-0 cursor-pointer p-2 rounded-md hover:bg-gray-100"
-        :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-        @click.stop="onAction('list')"
-      >
-        List
-      </button>
-      <button
-        class="bg-white border-0 cursor-pointer p-2 rounded-md hover:bg-gray-100"
-        :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-        @click.stop="onAction('sparkle')"
-      >
-        Sparkle
-      </button>
-      <button
+      <Text size="small">
+        <button
+          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
+          @click.stop="onAction('rewrite')"
+        >
+          <IconRewrite class="w-4 h-4" />
+          {{ t('writing_tools.rewrite') }}
+        </button>
+        <button
+          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
+          @click.stop="onAction('proofread')"
+        >
+          <IconProofread class="w-4 h-4" />
+          {{ t('writing_tools.proofread') }}
+        </button>
+        <button
+          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
+          @click.stop="onAction('list')"
+        >
+          <IconList class="w-4 h-4" />
+          {{ t('writing_tools.list') }}
+        </button>
+        <button
+          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
+          @click.stop="onAction('sparkle')"
+        >
+          <IconSparkle class="w-4 h-4" />
+          {{ t('writing_tools.sparkle') }}
+        </button>
+      <!-- <button
         class="mr-1 text-gray-700 bg-gray-50 hover:bg-gray-100 border-0 cursor-pointer p-1 rounded-full"
         @click="onCloseToolBar"
       >
         <IconClose class="w-3 h-3" />
-      </button>
+      </button> -->
+      </Text>
     </div>
     <div
       v-if="writingToolType"
       ref="popupRef"
-      class="popup bg-white fixed shadow-lg rounded-md p-4 z-50 transition-[width,top,left]"
+      class="popup bg-white fixed shadow-lg rounded-md z-50 transition-[width,top,left]"
       :class="!popupPos ? 'opacity-0' : ''"
       :style="popupPos ? { top: popupPos.top + 'px', left: popupPos.left + 'px' } : {}"
     >
@@ -67,8 +73,14 @@
 import { useElementBounding, useEventListener } from '@vueuse/core'
 import { computed, ref, UnwrapRef } from 'vue'
 
-import IconClose from '@/assets/icons/close.svg?component'
+import IconList from '@/assets/icons/writing-tools-list.svg?component'
+import IconProofread from '@/assets/icons/writing-tools-proofread.svg?component'
+// import IconClose from '@/assets/icons/close.svg?component'
+import IconRewrite from '@/assets/icons/writing-tools-rewrite.svg?component'
+import IconSparkle from '@/assets/icons/writing-tools-sparkle.svg?component'
+import Text from '@/components/ui/Text.vue'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
+import { useI18n } from '@/utils/i18n'
 import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
 
 import SuggestionCard from './SuggestionCard.vue'
@@ -78,6 +90,7 @@ const props = defineProps<{
   editableElement: HTMLElement
 }>()
 
+const { t } = useI18n()
 const isEditableFocus = ref(false)
 const editableElementBounding = useElementBounding(props.editableElement)
 const toolBarRef = ref<HTMLDivElement | null>(null)
@@ -257,10 +270,10 @@ const onClosePopup = () => {
   writingToolSelectedText.value = ''
 }
 
-const onCloseToolBar = () => {
-  writingToolSelectedText.value = ''
-  isEditableFocus.value = false
-}
+// const onCloseToolBar = () => {
+//   writingToolSelectedText.value = ''
+//   isEditableFocus.value = false
+// }
 
 const onClickToClosePopup = (ev: Event) => {
   const target = ev.composed ? ev.composedPath()[0] as HTMLElement : ev.target as HTMLElement

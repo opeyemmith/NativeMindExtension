@@ -165,5 +165,25 @@
     "sites": {
       "add_to_nativemind": "添加到 NativeMind"
     }
+  },
+  "popup": {
+    "reload_page": "请重新加载页面以使用 NativeMind。",
+    "page_not_supported": "此页面不受 NativeMind 支持。"
+  },
+  "writing_tools": {
+    "processing": "正在处理...",
+    "rewrite_suggestion": "重写建议",
+    "sparkle_text": "闪光文字",
+    "key_points": "关键要点",
+    "grammar_and_style": "语法与文体",
+    "proofread": "校对",
+    "list": "列表",
+    "sparkle": "闪耀",
+    "rewrite": "重写",
+    "apply": "申请",
+    "dismiss": "解散"
+  },
+  "textarea": {
+    "reset_to_default": "重置为默认"
   }
 }

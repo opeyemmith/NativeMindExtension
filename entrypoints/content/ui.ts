@@ -5,16 +5,16 @@ import { ContentScriptContext } from 'wxt/utils/content-script-context'
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
 
 import { initToast } from '@/composables/useToast'
-import { convertPropertiesIntoSimpleVariables, extractFontFace, loadContentScriptCss, scopeStyleIntoShadowRoot } from '@/utils/css'
+import { convertPropertiesIntoSimpleVariables, extractFontFace, injectStyleSheetToDocument, loadContentScriptCss, scopeStyleIntoShadowRoot } from '@/utils/css'
 import { createI18nInstance } from '@/utils/i18n/index'
 
 async function loadStyleSheet(shadowRoot: ShadowRoot) {
   const contentScriptCss = await loadContentScriptCss(import.meta.env.ENTRYPOINT)
   const styleSheet = convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(contentScriptCss), true)
-  shadowRoot.adoptedStyleSheets.push(styleSheet)
+  injectStyleSheetToDocument(shadowRoot, styleSheet)
   // font-face can only be applied to the document, not the shadow root
   const fontFaceStyleSheet = extractFontFace(styleSheet)
-  document.adoptedStyleSheets.push(fontFaceStyleSheet)
+  injectStyleSheetToDocument(document, fontFaceStyleSheet)
 }
 
 export async function createShadowRootOverlay(ctx: ContentScriptContext, component: Component<{ rootElement: HTMLDivElement }>) {

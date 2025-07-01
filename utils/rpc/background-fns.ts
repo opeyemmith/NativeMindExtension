@@ -358,7 +358,7 @@ function initWebLLMEngine(model: WebLLMSupportedModel) {
   }
 }
 
-type UnsupportedWebLLMReason = 'browser' | 'gpu'
+type UnsupportedWebLLMReason = 'browser' | 'not_support_webgpu' | 'not_support_high_performance'
 async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: UnsupportedWebLLMReason }> {
   if (import.meta.env.FIREFOX) {
     return {
@@ -369,7 +369,7 @@ async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: Unsu
   if (!navigator.gpu) {
     return {
       supported: false,
-      reason: 'gpu',
+      reason: 'not_support_webgpu',
     }
   }
   try {
@@ -382,11 +382,11 @@ async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: Unsu
       supported: true,
     }
   }
-  catch (_error) {
-    logger.debug('WebGPU not supported')
+  catch (error) {
+    logger.debug('WebGPU not supported', error)
     return {
       supported: false,
-      reason: 'gpu',
+      reason: 'not_support_high_performance',
     }
   }
 }

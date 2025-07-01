@@ -1,3 +1,4 @@
+import { watch } from 'vue'
 import type { ComposerTranslation as OriginComposerTranslation } from 'vue-i18n'
 import { createI18n, useI18n as _useI18n } from 'vue-i18n'
 
@@ -42,14 +43,21 @@ const messages = {
 
 export const createI18nInstance = lazyInitialize(async () => {
   const userConfig = await getUserConfig()
-  const localeInConfig = userConfig?.locale.current.get()
-  const defaultLocale = localeInConfig ?? await getAcceptLanguages(SUPPORTED_LOCALES.map((l) => l.code), 'en')
+  const localeInConfig = userConfig?.locale.current.toRef()
+  const defaultLocale = localeInConfig.value ?? await getAcceptLanguages(SUPPORTED_LOCALES.map((l) => l.code), 'en')
 
   const i18n = createI18n<[MessageSchema], SupportedLocaleCode>({
     legacy: false,
     locale: defaultLocale,
     fallbackLocale: 'en',
     messages,
+  })
+
+  // watch locale in config which may be changed by other tabs
+  watch(localeInConfig, (newLocale) => {
+    if (newLocale && SUPPORTED_LOCALES.some((l) => l.code === newLocale)) {
+      (i18n.global as unknown as ReturnType<typeof useI18n>).locale.value = newLocale
+    }
   })
   return i18n
 })

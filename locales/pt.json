@@ -48,7 +48,9 @@
       "need_help": "Precisa de ajuda?",
       "ollama_desc": "Desbloqueie todo o poder da IA local com Ollama.",
       "setup": "Configurar",
-      "step1": "Etapa 1"
+      "step1": "Etapa 1",
+      "download_model_to_begin": "Baixe um modelo para começar.",
+      "select_model_to_start": "Selecione e baixe um modelo para começar"
     },
     "webllm_tutorial": {
       "desc": "Use um modelo leve (QWEN 0.6B) diretamente no seu navegador - sem configuração, sem espera.",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋 Bem-vindo ao **NativeMind**",
       "body": "O NativeMind é uma extensão de navegador com foco em privacidade que ajuda você a conversar, pesquisar e traduzir - tudo alimentado por modelos de linguagem no dispositivo.\n\n\nAqui está o que você pode fazer com o NativeMind:\n\n\n\n- Converse através de várias abas para acompanhar diferentes páginas.\n\n- Pesquise na web diretamente no chat para obter mais contexto.\n\n- Clique com o botão direito para traduzir instantaneamente qualquer parte da página.\n\n- Alterne ou baixe modelos a qualquer momento nas configurações.\n\n\nVocê pode começar experimentando as ações rápidas abaixo."
-    }
+    },
+    "ollama_is_running": "Ollama está executando"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "Obter Ollama",
     "models": {
-      "title": "Modelo ativo"
+      "title": "Modelos",
+      "discover_more": "Descubra mais modelos"
     },
     "ollama": {
       "already_installed": "Já instalou e está executando o Ollama?",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "Prompt de sistema do tradutor"
     },
     "provider": {
-      "title": "Provedor de modelos"
+      "title": "Conexão"
     },
     "provider_model": {
-      "title": "Provedor"
+      "title": "Configurar Ollama"
     },
     "quick_actions": {
       "description": "Configure ações rápidas para executar seus prompts favoritos mais rapidamente - em um novo chat ou no menu de contexto.",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "Linguagem de tradução"
     },
-    "webllm-desc": "Usando WebLLM para teste rápido. \nPara suporte completo aos modelos e melhor desempenho, instale o Ollama.",
+    "webllm-desc": "Você está agora usando WebLLM: qwen3:0.6b para teste rápido. Para suporte completo de modelos e melhor desempenho, por favor instale o Ollama.",
     "general": {
       "system_language": "Idioma do sistema",
       "title": "Geral"
     },
-    "title": "Configurações"
+    "title": "Configurações",
+    "model_downloader": {
+      "description": "Este modelo precisa ser baixado antes do uso. O download pode levar alguns minutos.",
+      "downloading_model": "Baixando \"{model}\"",
+      "download_model": "Baixar \"{model}\"",
+      "downloading": "O seu modelo está sendo baixado. Por favor, aguarde…",
+      "download": "Baixar",
+      "retry": "Tentar novamente",
+      "unable_to_download": "Não foi possível iniciar o download",
+      "could_not_connect_ollama": "Não foi possível conectar ao Ollama. Por favor, certifique-se de que o Ollama está em execução e tente novamente."
+    },
+    "webllm_downloader": {
+      "description": "Para usar o modo Local, você precisa baixar o modelo {model} ({size}). Gostaria de baixá-lo agora?"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "Ops! Algo deu errado. Por favor, verifique sua conexão com o Ollama nas configurações e tente novamente.",
     "model_request_timeout": "Tempo limite da solicitação esgotado. Verifique sua conexão com o Ollama ou considere iniciar uma nova sessão, pois contextos longos podem afetar os tempos de resposta.",
     "timeout_error": "Operação expirou: {message}",
-    "unknown_error": "Ocorreu um erro inesperado: {message}"
+    "unknown_error": "Ocorreu um erro inesperado: {message}",
+    "webllm_not_supported": "WebLLM não é suportado no seu dispositivo."
+  },
+  "common": {
+    "cancel": "Cancelar"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Adicionar ao NativeMind"
+    }
   }
 }

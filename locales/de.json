@@ -48,7 +48,9 @@
       "need_help": "Benötigen Sie Hilfe?",
       "ollama_desc": "Mit Ollama die volle lokale KI -Macht freischalten.",
       "setup": "Aufstellen",
-      "step1": "Schritt 1"
+      "step1": "Schritt 1",
+      "download_model_to_begin": "Laden Sie ein Modell herunter, um zu beginnen.",
+      "select_model_to_start": "Wählen Sie ein Modell aus und laden Sie es herunter, um zu beginnen"
     },
     "webllm_tutorial": {
       "desc": "Verwenden Sie ein leichtes Modell (QWEN 0,6B) direkt in Ihrem Browser - kein Setup, kein Warten.",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋 Willkommen bei **NativeMind**",
       "body": "NATIVEMIND ist eine Datenschutz-AI-Browser-Erweiterung, die Ihnen hilft, zu chatten, zu suchen und zu übersetzen-alles mit Sprachmodellen für das Gerät.\n\n\nFolgendes können Sie mit Nativemind machen:\n\n\n\n- Chatten Sie über mehrere Registerkarten hinweg, um verschiedene Seiten im Auge zu behalten.\n\n- Durchsuchen Sie das Web direkt im Chat, um einen weiteren Kontext zu erhalten.\n\n- Klicken Sie mit der rechten Maustaste, um einen Teil der Seite sofort zu übersetzen.\n\n- Modelle jederzeit in Einstellungen wechseln oder herunterladen.\n\n\nSie können zunächst die schnellen Aktionen unten ausprobieren."
-    }
+    },
+    "ollama_is_running": "Ollama läuft"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "Holen Sie sich Ollama",
     "models": {
-      "title": "Aktives Modell"
+      "title": "Modelle",
+      "discover_more": "Entdecken Sie weitere Modelle"
     },
     "ollama": {
       "already_installed": "Bereits installiert und Ollama laufen?",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "Übersetzungssystem Eingabeaufforderung"
     },
     "provider": {
-      "title": "Modellanbieter"
+      "title": "Verbindung"
     },
     "provider_model": {
-      "title": "Anbieter"
+      "title": "Ollama konfigurieren"
     },
     "quick_actions": {
       "description": "Richten Sie schnelle Aktionen ein, um Ihre bevorzugten Eingabeaufforderungen schneller auszuführen-aus dem neuen Chat oder dem Rechtsklickmenü.",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "Übersetzungssprache"
     },
-    "webllm-desc": "Verwenden Sie WebllM für einen schnellen Versuch. \nFür die volle Modellunterstützung und eine bessere Leistung installieren Sie bitte Ollama.",
+    "webllm-desc": "Sie verwenden jetzt WebLLM: qwen3:0.6b für einen schnellen Test. Für vollständige Modellunterstützung und bessere Leistung installieren Sie bitte Ollama.",
     "general": {
       "system_language": "Systemsprache",
       "title": "Allgemein"
     },
-    "title": "Einstellungen"
+    "title": "Einstellungen",
+    "model_downloader": {
+      "description": "Dieses Modell muss vor der Verwendung heruntergeladen werden. Der Download kann einige Minuten dauern.",
+      "downloading_model": "Lade \"{model}\" herunter",
+      "download_model": "Lade \"{model}\" herunter",
+      "downloading": "Ihr Modell wird heruntergeladen. Bitte warten…",
+      "download": "Herunterladen",
+      "retry": "Wiederholen",
+      "unable_to_download": "Download kann nicht gestartet werden",
+      "could_not_connect_ollama": "Wir konnten keine Verbindung zu Ollama herstellen. Bitte stellen Sie sicher, dass Ollama läuft und versuchen Sie es erneut."
+    },
+    "webllm_downloader": {
+      "description": "Um den lokalen Modus zu verwenden, müssen Sie das {model}-Modell ({size}) herunterladen. Möchten Sie es jetzt herunterladen?"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "Hoppla! \nEtwas lief schief. \nBitte überprüfen Sie Ihre Ollama -Verbindung in Einstellungen und versuchen Sie es erneut.",
     "model_request_timeout": "\"Anfordern Sie eine Zeitüberschreitung, überprüfen Sie bitte Ihre Ollama -Verbindung oder in Betracht, eine neue Sitzung zu starten, da lange Kontexte die Antwortzeiten beeinflussen können.\"",
     "timeout_error": "Operation zeitlich ausgegeben: {message}",
-    "unknown_error": "Es ist ein unerwarteter Fehler aufgetreten: {message}"
+    "unknown_error": "Es ist ein unerwarteter Fehler aufgetreten: {message}",
+    "webllm_not_supported": "WebLLM wird auf Ihrem Gerät nicht unterstützt."
+  },
+  "common": {
+    "cancel": "Abbrechen"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Zu NativeMind hinzufügen"
+    }
   }
 }

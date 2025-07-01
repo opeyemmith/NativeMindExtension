@@ -146,7 +146,7 @@ const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   }
   else if (actionEvent.action === 'openSettings') {
     const scrollTarget = (actionEvent as ActionEvent<'openSettings'>).data.scrollTarget
-    showSettings(true, scrollTarget)
+    showSettings(true, { scrollTarget })
   }
   else {
     throw new Error(`Unknown action: ${actionEvent.action}`)

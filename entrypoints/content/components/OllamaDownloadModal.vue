@@ -8,73 +8,80 @@
     noCloseButton
     :fadeInAnimation="false"
   >
-    <div class="bg-white py-4 px-6 rounded-md w-[340px] max-w-full flex flex-col gap-2 text-black text-xs">
-      <div class="font-bold text-base">
-        {{ `${pulling ? 'Downloading' : 'Download'} “${modelInfo.name}” model (${formatSize(modelInfo.size)})` }}
-      </div>
-      <div
-        v-if="!pulling"
-        class="text-gray-600 text-sm"
-      >
-        This model needs to be downloaded before use. The download may take a few minutes.
-      </div>
-      <div
-        v-else
-        class="text-gray-600 text-sm"
-      >
-        Your model is being downloaded. Please wait…
-      </div>
-      <div v-if="pulling && !pulling.error">
-        <div class="flex gap-2 items-stretch flex-col">
+    <ConfirmPanel
+      v-if="ollamaStatusStore.connectionStatus === 'connected'"
+      :okButtonText="!pulling ? t('settings.model_downloader.download') : undefined"
+      :cancelButtonText="t('common.cancel')"
+      @ok="installModel"
+      @cancel="cancel"
+    >
+      <template #title>
+        {{ pulling ? t('settings.model_downloader.downloading_model', { model: modelInfo.name }) : t('settings.model_downloader.download_model', { model: modelInfo.name }) }}
+        {{ modelInfo.size ? `(${formatSize(modelInfo.size)})` : '' }}
+      </template>
+      <template #body>
+        <div
+          v-if="!pulling"
+          class="text-gray-600 text-sm"
+        >
+          {{ t('settings.model_downloader.description') }}
+        </div>
+        <div
+          v-else
+          class="text-gray-600 text-sm"
+        >
+          {{ t('settings.model_downloader.downloading') }}
+        </div>
+        <div
+          v-if="pulling && !pulling.error"
+          class="flex gap-2 items-stretch flex-col mt-1"
+        >
           <ProgressBar :progress="pulling.completed / (pulling.total || 1)" />
           <div class="text-xs text-gray-500 flex justify-between items-center">
             <div>{{ formatSize(pulling.completed) }}</div>
-            <div>{{ formatSize(pulling.total) }}</div>
+            <div>{{ pulling.total ? formatSize(pulling.total) : '-' }}</div>
           </div>
         </div>
-      </div>
-      <div v-if="pulling?.error">
-        <div class="text-red-500 text-xs flex items-center gap-1">
-          <IconWarning class="w-3 h-3" />
-          <span>{{ pulling.error }}</span>
+        <div v-if="pulling?.error">
+          <div class="text-red-500 text-xs flex items-center gap-1">
+            <IconWarning class="w-3 h-3 shrink-0" />
+            <span class="wrap-anywhere">{{ pulling.error }}</span>
+          </div>
         </div>
-      </div>
-      <Divider class="mt-4 mb-2" />
-      <div class="flex gap-2 items-center justify-end">
-        <Button
-          variant="secondary"
-          class="p-2"
-          @click="cancel"
-        >
-          Cancel
-        </Button>
-        <Button
-          v-if="!pulling"
-          variant="primary"
-          class="p-2"
-          @click="installModel"
-        >
-          Download
-        </Button>
-      </div>
-    </div>
+      </template>
+    </ConfirmPanel>
+    <ConfirmPanel
+      v-else
+      :okButtonText="t('settings.model_downloader.retry')"
+      :cancelButtonText="t('common.cancel')"
+      @ok="ollamaStatusStore.updateConnectionStatus"
+      @cancel="cancel"
+    >
+      <template #title>
+        {{ t('settings.model_downloader.unable_to_download') }}
+      </template>
+      <template #body>
+        {{ t('settings.model_downloader.could_not_connect_ollama') }}
+      </template>
+    </ConfirmPanel>
   </Modal>
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, ref } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import IconWarning from '@/assets/icons/warning.svg?component'
+import ConfirmPanel from '@/components/ConfirmPanel.vue'
 import Modal from '@/components/Modal.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
-import Button from '@/components/ui/Button.vue'
-import Divider from '@/components/ui/Divider.vue'
 import { useInjectContext } from '@/composables/useInjectContext'
 import { formatSize } from '@/utils/formatter'
+import { useI18n } from '@/utils/i18n'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 import logger from '@/utils/logger'
 
 import { useRootElement } from '../composables/useRootElement'
+import { useOllamaStatusStore } from '../store'
 import { pullOllamaModel } from '../utils/llm'
 
 const log = logger.child('OllamaDownloadConfirmModal')
@@ -85,7 +92,14 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits(['cancel', 'finished'])
-const modelInfo = PREDEFINED_OLLAMA_MODELS.find((model) => model.id === props.model) || PREDEFINED_OLLAMA_MODELS[0]
+const { t } = useI18n()
+const modelInfo = PREDEFINED_OLLAMA_MODELS.find((model) => model.id === props.model) || {
+  model: props.model,
+  id: props.model,
+  name: props.model,
+  size: 0,
+}
+const ollamaStatusStore = useOllamaStatusStore()
 const rootElement = useRootElement()
 const sidebarContainerEl = useInjectContext('sideContainerEl').inject()
 
@@ -138,5 +152,9 @@ const installModel = async () => {
 
 onBeforeUnmount(() => {
   pulling.value?.abort()
+})
+
+onMounted(() => {
+  ollamaStatusStore.updateConnectionStatus()
 })
 </script>

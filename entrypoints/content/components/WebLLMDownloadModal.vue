@@ -1,20 +1,20 @@
 <template>
   <div class="bg-white text-black py-4 px-6 rounded-md max-w-full flex flex-col w-[340px] text-xs">
     <div class="font-bold text-base">
-      {{ `${webLLMInitializeProgress.started ? 'Downloading' : 'Download'} “${DEFAULT_MODEL.name}” model (${formatSize(DEFAULT_MODEL.weightsBinSize)})` }}
+      {{ webLLMInitializeProgress.started ? t('settings.model_downloader.downloading_model', {model: DEFAULT_MODEL.name}) :t('settings.model_downloader.download_model', {model: DEFAULT_MODEL.name}) }}
+      ({{ formatSize(DEFAULT_MODEL.weightsBinSize) }})
     </div>
     <div
       v-if="!webLLMInitializeProgress.started"
       class="text-gray-600 text-sm"
     >
-      To use Local mode, you need to download the {{ DEFAULT_MODEL.name }} model ({{ formatSize(DEFAULT_MODEL.weightsBinSize) }}). Would you like to download it
-      now?
+      {{ t('settings.webllm_downloader.description', {model: DEFAULT_MODEL.name, size: formatSize(DEFAULT_MODEL.weightsBinSize)}) }}
     </div>
     <div
       v-else
       class="text-gray-600 text-sm"
     >
-      Your model is being downloaded. Please wait…
+      {{ t('settings.model_downloader.downloading') }}
     </div>
     <div
       v-if="webLLMInitializeProgress.started"
@@ -35,7 +35,7 @@
         class="p-2"
         @click="cancel"
       >
-        Cancel
+        {{ t('common.cancel') }}
       </Button>
       <Button
         v-if="!webLLMInitializeProgress.started"
@@ -44,7 +44,7 @@
         :class="{ 'opacity-50 pointer-events-none': !supportedWebLLM.supported }"
         @click="initWebLLM"
       >
-        Download
+        {{ t('settings.model_downloader.download') }}
       </Button>
     </div>
     <div
@@ -52,7 +52,7 @@
       class="text-red-500 text-[10px] flex items-center gap-2 justify-start"
     >
       <IconWarning class="w-3 h-3" />
-      WebLLM not supported on your {{ supportedWebLLM.reason === 'browser' ? 'browser' : 'device' }}.
+      {{ t('errors.webllm_not_supported') }}
     </div>
   </div>
 </template>
@@ -65,6 +65,7 @@ import ProgressBar from '@/components/ProgressBar.vue'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import { formatSize } from '@/utils/formatter'
+import { useI18n } from '@/utils/i18n'
 import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
@@ -78,6 +79,7 @@ const emit = defineEmits<{
   (e: 'finished', model: WebLLMSupportedModel): void
 }>()
 
+const { t } = useI18n()
 const supportedWebLLM = await c2bRpc.checkSupportWebLLM()
 const DEFAULT_MODEL = SUPPORTED_MODELS[0]
 const webLLMInitializeProgress = ref({ total: DEFAULT_MODEL.weightsBinSize, downloaded: 0, started: false, done: false })

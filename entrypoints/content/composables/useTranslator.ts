@@ -77,12 +77,12 @@ async function _useTranslator() {
       if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
         if (!(await ollamaStatusStore.updateConnectionStatus())) {
           toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
-          showSettings(true, 'server-address-section')
+          showSettings(true, { scrollTarget: 'server-address-section' })
           return
         }
         else if ((await ollamaStatusStore.updateModelList()).length === 0) {
           toast('No model found, please download a model.', { duration: 2000 })
-          showSettings(true, 'model-download-section')
+          showSettings(true, { scrollTarget: 'model-download-section' })
           return
         }
       }

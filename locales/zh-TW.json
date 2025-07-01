@@ -48,7 +48,9 @@
       "need_help": "需要幫助嗎？",
       "ollama_desc": "用Ollama解鎖AI的全部力量。",
       "setup": "設置",
-      "step1": "步驟1"
+      "step1": "步驟1",
+      "download_model_to_begin": "下載模型以開始。",
+      "select_model_to_start": "選擇並下載模型以開始使用"
     },
     "webllm_tutorial": {
       "desc": "在瀏覽器中使用輕巧的模型（QWEN 0.6B） - 無需設置，無需等待。",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋歡迎來到 **NativeMind**",
       "body": "NativeMind是一個隱私優先的AI瀏覽器擴展程式，可協助您聊天、搜尋和翻譯 - 全部由裝置語言模型提供支援。\n\n這是您可以使用NativeMind來做的：\n- 跨多個分頁聊天以跟蹤不同頁面。\n- 直接在聊天中搜尋網路以獲取更多上下文。\n- 右鍵點擊​​以立即翻譯頁面的任何部分。\n- 在設置中隨時切換或下載模型。\n\n您可以從下面嘗試快捷操作開始。"
-    }
+    },
+    "ollama_is_running": "Ollama 正在運行"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "獲取Ollama",
     "models": {
-      "title": "當前模型"
+      "title": "模型",
+      "discover_more": "探索更多模型"
     },
     "ollama": {
       "already_installed": "已經安裝並執行Ollama？",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "翻譯系統提示詞"
     },
     "provider": {
-      "title": "模型提供商"
+      "title": "連接"
     },
     "provider_model": {
-      "title": "提供者"
+      "title": "配置 Ollama"
     },
     "quick_actions": {
       "description": "設置快捷操作以更快地執行您喜歡的提示詞 - 從新建聊天或右鍵選單中。",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "翻譯語言"
     },
-    "webllm-desc": "使用WEBLLM進行快速試用。要獲得完整的模型支援和更好的效能，請安裝Ollama。",
+    "webllm-desc": "您現在正在使用 WebLLM: qwen3:0.6b 進行快速試用。如需完整模型支援和更佳效能，請安裝 Ollama。",
     "general": {
       "system_language": "系統語言",
       "title": "一般"
     },
-    "title": "設定"
+    "title": "設定",
+    "model_downloader": {
+      "description": "此模型需要在使用前下載。下載可能需要幾分鐘的時間。",
+      "downloading_model": "正在下載「{model}」",
+      "download_model": "下載「{model}」",
+      "downloading": "您的模型正在下載中，請稍候…",
+      "download": "下載",
+      "retry": "重試",
+      "unable_to_download": "無法開始下載",
+      "could_not_connect_ollama": "我們無法連接到 Ollama。請確保 Ollama 正在運行，然後再試一次。"
+    },
+    "webllm_downloader": {
+      "description": "要使用本機模式，您需要下載 {model} 模型（{size}）。您現在要下載嗎？"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "哎呀！出了點問題。請在設置中檢查您的Ollama連接，然後重試。",
     "model_request_timeout": "“請求超時，請檢查您的Ollama連接或考慮啟動新會話，因為長上下文可能會影響響應時間。”",
     "timeout_error": "操作計時：{message}",
-    "unknown_error": "發生意外錯誤：{message}"
+    "unknown_error": "發生意外錯誤：{message}",
+    "webllm_not_supported": "WebLLM 在您的裝置上不受支援。"
+  },
+  "common": {
+    "cancel": "取消"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "新增至 NativeMind"
+    }
   }
 }

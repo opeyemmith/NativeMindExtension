@@ -48,7 +48,9 @@
       "need_help": "Besoin d'aide ?",
       "ollama_desc": "Libérez toute la puissance de l'IA locale avec Ollama.",
       "setup": "Configuration",
-      "step1": "ÉTAPE 1"
+      "step1": "ÉTAPE 1",
+      "download_model_to_begin": "Téléchargez un modèle pour commencer.",
+      "select_model_to_start": "Sélectionnez et téléchargez un modèle pour commencer"
     },
     "webllm_tutorial": {
       "desc": "Utilisez un modèle léger (Qwen 0.6b) directement dans votre navigateur - sans configuration, sans attente.",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋 Bienvenue sur **NativeMind**",
       "body": "NativeMind est une extension de navigateur IA qui privilégie la confidentialité et vous aide à discuter, rechercher et traduire - le tout alimenté par des modèles de langage fonctionnant sur votre appareil.\n\n\nVoici ce que vous pouvez faire avec NativeMind :\n\n\n\n- Discuter à travers plusieurs onglets pour suivre différentes pages.\n\n- Rechercher sur le Web directement dans le chat pour plus de contexte.\n\n- Cliquer avec le bouton droit pour traduire instantanément n'importe quelle partie de la page.\n\n- Changer ou télécharger des modèles à tout moment dans les Paramètres.\n\n\nVous pouvez commencer par essayer les actions rapides ci-dessous."
-    }
+    },
+    "ollama_is_running": "Ollama est en cours d'exécution"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "Obtenir Ollama",
     "models": {
-      "title": "Modèle actif"
+      "title": "Modèles",
+      "discover_more": "Découvrez plus de modèles"
     },
     "ollama": {
       "already_installed": "Ollama est déjà installé et en cours d'exécution ?",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "Instruction système de traduction"
     },
     "provider": {
-      "title": "Fournisseur de modèles"
+      "title": "Connexion"
     },
     "provider_model": {
-      "title": "Fournisseur"
+      "title": "Configurer Ollama"
     },
     "quick_actions": {
       "description": "Configurez des actions rapides pour exécuter vos instructions préférées plus rapidement - depuis le nouveau chat ou le menu contextuel.",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "Langue de traduction"
     },
-    "webllm-desc": "Utilisation de WebLLM pour un essai rapide. \nPour une prise en charge complète des modèles et de meilleures performances, veuillez installer Ollama.",
+    "webllm-desc": "Vous utilisez maintenant WebLLM : qwen3:0.6b pour un essai rapide. Pour un support complet des modèles et de meilleures performances, veuillez installer Ollama.",
     "general": {
       "system_language": "Langue du système",
       "title": "Général"
     },
-    "title": "Paramètres"
+    "title": "Paramètres",
+    "model_downloader": {
+      "description": "Ce modèle doit être téléchargé avant utilisation. Le téléchargement peut prendre quelques minutes.",
+      "downloading_model": "Téléchargement de \"{model}\"",
+      "download_model": "Télécharger \"{model}\"",
+      "downloading": "Votre modèle est en cours de téléchargement. Veuillez patienter…",
+      "download": "Télécharger",
+      "retry": "Réessayer",
+      "unable_to_download": "Impossible de démarrer le téléchargement",
+      "could_not_connect_ollama": "Nous n'avons pas pu nous connecter à Ollama. Veuillez vous assurer qu'Ollama est en cours d'exécution et réessayer."
+    },
+    "webllm_downloader": {
+      "description": "Pour utiliser le mode Local, vous devez télécharger le modèle {model} ({size}). Souhaitez-vous le télécharger maintenant ?"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "Oups ! Quelque chose s'est mal passé. Veuillez vérifier votre connexion Ollama dans les paramètres et réessayer.",
     "timeout_error": "Opération expirée : {message}",
     "unknown_error": "Une erreur inattendue s'est produite : {message}",
-    "model_request_timeout": "Délai de requête expiré. Veuillez vérifier votre connexion Ollama ou envisager de démarrer une nouvelle session, car les contextes longs peuvent affecter les temps de réponse."
+    "model_request_timeout": "Délai de requête expiré. Veuillez vérifier votre connexion Ollama ou envisager de démarrer une nouvelle session, car les contextes longs peuvent affecter les temps de réponse.",
+    "webllm_not_supported": "WebLLM n'est pas pris en charge sur votre appareil."
+  },
+  "common": {
+    "cancel": "Annuler"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Ajouter à NativeMind"
+    }
   }
 }

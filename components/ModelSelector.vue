@@ -147,7 +147,7 @@ const onClickDelete = async (model: string) => {
 
 const onClick = () => {
   if (modelList.value.length === 0) {
-    showSettings(true, 'model-download-section')
+    showSettings(true, { scrollTarget: 'model-download-section' })
   }
 }
 

@@ -24,6 +24,12 @@
         </div>
       </div>
     </div>
+    <DownloadConfirmModal
+      v-if="isShowDownloadOllamaModal && props.downloadModel"
+      :model="props.downloadModel"
+      @finished="onDownloadOllamaModelFinished"
+      @cancel="onDownloadOllamaModelFinished"
+    />
     <Modal
       v-model="isShowDownloadWebLLMModal"
       class="fixed"
@@ -38,44 +44,10 @@
       />
     </Modal>
     <div class="p-4 pt-0 flex flex-col gap-4">
-      <Block :title="t('settings.general.title')">
-        <div class="flex flex-col gap-4">
-          <Section
-            :title="t('settings.general.system_language')"
-          >
-            <div class="w-52">
-              <UILanguageSelector />
-            </div>
-          </Section>
-        </div>
-      </Block>
       <Block :title="t('settings.provider_model.title')">
         <div class="flex flex-col gap-4">
-          <Section :title="t('settings.provider.title')">
-            <Button
-              variant="secondary"
-              :hoverStyle="false"
-              class="flex justify-between items-center cursor-auto text-[13px] font-medium py-0 px-[10px] h-8 w-full bg-[#FAFAFA]"
-            >
-              <div
-                v-if="endpointType==='ollama'"
-                class="flex items-center gap-2"
-              >
-                <img
-                  :src="IconOllama"
-                  class="w-4 h-4"
-                >
-                <span>Ollama</span>
-                <StatusBadge
-                  :status="connectionStatus === 'connected' ? 'success' : 'error'"
-                  :text="connectionStatus === 'connected' ? t('settings.ollama.connected') : connectionStatus === 'unconnected' ? t('settings.ollama.unconnected') : t('settings.ollama.connection_error')"
-                />
-              </div>
-              <span v-else-if="endpointType === 'web-llm'">Web LLM: {{ DEFAULT_WEBLLM_MODEL.name }}</span>
-              <ExhaustiveError v-else />
-            </Button>
+          <Section v-if="endpointType === 'web-llm'">
             <span
-              v-if="endpointType === 'web-llm'"
               class="block w-80 mt-2"
             >
               <Text
@@ -86,6 +58,27 @@
                 {{ t('settings.webllm-desc') }}
               </Text>
             </span>
+          </Section>
+          <Section :title="t('settings.provider.title')">
+            <Button
+              variant="secondary"
+              :hoverStyle="false"
+              class="flex justify-between items-center cursor-auto text-[13px] font-medium py-0 px-[10px] h-8 w-full bg-[#FAFAFA]"
+            >
+              <div
+                class="flex items-center gap-2"
+              >
+                <img
+                  :src="IconOllama"
+                  class="w-4 h-4"
+                >
+                <span>Ollama</span>
+                <StatusBadge
+                  :status="connectionStatus === 'connected' ? 'success' : 'warning'"
+                  :text="connectionStatus === 'connected' ? t('settings.ollama.connected') : t('settings.ollama.unconnected')"
+                />
+              </div>
+            </Button>
           </Section>
           <Section>
             <div class="flex flex-col gap-4 items-start">
@@ -103,12 +96,12 @@
                 </Button>
               </a>
               <ScrollTarget
+                v-if="endpointType === 'ollama'"
                 :autoScrollIntoView="scrollTarget === 'server-address-section'"
                 showHighlight
                 class="w-full"
               >
                 <Section
-                  v-if="endpointType === 'ollama'"
                   :title="t('settings.ollama.server_address')"
                   class="w-full"
                 >
@@ -167,95 +160,42 @@
             v-if="connectionStatus === 'connected' && endpointType === 'ollama'"
             :title="t('settings.models.title')"
           >
-            <ModelSelector
-              ref="modelSelectorRef"
-              class="max-w-64"
-              type="buttons"
-              dropdownAlign="left"
-              showDetails
-              allowDelete
-            />
+            <div class="flex flex-col gap-2 items-start">
+              <ModelSelector
+                ref="modelSelectorRef"
+                class="max-w-64"
+                type="buttons"
+                dropdownAlign="left"
+                showDetails
+                allowDelete
+              />
+              <a
+                href="https://ollama.com/search"
+                class="underline text-xs"
+                target="_blank"
+              >
+                {{ t('settings.models.discover_more') }}
+              </a>
+              <a
+                :href="OLLAMA_TUTORIAL_URL"
+                target="_blank"
+                class="underline text-xs"
+              >
+                {{ t('settings.ollama.learn_more_about_models') }}
+              </a>
+            </div>
           </Section>
-          <ScrollTarget
-            :autoScrollIntoView="scrollTarget === 'model-download-section'"
-            showHighlight
+        </div>
+      </Block>
+      <Block :title="t('settings.general.title')">
+        <div class="flex flex-col gap-4">
+          <Section
+            :title="t('settings.general.system_language')"
           >
-            <Section
-              v-if="connectionStatus === 'connected' && endpointType === 'ollama'"
-              :title="t('settings.ollama.downloadable_model')"
-            >
-              <div class="flex gap-3 justify-start items-stretch">
-                <DownloadConfirmModal
-                  v-if="isShowDownloadOllamaModal && selectedAvailableModel"
-                  :model="selectedAvailableModel"
-                  @finished="onDownloadOllamaModelFinished"
-                  @cancel="onDownloadOllamaModelFinished"
-                />
-                <Selector
-                  v-model="selectedAvailableModel"
-                  class="grow"
-                  containerClass="w-full"
-                  dropdownClass="text-xs text-black w-52"
-                  dropdownAlign="stretch"
-                  :options="availableModelOptions"
-                >
-                  <template #button="{ option }">
-                    <div
-                      v-if="option"
-                      class="flex items-center gap-[6px]"
-                    >
-                      <ModelLogo
-                        :modelId="option.value.id"
-                        class="shrink-0 grow-0"
-                      />
-                      <span>
-                        {{ option.label }}
-                      </span>
-                    </div>
-                    <div v-else>
-                      {{ t('settings.choose_model') }}
-                    </div>
-                  </template>
-                  <template #option="{ option }">
-                    <div class="flex items-center gap-2">
-                      <div class="flex items-center gap-[6px]">
-                        <ModelLogo
-                          :modelId="option.value.id"
-                          class="shrink-0 grow-0"
-                        />
-                        <span>
-                          {{ option.label }}
-                        </span>
-                      </div>
-                      <span
-                        v-if="option.value?.size"
-                        class="text-gray-500 font-light whitespace-nowrap"
-                      >
-                        ({{ formatSize(option.value.size) }})
-                      </span>
-                    </div>
-                  </template>
-                </Selector>
-                <Button
-                  variant="primary"
-                  class="px-2 py-1 rounded-md"
-                  :class="selectedAvailableModel ? '' : 'pointer-events-none bg-gray-400 text-gray-200'"
-                  @click="isShowDownloadOllamaModal = true"
-                >
-                  {{ t('settings.download') }}
-                </Button>
-              </div>
-              <div class="mt-4">
-                <a
-                  :href="OLLAMA_TUTORIAL_URL"
-                  target="_blank"
-                  class="text-xs text-blue-500 hover:underline"
-                >
-                  {{ t('settings.ollama.learn_more_about_models') }}
-                </a>
-              </div>
-            </Section>
-          </ScrollTarget>
+            <div class="w-52">
+              <UILanguageSelector />
+            </div>
+          </Section>
         </div>
       </Block>
       <Block :title="t('settings.prompts.title')">
@@ -366,16 +306,14 @@
 
 <script setup lang="tsx">
 import { useCountdown } from '@vueuse/core'
-import { computed, onMounted, ref, toRef, watch } from 'vue'
+import { onMounted, ref, toRef, watch } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
 import IconOllama from '@/assets/icons/ollama.png'
-import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import Input from '@/components/Input.vue'
 import Loading from '@/components/Loading.vue'
 import Logo from '@/components/Logo.vue'
 import Modal from '@/components/Modal.vue'
-import ModelLogo from '@/components/ModelLogo.vue'
 import ModelSelector from '@/components/ModelSelector.vue'
 import ScrollTarget from '@/components/ScrollTarget.vue'
 import Selector from '@/components/Selector.vue'
@@ -385,11 +323,8 @@ import Button from '@/components/ui/Button.vue'
 import Text from '@/components/ui/Text.vue'
 import UILanguageSelector from '@/components/UILanguageSelector.vue'
 import { OLLAMA_HOMEPAGE_URL, OLLAMA_TUTORIAL_URL } from '@/utils/constants'
-import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n/index'
 import { SUPPORTED_LANGUAGES } from '@/utils/language/detect'
-import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
-import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { SettingsScrollTarget } from '@/utils/scroll-targets'
 import { DEFAULT_CHAT_SYSTEM_PROMPT, DEFAULT_TRANSLATOR_SYSTEM_PROMPT, getUserConfig } from '@/utils/user-config'
@@ -404,21 +339,15 @@ import DownloadWebLLMModel from '../WebLLMDownloadModal.vue'
 import Block from './Block.vue'
 import Section from './Section.vue'
 
-defineProps<{
+const props = defineProps<{
   scrollTarget?: SettingsScrollTarget
+  downloadModel?: string
 }>()
 
 const log = logger.child('Settings')
-const DEFAULT_WEBLLM_MODEL = SUPPORTED_MODELS[0]
 
 const { t } = useI18n()
 const ollamaStatusStore = useOllamaStatusStore()
-const availableModelOptions = computed(() => PREDEFINED_OLLAMA_MODELS.map((model) => ({
-  id: model.id,
-  label: model.name,
-  value: model,
-  disabled: ollamaStatusStore.modelList.some((m) => m.model === model.id),
-})))
 
 const settingsRef = ref<HTMLElement | null>(null)
 const rootElement = useRootElement()
@@ -431,8 +360,7 @@ const loading = ref(false)
 const modelSelectorRef = ref<InstanceType<typeof ModelSelector> | null>(null)
 const isShowDownloadWebLLMModal = ref(false)
 const connectionStatus = toRef(ollamaStatusStore, 'connectionStatus')
-const selectedAvailableModel = ref()
-const isShowDownloadOllamaModal = ref(false)
+const isShowDownloadOllamaModal = ref(!!props.downloadModel)
 // Prompt refs
 const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const translationSystemPromptError = ref('')
@@ -442,7 +370,6 @@ const defaultQuickActions = userConfig.chat.quickActions.actions.getDefault()
 
 const onDownloadOllamaModelFinished = async () => {
   await ollamaStatusStore.updateModelList()
-  selectedAvailableModel.value = undefined
   isShowDownloadOllamaModal.value = false
 }
 
@@ -463,6 +390,7 @@ const testConnection = async () => {
   if (success) {
     await ollamaStatusStore.updateModelList()
   }
+  return success
 }
 
 let clickCount = 0
@@ -516,7 +444,7 @@ watch(translationSystemPrompt, (newValue) => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   testConnection()
 })
 </script>

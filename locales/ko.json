@@ -48,7 +48,9 @@
       "need_help": "도움이 필요하세요?",
       "ollama_desc": "Ollama로 로컬 AI의 모든 기능을 활용하세요.",
       "setup": "설정",
-      "step1": "1단계"
+      "step1": "1단계",
+      "download_model_to_begin": "시작하려면 모델을 다운로드하세요.",
+      "select_model_to_start": "시작하려면 모델을 선택하고 다운로드하세요"
     },
     "webllm_tutorial": {
       "desc": "브라우저에서 바로 경량 모델(Qwen 0.6B)을 사용해 보세요. 설정 없이 바로 시작할 수 있습니다.",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋 **NativeMind**에 오신 것을 환영합니다",
       "body": "NativeMind는 개인 정보 보호에 중점을 둔 AI 브라우저 확장 프로그램으로, 온디바이스 언어 모델을 통해 채팅, 검색 및 번역을 지원합니다.\n\n\nNativeMind로 할 수 있는 일은 다음과 같습니다.\n\n\n\n- 여러 탭에서 채팅하여 다양한 페이지의 내용을 파악할 수 있습니다.\n\n- 채팅 내에서 직접 웹을 검색하여 더 많은 정보를 얻을 수 있습니다.\n\n- 마우스 오른쪽 버튼을 클릭하여 페이지의 일부를 즉시 번역할 수 있습니다.\n\n- 설정에서 언제든지 모델을 변경하거나 새 모델을 다운로드할 수 있습니다.\n\n\n아래의 빠른 액션으로 지금 바로 시작해 보세요."
-    }
+    },
+    "ollama_is_running": "Ollama가 실행 중입니다"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "Ollama 얻기",
     "models": {
-      "title": "활성 모델"
+      "title": "모델",
+      "discover_more": "더 많은 모델 살펴보기"
     },
     "ollama": {
       "already_installed": "이미 Ollama를 설치하고 실행 중인가요?",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "번역 시스템 프롬프트"
     },
     "provider": {
-      "title": "모델 제공 업체"
+      "title": "연결"
     },
     "provider_model": {
-      "title": "제공 업체"
+      "title": "Ollama 구성"
     },
     "quick_actions": {
       "description": "새 채팅이나 컨텍스트 메뉴에서 자주 사용하는 프롬프트를 더 빠르게 실행할 수 있도록 빠른 액션을 설정하세요.",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "번역 언어"
     },
-    "webllm-desc": "빠른 테스트를 위해 WebLLM을 사용합니다. \n전체 모델 지원과 더 나은 성능을 위해 Ollama를 설치하세요.",
+    "webllm-desc": "지금 빠른 체험을 위해 WebLLM: qwen3:0.6b를 사용하고 있습니다. 전체 모델 지원과 더 나은 성능을 위해서는 Ollama를 설치해 주세요.",
     "general": {
       "system_language": "시스템 언어",
       "title": "일반"
     },
-    "title": "설정"
+    "title": "설정",
+    "model_downloader": {
+      "description": "이 모델은 사용하기 전에 다운로드해야 합니다. 다운로드에 몇 분이 소요될 수 있습니다.",
+      "downloading_model": "\"{model}\" 다운로드 중",
+      "download_model": "\"{model}\" 다운로드",
+      "downloading": "모델을 다운로드하고 있습니다. 잠시만 기다려 주세요…",
+      "download": "다운로드",
+      "retry": "다시 시도",
+      "unable_to_download": "다운로드를 시작할 수 없음",
+      "could_not_connect_ollama": "Ollama에 연결할 수 없습니다. Ollama가 실행 중인지 확인하고 다시 시도해 주세요."
+    },
+    "webllm_downloader": {
+      "description": "로컬 모드를 사용하려면 {model} 모델({size})을 다운로드해야 합니다. 지금 다운로드하시겠습니까?"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "문제가 발생했습니다! 설정에서 Ollama 연결을 확인하고 다시 시도해 주세요.",
     "model_request_timeout": "요청 시간이 초과되었습니다. Ollama 연결을 확인하거나, 긴 컨텍스트가 응답 시간에 영향을 미칠 수 있으므로 새 세션 시작을 고려해 주세요.",
     "timeout_error": "작업 시간 초과: {message}",
-    "unknown_error": "예기치 않은 오류가 발생했습니다: {message}"
+    "unknown_error": "예기치 않은 오류가 발생했습니다: {message}",
+    "webllm_not_supported": "WebLLM이 귀하의 기기에서 지원되지 않습니다."
+  },
+  "common": {
+    "cancel": "취소"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "NativeMind에 추가"
+    }
   }
 }

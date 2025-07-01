@@ -5,7 +5,7 @@
     <div class="text-xs font-bold flex items-center justify-center">
       <StatusBadge
         status="success"
-        text="Ollama is running"
+        :text="t('onboarding.ollama_is_running')"
       />
     </div>
     <div class="flex flex-col gap-2">
@@ -14,13 +14,13 @@
           size="medium"
           class="font-semibold"
         >
-          Select a model to begin.
+          {{ t('onboarding.guide.download_model_to_begin') }}
         </Text>
       </div>
       <Divider class="mb-2" />
       <div>
         <Text>
-          Select and download a model to get started
+          {{ t('onboarding.guide.select_model_to_start') }}
         </Text>
       </div>
       <Selector
@@ -70,6 +70,13 @@
           </div>
         </template>
       </Selector>
+      <a
+        href="https://ollama.com/search"
+        class="underline text-xs"
+        target="_blank"
+      >
+        {{ t('settings.models.discover_more') }}
+      </a>
     </div>
     <Button
       class="h-10 mt-4 text-sm font-medium px-7"
@@ -128,11 +135,13 @@ import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
 import { OLLAMA_TUTORIAL_URL } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
+import { useI18n } from '@/utils/i18n'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 
 import DownloadConfirmModal from '../OllamaDownloadModal.vue'
 
 const emit = defineEmits(['finished'])
+const { t } = useI18n()
 
 const options = PREDEFINED_OLLAMA_MODELS.map((model) => ({
   id: model.id,

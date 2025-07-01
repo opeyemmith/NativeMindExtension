@@ -1,6 +1,6 @@
 {
   "settings": {
-    "webllm-desc": "Using WebLLM for quick tryout. For full model support and better performance, please install Ollama.",
+    "webllm-desc": "You are now using WebLLM: qwen3:0.6b for quick tryout. For full model support and better performance, please install Ollama.",
     "translation": {
       "title": "Translation Language"
     },
@@ -27,7 +27,8 @@
       "chat_system_prompt": "Chat System Prompt"
     },
     "models": {
-      "title": "Active Model"
+      "title": "Models",
+      "discover_more": " Discover more models"
     },
     "quick_actions": {
       "title": "Customize Quick Actions",
@@ -48,10 +49,10 @@
       "join_waitlist_link": "Join the waitlist"
     },
     "provider": {
-      "title": "Model Provider"
+      "title": "Connection"
     },
     "provider_model": {
-      "title": "Provider&Model"
+      "title": "Configure Ollama"
     },
     "advanced": {
       "title": "Advanced"
@@ -60,7 +61,20 @@
       "title": "General",
       "system_language": "System Language"
     },
-    "title": "Settings"
+    "title": "Settings",
+    "model_downloader": {
+      "description": "This model needs to be downloaded before use. The download may take a few minutes.",
+      "downloading": "Your model is being downloaded. Please wait…",
+      "download": "Download",
+      "downloading_model": "Downloading “{model}“",
+      "download_model": "Download “{model}“\t",
+      "unable_to_download": "Unable to Start Download",
+      "retry": "Retry",
+      "could_not_connect_ollama": "We couldn’t connect to Ollama. Please make sure Ollama is running and try again."
+    },
+    "webllm_downloader": {
+      "description": "To use Local mode, you need to download the {model} model ({size}). Would you like to download it now?"
+    }
   },
   "chat": {
     "messages": {
@@ -111,7 +125,9 @@
       "already_installed": "Already installed and run Ollama?",
       "setup": "Setup",
       "need_help": "Need help?",
-      "follow_our_tutorial": "Follow our installation guide"
+      "follow_our_tutorial": "Follow our installation guide",
+      "download_model_to_begin": "Download a model to begin.",
+      "select_model_to_start": "Select and download a model to get started"
     },
     "webllm_tutorial": {
       "title": "Not ready to install? Try it instantly.",
@@ -122,7 +138,8 @@
     "welcome_msg": {
       "title": "👋 Welcome to **NativeMind**",
       "body": "NativeMind is a privacy-first AI browser extension that helps you chat, search, and translate — all powered by on-device language models.\n\nHere’s what you can do with NativeMind:\n\n\n- Chat across multiple tabs to keep track of different pages.\n- Search the web directly within the chat for more context.\n- Right-click to translate any part of the page instantly.\n- Switch or download models anytime in Settings.\n\nYou can start by trying out the quick actions below."
-    }
+    },
+    "ollama_is_running": "Ollama is running"
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "Oops! Something went wrong. Please check your Ollama connection in settings and try again.",
     "model_not_found": "Oops! Something went wrong. Please check your Ollama connection in settings and try again.",
     "model_request_timeout": "'Request timeout, please check your Ollama connection or consider starting a new session as long contexts may affect response times.'",
-    "timeout_error": "Operation timed out: {message}"
+    "timeout_error": "Operation timed out: {message}",
+    "webllm_not_supported": "WebLLM not supported on your device."
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Add to NativeMind"
+    }
   }
 }

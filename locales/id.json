@@ -48,7 +48,9 @@
       "need_help": "Butuh bantuan?",
       "ollama_desc": "Buka kekuatan penuh AI lokal dengan Ollama.",
       "setup": "Pengaturan",
-      "step1": "LANGKAH 1"
+      "step1": "LANGKAH 1",
+      "download_model_to_begin": "Unduh model untuk memulai.",
+      "select_model_to_start": "Pilih dan unduh model untuk memulai"
     },
     "webllm_tutorial": {
       "desc": "Gunakan model ringan (Qwen 0.6b) langsung di browser Anda — tanpa pengaturan, tanpa menunggu.",
@@ -59,7 +61,8 @@
     "welcome_msg": {
       "title": "👋 Selamat datang di **NativeMind**",
       "body": "NativeMind adalah ekstensi browser AI yang mengutamakan privasi dan membantu Anda mengobrol, mencari, dan menerjemahkan — semuanya didukung oleh model bahasa yang berjalan di perangkat Anda.\n\nInilah yang dapat Anda lakukan dengan NativeMind:\n\n- Mengobrol di beberapa tab untuk melacak berbagai halaman.\n- Mencari di web secara langsung dalam obrolan untuk mendapatkan konteks lebih banyak.\n- Klik kanan untuk menerjemahkan bagian mana pun dari halaman secara instan.\n- Beralih atau mengunduh model kapan saja di Pengaturan.\n\nAnda dapat mulai dengan mencoba tindakan cepat di bawah ini."
-    }
+    },
+    "ollama_is_running": "Ollama sedang berjalan"
   },
   "settings": {
     "advanced": {
@@ -75,7 +78,8 @@
     },
     "get_ollama": "Dapatkan Ollama",
     "models": {
-      "title": "Model aktif"
+      "title": "Model",
+      "discover_more": "Temukan lebih banyak model"
     },
     "ollama": {
       "already_installed": "Sudah menginstal dan menjalankan Ollama?",
@@ -96,10 +100,10 @@
       "translation_system_prompt": "Prompt sistem penerjemah"
     },
     "provider": {
-      "title": "Penyedia Model"
+      "title": "Koneksi"
     },
     "provider_model": {
-      "title": "Penyedia&Model"
+      "title": "Konfigurasi Ollama"
     },
     "quick_actions": {
       "description": "Siapkan tindakan cepat untuk menjalankan prompt favorit Anda lebih cepat -- dari Obrolan Baru atau menu klik kanan.",
@@ -117,12 +121,25 @@
     "translation": {
       "title": "Bahasa terjemahan"
     },
-    "webllm-desc": "Menggunakan WebLLM untuk uji coba cepat. Untuk dukungan model lengkap dan kinerja yang lebih baik, silakan instal Ollama.",
+    "webllm-desc": "Anda sekarang menggunakan WebLLM: qwen3:0.6b untuk percobaan cepat. Untuk dukungan model lengkap dan performa yang lebih baik, silakan instal Ollama.",
     "general": {
       "system_language": "Bahasa sistem",
       "title": "Umum"
     },
-    "title": "Pengaturan"
+    "title": "Pengaturan",
+    "model_downloader": {
+      "description": "Model ini perlu diunduh sebelum digunakan. Pengunduhan mungkin memerlukan waktu beberapa menit.",
+      "downloading_model": "Mengunduh \"{model}\"",
+      "download_model": "Unduh \"{model}\"",
+      "downloading": "Model Anda sedang diunduh. Mohon tunggu…",
+      "download": "Unduh",
+      "retry": "Coba lagi",
+      "unable_to_download": "Tidak Dapat Memulai Unduhan",
+      "could_not_connect_ollama": "Kami tidak dapat terhubung ke Ollama. Pastikan Ollama sedang berjalan dan coba lagi."
+    },
+    "webllm_downloader": {
+      "description": "Untuk menggunakan mode Lokal, Anda perlu mengunduh model {model} ({size}). Apakah Anda ingin mengunduhnya sekarang?"
+    }
   },
   "context_menu": {
     "quick_actions": {
@@ -138,6 +155,15 @@
     "model_request_error": "Ups! Ada yang salah. Silakan periksa koneksi Ollama Anda di pengaturan dan coba lagi.",
     "model_request_timeout": "Waktu permintaan habis. Silakan periksa koneksi Ollama Anda atau pertimbangkan untuk memulai sesi baru karena konteks yang panjang dapat memengaruhi waktu respons.",
     "timeout_error": "Operasi waktu habis: {message}",
-    "unknown_error": "Terjadi kesalahan yang tidak terduga: {message}"
+    "unknown_error": "Terjadi kesalahan yang tidak terduga: {message}",
+    "webllm_not_supported": "WebLLM tidak didukung pada perangkat Anda."
+  },
+  "common": {
+    "cancel": "Batal"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Tambahkan ke NativeMind"
+    }
   }
 }

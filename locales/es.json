@@ -44,7 +44,8 @@
     "model_request_error": "¡Ups! Algo salió mal. Por favor, verifica tu conexión de Ollama en la configuración e inténtalo de nuevo.",
     "model_request_timeout": "Tiempo de espera agotado. Por favor verifica tu conexión de Ollama o considera iniciar una nueva sesión, ya que los contextos largos pueden afectar los tiempos de respuesta.",
     "timeout_error": "La operación agotó el tiempo de espera: {message}",
-    "unknown_error": "Se produjo un error inesperado: {message}"
+    "unknown_error": "Se produjo un error inesperado: {message}",
+    "webllm_not_supported": "WebLLM no es compatible con tu dispositivo."
   },
   "onboarding": {
     "banner": {
@@ -64,7 +65,9 @@
       "need_help": "¿Necesitas ayuda?",
       "ollama_desc": "Desbloquea todo el poder de la IA local con Ollama.",
       "setup": "Configuración",
-      "step1": "PASO 1"
+      "step1": "PASO 1",
+      "download_model_to_begin": "Descarga un modelo para comenzar.",
+      "select_model_to_start": "Selecciona y descarga un modelo para comenzar"
     },
     "webllm_tutorial": {
       "desc": "Usa un modelo ligero (Qwen 0.6b) directamente en tu navegador — sin configuración, sin espera.",
@@ -75,7 +78,8 @@
     "welcome_msg": {
       "body": "NativeMind es una extensión de navegador con IA que prioriza la privacidad y te ayuda a chatear, buscar y traducir — todo impulsado por modelos de lenguaje en el dispositivo.\n\nEsto es lo que puedes hacer con NativeMind:\n\n- Chatear en múltiples pestañas para hacer seguimiento de diferentes páginas.\n- Buscar en la web directamente dentro del chat para más contexto.\n- Hacer clic derecho para traducir cualquier parte de la página al instante.\n- Cambiar o descargar modelos en cualquier momento en Configuración.\n\nPuedes empezar probando las acciones rápidas a continuación.",
       "title": "👋 Bienvenido a **NativeMind**"
-    }
+    },
+    "ollama_is_running": "Ollama está ejecutándose"
   },
   "settings": {
     "advanced": {
@@ -95,7 +99,8 @@
     },
     "get_ollama": "Obtener Ollama",
     "models": {
-      "title": "Modelo Activo"
+      "title": "Modelos",
+      "discover_more": "Descubre más modelos"
     },
     "ollama": {
       "already_installed": "¿Ya instalaste y ejecutaste Ollama?",
@@ -116,10 +121,10 @@
       "translation_system_prompt": "Instrucción del Sistema de Traducción"
     },
     "provider": {
-      "title": "Proveedor de Modelo"
+      "title": "Conexión"
     },
     "provider_model": {
-      "title": "Proveedor y Modelo"
+      "title": "Configurar Ollama"
     },
     "quick_actions": {
       "description": "Configura Acciones Rápidas para ejecutar tus instrucciones favoritas más rápido -- desde Nuevo Chat o el menú contextual.",
@@ -137,7 +142,28 @@
     "translation": {
       "title": "Idioma de Traducción"
     },
-    "webllm-desc": "Usando WebLLM para una prueba rápida. Para soporte completo de modelos y mejor rendimiento, por favor instala Ollama.",
-    "title": "Configuración"
+    "webllm-desc": "Ahora estás usando WebLLM: qwen3:0.6b para una prueba rápida. Para soporte completo del modelo y mejor rendimiento, por favor instala Ollama.",
+    "title": "Configuración",
+    "model_downloader": {
+      "description": "Este modelo necesita ser descargado antes de su uso. La descarga puede tomar unos minutos.",
+      "downloading_model": "Descargando \"{model}\"",
+      "download_model": "Descargar \"{model}\"",
+      "downloading": "Tu modelo se está descargando. Por favor, espera…",
+      "download": "Descargar",
+      "retry": "Reintentar",
+      "unable_to_download": "No se puede iniciar la descarga",
+      "could_not_connect_ollama": "No pudimos conectar con Ollama. Por favor, asegúrate de que Ollama esté ejecutándose e inténtalo de nuevo."
+    },
+    "webllm_downloader": {
+      "description": "Para usar el modo Local, necesitas descargar el modelo {model} ({size}). ¿Te gustaría descargarlo ahora?"
+    }
+  },
+  "common": {
+    "cancel": "Cancelar"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Agregar a NativeMind"
+    }
   }
 }

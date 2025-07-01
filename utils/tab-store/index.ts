@@ -52,7 +52,7 @@ export type PageSummary = {
   done: boolean
 }
 
-type ShowSettingsParams = { show: boolean, scrollTarget?: SettingsScrollTarget }
+type ShowSettingsParams = { show: boolean, scrollTarget?: SettingsScrollTarget, downloadModel?: string }
 
 async function _getTabStore() {
   const { tabId, faviconUrl, url, title } = await c2bRpc.getTabInfo()

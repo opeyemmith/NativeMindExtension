@@ -3,7 +3,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
-import { VERSION } from './utils/constants'
+import { version } from './package.json'
+
+export const VERSION = version.split('-')[0]
 
 const IS_FIREFOX = process.argv.includes('firefox')
 

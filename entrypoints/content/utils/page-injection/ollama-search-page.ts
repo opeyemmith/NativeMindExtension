@@ -3,19 +3,21 @@ import { onScopeDispose } from 'vue'
 import { OLLAMA_SITE_DOWNLOAD_BUTTON_CLASS } from '@/utils/constants'
 import { debounce } from '@/utils/debounce'
 import { useGlobalI18n } from '@/utils/i18n'
-import { getModelLogoSvg } from '@/utils/llm/model-logos'
+import { getModelLogoUrl } from '@/utils/llm/model-logos'
 
 import { showSettings } from '../settings'
 
+function shouldExcludeModel(modelName: string) {
+  return modelName.toLowerCase().includes('embed')
+}
+
 function makeLogoElement(modelName: string) {
   const logo = document.createElement('div')
-  logo.style.cssText = `background-color: white; border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px;`
-  logo.innerHTML = getModelLogoSvg(modelName)
-  const logoSvg = logo.querySelector('svg')
-  if (logoSvg) {
-    logoSvg.style.width = '12px'
-    logoSvg.style.height = '12px'
-  }
+  const img = document.createElement('img')
+  logo.style.cssText = `border-radius: 9999px; display: inline-flex; align-items: center; justify-content: center; width: 16px; height: 16px; background-color: white;`
+  img.src = getModelLogoUrl(modelName)
+  img.style.cssText = `width: 12px; height: 12px; object-fit: contain;`
+  logo.appendChild(img)
   return logo
 }
 
@@ -25,6 +27,7 @@ function makeDownloadButton(modelName: string, text: string, additionalCss?: str
   downloadButton.appendChild(logo)
   downloadButton.appendChild(document.createTextNode(text))
   downloadButton.style.cssText = `
+    width: fit-content;
     display: inline-flex;
     align-items: center;
     gap: 4px;
@@ -78,7 +81,9 @@ export async function useInjectOllamaSearchPageDownloadButtons() {
       anchors.forEach((anchor) => {
         const h2 = anchor.querySelector('h2')
         const container = h2 ?? anchor
-        appendButtonTo(container, anchor.href.split('/library/')[1].split('/')[0])
+        const modelName = anchor.href.split('/library/')[1].split('/')[0]
+        if (shouldExcludeModel(modelName)) return
+        appendButtonTo(container, modelName)
       })
     }
     // fallback for when the anchors are not found
@@ -90,6 +95,7 @@ export async function useInjectOllamaSearchPageDownloadButtons() {
           if (!modelName) return
           const container = span.closest('h2') || span.closest('a') || span
           if (!container) return
+          if (shouldExcludeModel(modelName)) return
           appendButtonTo(container as HTMLElement, modelName)
         })
       }
@@ -122,15 +128,16 @@ export async function useInjectOllamaModelInfoPageDownloadButtons() {
 
   const { t } = await useGlobalI18n()
   const appendButtonTo = (el: HTMLElement, modelName: string) => {
-    const downloadButton = makeDownloadButton(modelName, t('ollama.sites.add_to_nativemind'), 'margin-left: 8px;')
+    const downloadButton = makeDownloadButton(modelName, t('ollama.sites.add_to_nativemind'), el.children.length ? '' : 'margin-left: 8px;')
     el.appendChild(downloadButton)
   }
 
   function mount() {
-    const anchors = document.querySelectorAll(`span > a:not([x-test-model-name])[href*="/library/${modelName || ''}"]`) as NodeListOf<HTMLAnchorElement>
+    const anchors = document.querySelectorAll(`a:not([x-test-model-name])[href*="/library/${modelName ? `${modelName}:` : ''}"]`) as NodeListOf<HTMLAnchorElement>
     if (anchors.length) {
       anchors.forEach((anchor) => {
         const modelName = anchor.href.split('/library/')[1].split('/')[0]
+        if (shouldExcludeModel(modelName)) return
         appendButtonTo(anchor, modelName)
       })
     }
@@ -141,6 +148,7 @@ export async function useInjectOllamaModelInfoPageDownloadButtons() {
         titleSpans.forEach((span) => {
           const container = span.closest('div') || span.closest('span') || span as HTMLElement
           if (!container) return
+          if (shouldExcludeModel(modelName)) return
           appendButtonTo(container, modelName)
         })
       }

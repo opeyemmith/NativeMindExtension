@@ -59,7 +59,7 @@
     <div
       v-if="writingToolType"
       ref="popupRef"
-      class="popup bg-white fixed shadow-lg rounded-md z-50 transition-[width,top,left]"
+      class="popup bg-white fixed rounded-md z-50 transition-[width,top,left] shadow-[0px_8px_16px_0px_#00000014,0px_4px_8px_0px_#00000014,0px_0px_0px_1px_#00000014]"
       :class="!popupPos ? 'opacity-0' : ''"
       :style="popupPos ? { top: popupPos.top + 'px', left: popupPos.left + 'px' } : {}"
     >

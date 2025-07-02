@@ -3,54 +3,59 @@
     ref="containerRef"
     class="editable-entry"
   >
-    <div
-      v-if="isShowToolBar"
-      ref="toolBarRef"
-      class="toolbar bg-white fixed flex items-center gap-1 rounded-md overflow-hidden text-xs shadow-md transition-[width,top,left]"
+    <Button
+      v-if="isShowToolBarDeferred"
+      variant="secondary"
+      class="toolbar bg-white fixed rounded-md overflow-hidden text-xs transition-[width,top,left]"
       :style="toolBarPos ? { top: toolBarPos.top + 'px', left: toolBarPos.left + 'px' } : {}"
       @mouseenter="onMouseEnterToolBar"
     >
-      <Text size="small">
-        <button
-          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
-          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-          @click.stop="onAction('rewrite')"
-        >
-          <IconRewrite class="w-4 h-4" />
-          {{ t('writing_tools.rewrite') }}
-        </button>
-        <button
-          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
-          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-          @click.stop="onAction('proofread')"
-        >
-          <IconProofread class="w-4 h-4" />
-          {{ t('writing_tools.proofread') }}
-        </button>
-        <button
-          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
-          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-          @click.stop="onAction('list')"
-        >
-          <IconList class="w-4 h-4" />
-          {{ t('writing_tools.list') }}
-        </button>
-        <button
-          class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
-          :class="{'opacity-50 pointer-events-none': !writingToolSelectedText}"
-          @click.stop="onAction('sparkle')"
-        >
-          <IconSparkle class="w-4 h-4" />
-          {{ t('writing_tools.sparkle') }}
-        </button>
-      <!-- <button
-        class="mr-1 text-gray-700 bg-gray-50 hover:bg-gray-100 border-0 cursor-pointer p-1 rounded-full"
-        @click="onCloseToolBar"
+      <div
+        ref="toolBarRef"
+        class="flex items-center"
       >
-        <IconClose class="w-3 h-3" />
-      </button> -->
-      </Text>
-    </div>
+        <Text size="small">
+          <button
+            class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+            :class="{'opacity-50': !writingToolSelectedText}"
+            @click.stop="onAction('rewrite')"
+          >
+            <IconRewrite class="w-4 h-4" />
+            {{ t('writing_tools.rewrite') }}
+          </button>
+          <button
+            class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+            :class="{'opacity-50': !writingToolSelectedText}"
+            @click.stop="onAction('proofread')"
+          >
+            <IconProofread class="w-4 h-4" />
+            {{ t('writing_tools.proofread') }}
+          </button>
+          <button
+            class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+            :class="{'opacity-50': !writingToolSelectedText}"
+            @click.stop="onAction('list')"
+          >
+            <IconList class="w-4 h-4" />
+            {{ t('writing_tools.list') }}
+          </button>
+          <button
+            class="bg-white border-0 cursor-pointer hover:bg-[#E4E4E7] h-7 flex items-center px-2 gap-[6px]"
+            :class="{'opacity-50': !writingToolSelectedText}"
+            @click.stop="onAction('sparkle')"
+          >
+            <IconSparkle class="w-4 h-4" />
+            {{ t('writing_tools.sparkle') }}
+          </button>
+          <!-- <button
+            class="mr-1 text-gray-700 bg-gray-50 hover:bg-gray-100 border-0 cursor-pointer p-1 rounded-full"
+            @click="onCloseToolBar"
+          >
+            <IconClose class="w-3 h-3" />
+          </button> -->
+        </Text>
+      </div>
+    </Button>
     <div
       v-if="writingToolType"
       ref="popupRef"
@@ -78,10 +83,13 @@ import IconProofread from '@/assets/icons/writing-tools-proofread.svg?component'
 // import IconClose from '@/assets/icons/close.svg?component'
 import IconRewrite from '@/assets/icons/writing-tools-rewrite.svg?component'
 import IconSparkle from '@/assets/icons/writing-tools-sparkle.svg?component'
+import Button from '@/components/ui/Button.vue'
 import Text from '@/components/ui/Text.vue'
+import { useDeferredValue } from '@/composables/useDeferredValue'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
 import { useI18n } from '@/utils/i18n'
 import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
+import { extendedComputed } from '@/utils/vue/utils'
 
 import SuggestionCard from './SuggestionCard.vue'
 import { WritingToolType } from './types'
@@ -104,6 +112,7 @@ const regenerateSymbol = ref(0)
 const isShowToolBar = computed(() => {
   return isEditableFocus.value && !!writingToolSelectedText.value.trim()
 })
+const isShowToolBarDeferred = useDeferredValue(isShowToolBar, 300, (v) => !v)
 
 const selectedRange = computed(() => {
   const _ = writingToolSelectedText.value // reactive to selected text changes
@@ -163,7 +172,10 @@ const updateEditableElementText = () => {
 
 updateEditableElementText()
 
-const toolBarPos = computed(() => {
+const toolBarPos = extendedComputed<null | { top: number, left: number }>((last) => {
+  if (!isShowToolBar.value && last) {
+    return { top: last.top, left: last.left }
+  }
   if (toolBarBounding.height.value === 0 || toolBarBounding.width.value === 0) {
     return null
   }

@@ -3,13 +3,10 @@
     v-if="enableWritingTools"
     to="body"
   >
-    <ShadowRoot>
-      <component
-        :is="'style'"
-        data-nativemind-writing-tools-style="true"
-      >
-        {{ inlineCss }}
-      </component>
+    <ShadowRootComponent
+      ref="shadowRootRef"
+      :adoptedStyleSheets="styleSheet ? [styleSheet] : []"
+    >
       <div
         ref="containerRef"
         class="nativemind-writing-tools nativemind-style-boundary"
@@ -23,22 +20,23 @@
           />
         </div>
       </div>
-    </ShadowRoot>
+    </ShadowRootComponent>
   </Teleport>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from 'vue'
-import { ShadowRoot } from 'vue-shadow-dom'
+import { onMounted, ref, shallowRef, watch } from 'vue'
+import { ShadowRoot as ShadowRootComponent } from 'vue-shadow-dom'
 
 import { useObserveElements } from '@/composables/useObserverElements'
-import { loadContentScriptCss } from '@/utils/css'
+import { loadContentScriptStyleSheet } from '@/utils/css'
 import logger from '@/utils/logger'
 import { getUserConfig } from '@/utils/user-config'
 
 import EditableEntry from './EditableEntry.vue'
 
-const inlineCss = ref('')
+const styleSheet = shallowRef<CSSStyleSheet | null>(null)
+const shadowRootRef = ref<ShadowRoot | null>(null)
 const userConfig = await getUserConfig()
 const enableWritingTools = userConfig.writingTools.enable.toRef()
 const initialElements = [...document.querySelectorAll('textarea, input:not([type="hidden"]), [contenteditable]')] as HTMLElement[]
@@ -54,8 +52,8 @@ const { elements } = enableWritingTools.value
   : { elements: ref([]) }
 
 onMounted(async () => {
-  if (enableWritingTools.value) {
-    inlineCss.value = await loadContentScriptCss('content')
+  if (enableWritingTools.value && shadowRootRef.value) {
+    styleSheet.value = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
   }
 })
 

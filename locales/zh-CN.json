@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "添加到 NativeMind"
+      "add_to_nativemind": "在 NativeMind 中使用"
     }
   },
   "popup": {
@@ -180,8 +180,8 @@
     "list": "列表",
     "sparkle": "闪耀",
     "rewrite": "重写",
-    "apply": "申请",
-    "dismiss": "解散"
+    "apply": "使用",
+    "dismiss": "关闭"
   },
   "textarea": {
     "reset_to_default": "重置为默认"

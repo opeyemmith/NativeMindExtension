@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "Agregar a NativeMind"
+      "add_to_nativemind": "Usar en NativeMind"
     }
   },
   "popup": {

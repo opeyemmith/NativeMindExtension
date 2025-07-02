@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "NativeMindに追加"
+      "add_to_nativemind": "NativeMindでの使用"
     }
   },
   "popup": {

@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "Ajouter à NativeMind"
+      "add_to_nativemind": "Utiliser dans NativeMind"
     }
   },
   "popup": {
@@ -181,7 +181,7 @@
     "sparkle": "Étincelle",
     "rewrite": "Réécrire",
     "apply": "Appliquer",
-    "dismiss": "Rejeter"
+    "dismiss": "Fermer"
   },
   "textarea": {
     "reset_to_default": "Rétablir par défaut"

@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "เพิ่มไปยัง NativeMind"
+      "add_to_nativemind": "ใช้ใน NativeMind"
     }
   },
   "popup": {
@@ -180,7 +180,7 @@
     "list": "รายการ",
     "sparkle": "ประกาย",
     "rewrite": "เขียนใหม่",
-    "apply": "สมัคร",
+    "apply": "นำไปใช้",
     "dismiss": "ยกเลิก"
   },
   "textarea": {

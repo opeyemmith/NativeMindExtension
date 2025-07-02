@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser'
 
+import { memoFunction } from './cache'
 import logger from './logger'
 
 export function convertPropertiesIntoSimpleVariables(sheet: CSSStyleSheet, scopeInShadowDom = true) {
@@ -21,7 +22,7 @@ export function scopeStyleIntoShadowRoot(cssText: string) {
   return sheet
 }
 
-export async function loadContentScriptCss(name: string): Promise<string> {
+async function loadContentScriptCss(name: string): Promise<string> {
   // @ts-expect-error - css output files is not defined in the types
   const url = browser.runtime.getURL(`/content-scripts/${name}.css`)
   try {
@@ -36,6 +37,12 @@ export async function loadContentScriptCss(name: string): Promise<string> {
     return ''
   }
 }
+
+export const loadContentScriptStyleSheet = memoFunction(async (name: string): Promise<CSSStyleSheet> => {
+  const contentScriptCss = await loadContentScriptCss(name)
+  const styleSheet = convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(contentScriptCss), true)
+  return styleSheet
+})
 
 export function convertStyleSheetToCssText(sheet: CSSStyleSheet) {
   let cssText = ''
@@ -95,7 +102,7 @@ export function extractFontFace(sheet: CSSStyleSheet) {
 
 export function injectStyleSheetToDocument(doc: ShadowRoot | Document, sheet: CSSStyleSheet) {
   if (import.meta.env.FIREFOX) {
-    // Firefox does not support adoptedStyleSheets in shadow roots
+    // Firefox does not support adoptedStyleSheets before document loaded
     // so we need to inject the styles directly into the document
     const cssText = convertStyleSheetToCssText(sheet)
     const styleElement = document.createElement('style')

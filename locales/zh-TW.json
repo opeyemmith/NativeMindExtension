@@ -163,7 +163,7 @@
   },
   "ollama": {
     "sites": {
-      "add_to_nativemind": "新增至 NativeMind"
+      "add_to_nativemind": "在 NativeMind 中使用"
     }
   },
   "popup": {
@@ -180,7 +180,7 @@
     "list": "清單",
     "sparkle": "閃耀",
     "rewrite": "重寫",
-    "apply": "申請",
+    "apply": "套用",
     "dismiss": "關閉"
   },
   "textarea": {

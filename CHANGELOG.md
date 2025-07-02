@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.0-beta.12
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.11...v1.3.0-beta.12)
+
+### 🚀 Enhancements
+
+- **writing tools:** Ui update; support Gmail editor ([e89b004](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e89b004))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.11
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.10...v1.3.0-beta.11)

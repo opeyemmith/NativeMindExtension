@@ -1,6 +1,6 @@
 <template>
   <div
-    class="relative focus:shadow-[0px_0px_0px_1px_#24B960] rounded-[6px] shadow-[0px_0px_0px_1px_rgba(0,0,0,0.08),0px_1px_2px_0px_rgba(0,0,0,0.12)]"
+    class="relative focus-within:shadow-[0px_0px_0px_1px_#24B960] rounded-[6px] shadow-[0px_0px_0px_1px_rgba(0,0,0,0.08),0px_1px_2px_0px_rgba(0,0,0,0.12)]"
     :class="classNames('overflow-hidden', props.outerClass)"
   >
     <textarea
@@ -20,7 +20,7 @@
         class="text-[11px] leading-[16px] text-[#0D80F2] hover:text-[#0B6BBF] font-normal cursor-pointer flex items-center gap-1"
         @click="resetToDefault"
       >
-        Reset to default
+        {{ t('textarea.reset_to_default') }}
       </button>
       <div v-else />
 
@@ -40,6 +40,7 @@ import { useVModel } from '@vueuse/core'
 import { computed, onUnmounted, ref } from 'vue'
 
 import IconResier from '@/assets/icons/resizer.svg'
+import { useI18n } from '@/utils/i18n'
 import { classNames, type ComponentClassAttr } from '@/utils/vue/utils'
 
 const props = withDefaults(defineProps<{
@@ -65,6 +66,7 @@ const inputValue = useVModel(props, 'modelValue', emit, {
   eventName: 'update:modelValue',
 })
 
+const { t } = useI18n()
 const textareaRef = ref<HTMLTextAreaElement | null>(null)
 const textareaHeight = ref(props.minHeight)
 const isResizing = ref(false)

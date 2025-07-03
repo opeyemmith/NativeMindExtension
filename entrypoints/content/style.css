@@ -78,6 +78,7 @@
   --color-text-placeholder: #aeb5bd;
   --color-text-disabled: #aeb5bd;
   --color-bg-component: hsla(0, 0%, 98%, 1);
+  --color-icon-link: #0f62fe;
 
   --shadow-01: 0px 8px 16px 0px #00000014, 0px 4px 8px 0px #00000014,
     0px 0px 0px 1px #00000014;
@@ -106,4 +107,12 @@
 .nativemind-style-boundary *::-webkit-scrollbar-thumb {
   background: #e4e4e7;
   border-radius: 5px;
+}
+
+@-moz-document url-prefix() {
+  /* Firefox scrollbar styling */
+  .nativemind-style-boundary * {
+    scrollbar-width: thin;
+    scrollbar-color: #e4e4e7 transparent;
+  }
 }

@@ -57,14 +57,14 @@
         v-if="isOpen"
         ref="dropdownRef"
         data-nativemind-selector-dropdown
-        class="absolute overflow-hidden z-10 bg-bg-component rounded-lg shadow-01 p-1"
+        class="absolute overflow-hidden z-10 bg-bg-component rounded-lg shadow-01"
         :style="{ top: `${dropdownPos.y}px`, left: `${dropdownPos.x}px`, width: dropdownPos.width ? `${dropdownPos.width}px` : undefined, zIndex: String(zIndex) }"
         :class="dropdownClass"
       >
         <ScrollContainer
           containerClass="h-full max-h-60"
           itemContainerClass="h-max"
-          class="grow overflow-hidden"
+          class="grow overflow-hidden p-1"
           showScrollbar
           :arrivalShadow="false"
         >
@@ -89,6 +89,9 @@
             {{ props.emptyPlaceholder }}
           </div>
         </ScrollContainer>
+        <div>
+          <slot name="bottom" />
+        </div>
       </div>
     </Teleport>
   </div>

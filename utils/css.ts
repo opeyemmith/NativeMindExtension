@@ -1,5 +1,6 @@
 import { browser } from 'wxt/browser'
 
+import { memoFunction } from './cache'
 import logger from './logger'
 
 export function convertPropertiesIntoSimpleVariables(sheet: CSSStyleSheet, scopeInShadowDom = true) {
@@ -21,7 +22,7 @@ export function scopeStyleIntoShadowRoot(cssText: string) {
   return sheet
 }
 
-export async function loadContentScriptCss(name: string): Promise<string> {
+async function loadContentScriptCss(name: string): Promise<string> {
   // @ts-expect-error - css output files is not defined in the types
   const url = browser.runtime.getURL(`/content-scripts/${name}.css`)
   try {
@@ -35,6 +36,20 @@ export async function loadContentScriptCss(name: string): Promise<string> {
     )
     return ''
   }
+}
+
+export const loadContentScriptStyleSheet = memoFunction(async (name: string): Promise<CSSStyleSheet> => {
+  const contentScriptCss = await loadContentScriptCss(name)
+  const styleSheet = convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(contentScriptCss), true)
+  return styleSheet
+})
+
+export function convertStyleSheetToCssText(sheet: CSSStyleSheet) {
+  let cssText = ''
+  for (const rule of sheet.cssRules) {
+    cssText += rule.cssText + '\n'
+  }
+  return cssText
 }
 
 export function createStyleSheetByCssText(cssText: string) {
@@ -83,4 +98,27 @@ export function extractFontFace(sheet: CSSStyleSheet) {
     logger.error('Failed to extract font-face from stylesheet', err)
   }
   return newSheet
+}
+
+export function injectStyleSheetToDocument(doc: ShadowRoot | Document, sheet: CSSStyleSheet) {
+  if (import.meta.env.FIREFOX) {
+    // Firefox does not support adoptedStyleSheets before document loaded
+    // so we need to inject the styles directly into the document
+    const cssText = convertStyleSheetToCssText(sheet)
+    const styleElement = document.createElement('style')
+    styleElement.textContent = cssText
+    if (doc instanceof ShadowRoot) {
+      doc.appendChild(styleElement)
+    }
+    else {
+      doc.head.appendChild(styleElement)
+    }
+  }
+  else {
+    if (doc.adoptedStyleSheets.includes(sheet)) {
+      logger.warn('StyleSheet is already adopted in the document', sheet)
+      return
+    }
+    doc.adoptedStyleSheets.push(sheet)
+  }
 }

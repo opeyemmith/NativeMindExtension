@@ -20,6 +20,7 @@
       >
         <Settings
           :scrollTarget="tabStore.showSetting.value.scrollTarget"
+          :downloadModel="tabStore.showSetting.value.downloadModel"
           class="bg-[#E9E9EC] text-black text-xs"
           :style="{ zIndex: settingsPanelZIndex }"
         />
@@ -48,11 +49,13 @@ import { useRootElement } from './composables/useRootElement'
 import { useTranslator } from './composables/useTranslator'
 import { Chat } from './utils/chat'
 import { initContextMenu } from './utils/context-menu'
+import { useInjectOllamaDownloadButtons } from './utils/page-injection/ollama-search-page'
 import { showSettings } from './utils/settings'
 import { getCurrentTabInfo } from './utils/tabs'
 
 // init translator global event listeners
 useTranslator()
+useInjectOllamaDownloadButtons()
 initContextMenu()
 const tabStore = await getTabStore()
 const userConfig = await getUserConfig()

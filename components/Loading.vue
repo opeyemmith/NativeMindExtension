@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!done"
     class="spinner"
     :style="{ width: size + 'px', height: size + 'px', borderRadius: size / 2 + 'px', '--bar-color': strokeColor, '--total-bars': totalBars }"
   >
@@ -10,22 +11,30 @@
       :style="{ '--bar-number': i }"
     />
   </div>
+  <div v-else>
+    <IconLoadingDone
+      class="text-[#60C959]"
+      :style="{ width: size + 'px', height: size + 'px' }"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
+import IconLoadingDone from '@/assets/icons/loading-done.svg?component'
+
 withDefaults(
   defineProps<{
     size?: number
     strokeColor?: string
     strokeWidth?: number
     trackColor?: string
-    isComplete?: boolean
+    done?: boolean
   }>(),
   {
     size: 20,
     strokeWidth: 10,
     trackColor: 'transparent',
-    isComplete: false,
+    done: false,
   },
 )
 

@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 import logger from '@/utils/logger'
 
-import { ContextMenuId } from '../context-menu'
+import { ContextMenuManager } from '../context-menu'
 import { AppError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
 import { deleteModel, getLocalModelList, pullModel } from '../llm/ollama'
@@ -270,21 +270,6 @@ const fetchAsText = async (url: string, initOptions?: RequestInit) => {
   }
 }
 
-const updateContextMenu = async (id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) => {
-  return browser.contextMenus.update(id, props)
-}
-
-const createContextMenu = async (id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) => {
-  return browser.contextMenus.create({
-    id,
-    ...props,
-  })
-}
-
-const deleteContextMenu = async (id: ContextMenuId) => {
-  return browser.contextMenus.remove(id)
-}
-
 const deleteOllamaModel = async (modelId: string) => {
   await deleteModel(modelId)
 }
@@ -373,7 +358,7 @@ function initWebLLMEngine(model: WebLLMSupportedModel) {
   }
 }
 
-type UnsupportedWebLLMReason = 'browser' | 'gpu'
+type UnsupportedWebLLMReason = 'browser' | 'not_support_webgpu' | 'not_support_high_performance'
 async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: UnsupportedWebLLMReason }> {
   if (import.meta.env.FIREFOX) {
     return {
@@ -384,7 +369,7 @@ async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: Unsu
   if (!navigator.gpu) {
     return {
       supported: false,
-      reason: 'gpu',
+      reason: 'not_support_webgpu',
     }
   }
   try {
@@ -397,11 +382,11 @@ async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: Unsu
       supported: true,
     }
   }
-  catch (_error) {
-    logger.debug('WebGPU not supported')
+  catch (error) {
+    logger.debug('WebGPU not supported', error)
     return {
       supported: false,
-      reason: 'gpu',
+      reason: 'not_support_high_performance',
     }
   }
 }
@@ -495,9 +480,9 @@ export const backgroundFunctions = {
   fetchAsDataUrl,
   fetchAsText,
   streamObjectFromSchema,
-  updateContextMenu,
-  createContextMenu,
-  deleteContextMenu,
+  updateContextMenu: (...args: Parameters<ContextMenuManager['updateContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.updateContextMenu(...args)),
+  createContextMenu: (...args: Parameters<ContextMenuManager['createContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.createContextMenu(...args)),
+  deleteContextMenu: (...args: Parameters<ContextMenuManager['deleteContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.deleteContextMenu(...args)),
   initWebLLMEngine,
   hasWebLLMModelInCache,
   deleteWebLLMModelInCache,

@@ -1,6 +1,165 @@
 # Changelog
 
 
+## v1.3.0-beta.17
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.16...v1.3.0-beta.17)
+
+### 🩹 Fixes
+
+- **settings:** Adjust button padding and dropdown class for better layout ([1d57e03](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1d57e03))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.16
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.15...v1.3.0-beta.16)
+
+### 🚀 Enhancements
+
+- **settings:** Add discover more models button ([f45b27f](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f45b27f))
+
+### 🏡 Chore
+
+- **locales:** Update translation for writing tool to improve clarity ([0bd7bc3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0bd7bc3))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.15
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.14...v1.3.0-beta.15)
+
+### 🚀 Enhancements
+
+- **debug-settings:** Add reasoning toggle; implement custom fetch utility ([2652224](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2652224))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.14
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.13...v1.3.0-beta.14)
+
+### 🚀 Enhancements
+
+- **settings:** Use NativeMind logo in ollama.com download buttons ([796a43e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/796a43e))
+
+### 🩹 Fixes
+
+- **manifest:** Update DNR configuration ([f049e90](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f049e90))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.13
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.12...v1.3.0-beta.13)
+
+### 🩹 Fixes
+
+- **writing-tools:** Update popup shadow styles for better visibility ([aa31213](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa31213))
+- **context-menu:** Implement context menu persistence and restore functionality ([2a6e50d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2a6e50d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.12
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.11...v1.3.0-beta.12)
+
+### 🚀 Enhancements
+
+- **writing tools:** Ui update; support Gmail editor ([e89b004](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e89b004))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.11
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.10...v1.3.0-beta.11)
+
+### 🚀 Enhancements
+
+- **settings:** Exclude embedding models in ollama.com ([58f3e5a](https://github.com/NativeMindBrowser/NativeMindExtension/commit/58f3e5a))
+- **writing-tools:** Enhance Writing Tools UI and functionality ([c89904c](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c89904c))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.10
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.8...v1.3.0-beta.10)
+
+### 🚀 Enhancements
+
+- **settings:** Support direct model download from ollama.com ([e6eb2ff](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e6eb2ff))
+
+### 🩹 Fixes
+
+- **i18n:** Welcome message i18n and add max length limit for quick action content ([22839c2](https://github.com/NativeMindBrowser/NativeMindExtension/commit/22839c2))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.7...v1.3.0-beta.8)
+
+### 🚀 Enhancements
+
+- **i18n:** Update translation for multiple languages ([7bf945e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7bf945e))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.6...v1.3.0-beta.7)
+
+### 🚀 Enhancements
+
+- **i18n:** Improve translations in multiple languages ([3b647f7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3b647f7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.5...v1.3.0-beta.6)
+
+### 🚀 Enhancements
+
+- **settings:** Update feedback messages ([0c81af1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0c81af1))
+- **i18n:** Add localization support for multiple languages ([7858b2e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/7858b2e))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.3.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.4...v1.3.0-beta.5)
+
+### 🚀 Enhancements
+
+- **quick actions:** Replace quick-action icon and update context menu management ([cfa2737](https://github.com/NativeMindBrowser/NativeMindExtension/commit/cfa2737))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.3...v1.3.0-beta.4)

@@ -5,16 +5,15 @@ import { ContentScriptContext } from 'wxt/utils/content-script-context'
 import { createShadowRootUi } from 'wxt/utils/content-script-ui/shadow-root'
 
 import { initToast } from '@/composables/useToast'
-import { convertPropertiesIntoSimpleVariables, extractFontFace, loadContentScriptCss, scopeStyleIntoShadowRoot } from '@/utils/css'
-import { i18n } from '@/utils/i18n'
+import { extractFontFace, injectStyleSheetToDocument, loadContentScriptStyleSheet } from '@/utils/css'
+import { createI18nInstance } from '@/utils/i18n/index'
 
 async function loadStyleSheet(shadowRoot: ShadowRoot) {
-  const contentScriptCss = await loadContentScriptCss(import.meta.env.ENTRYPOINT)
-  const styleSheet = convertPropertiesIntoSimpleVariables(scopeStyleIntoShadowRoot(contentScriptCss), true)
-  shadowRoot.adoptedStyleSheets.push(styleSheet)
+  const styleSheet = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
+  injectStyleSheetToDocument(shadowRoot, styleSheet)
   // font-face can only be applied to the document, not the shadow root
   const fontFaceStyleSheet = extractFontFace(styleSheet)
-  document.adoptedStyleSheets.push(fontFaceStyleSheet)
+  injectStyleSheetToDocument(document, fontFaceStyleSheet)
 }
 
 export async function createShadowRootOverlay(ctx: ContentScriptContext, component: Component<{ rootElement: HTMLDivElement }>) {
@@ -37,7 +36,7 @@ export async function createShadowRootOverlay(ctx: ContentScriptContext, compone
       shadowHost.style.setProperty('z-index', 'calc(infinity)')
       const pinia = createPinia()
       const app = createApp(component, { rootElement })
-      app.use(i18n)
+      app.use(await createI18nInstance())
       app.use(initToast(toastRoot))
       app.use(pinia)
       app.mount(rootElement)

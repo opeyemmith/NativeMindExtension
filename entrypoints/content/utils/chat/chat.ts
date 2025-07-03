@@ -4,6 +4,7 @@ import { type Ref, ref, watch } from 'vue'
 import { nonNullable } from '@/utils/array'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
+import { useGlobalI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'
 import { SearchingMessage } from '@/utils/search'
@@ -18,7 +19,7 @@ import { getCurrentTabInfo, getDocumentContentOfTabs, getValidTabs, TabInfo } fr
 
 const log = logger.child('chat')
 
-export type MessageIdScope = 'quickActions'
+export type MessageIdScope = 'quickActions' | 'welcomeMessage'
 
 export class ReactiveHistoryManager extends EventEmitter {
   constructor(public history: Ref<HistoryItemV1[]>, public systemMessage?: string) {
@@ -215,9 +216,10 @@ export class ReactiveHistoryManager extends EventEmitter {
 
 type ChatStatus = 'idle' | 'pending' | 'streaming'
 
-export class ActionEvent<ActionType extends ActionTypeV1> extends Event {
+const ACTION_EVENT_CONSTRUCT_TYPE = 'messageAction'
+export class ActionEvent<ActionType extends ActionTypeV1> extends CustomEvent<{ data: ActionV1[ActionType], action: ActionType }> {
   constructor(public action: ActionType, public data: ActionV1[ActionType]) {
-    super('messageAction', { bubbles: true })
+    super(ACTION_EVENT_CONSTRUCT_TYPE, { bubbles: true, detail: { action, data } })
   }
 }
 
@@ -255,10 +257,13 @@ export class Chat {
 
   static createActionEventHandler(handler: (ev: ActionEvent<ActionTypeV1>) => void) {
     return function actionHandler(ev: Event) {
-      log.debug('Handling action event', ev)
-      if (ev instanceof ActionEvent) {
-        log.debug('Action event triggered', ev.action, ev.data)
-        handler(ev)
+      if (ev.type === ACTION_EVENT_CONSTRUCT_TYPE && ev instanceof CustomEvent) {
+        log.debug('Action event triggered', ev)
+        // reconstruct the event to fix firefox issue
+        // firefox does not pass the origin event instance in the event bubbling
+        const event = ev as CustomEvent<{ action: ActionTypeV1, data: ActionV1[ActionTypeV1] }>
+        const actionEvent = new ActionEvent<ActionTypeV1>(event.detail.action, event.detail.data)
+        handler(actionEvent)
       }
     }
   }
@@ -269,13 +274,13 @@ export class Chat {
     return this.status.value === 'pending' || this.status.value === 'streaming'
   }
 
-  private errorHandler(e: unknown, msg?: AssistantMessageV1) {
+  private async errorHandler(e: unknown, msg?: AssistantMessageV1) {
     log.error('Error in chat', e)
     if (!(e instanceof AbortError)) {
       const errorMsg = msg || this.historyManager.appendAssistantMessage()
       errorMsg.isError = true
       errorMsg.done = true
-      errorMsg.content = e instanceof AppError ? e.toLocaleMessage() : 'Unexpected error occurred'
+      errorMsg.content = e instanceof AppError ? await e.toLocaleMessage() : 'Unexpected error occurred'
     }
     else if (msg) {
       this.historyManager.deleteMessage(msg)
@@ -350,6 +355,7 @@ export class Chat {
   }
 
   private async searchOnline(queryList: string[], { onStartQuery, resultLimit }: { onStartQuery?: (query: string) => void, resultLimit?: number } = {}) {
+    const { t } = await useGlobalI18n()
     const abortController = new AbortController()
     this.abortControllers.push(abortController)
     const searcher = this.searchScraper.search(queryList, { abortSignal: abortController.signal, resultLimit, engine: 'google' })
@@ -362,7 +368,7 @@ export class Chat {
     for await (const progress of searcher) {
       if (progress.type === 'query-start') {
         onStartQuery?.(progress.query)
-        parentTaskMsg = this.historyManager.appendTaskMessage(`Searching locally in browser…`)
+        parentTaskMsg = this.historyManager.appendTaskMessage(t('chat.messages.search_locally'))
         parentTaskMsg.icon = 'searchColored'
       }
       else if (progress.type === 'query-finished') {
@@ -372,7 +378,7 @@ export class Chat {
         }
       }
       else if (progress.type === 'page-start') {
-        const msg = this.historyManager.appendTaskMessage(makeParagraph(`Reading: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 }), parentTaskMsg)
+        const msg = this.historyManager.appendTaskMessage(makeParagraph(`${t('chat.messages.reading')}: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 }), parentTaskMsg)
         msg.icon = 'tickColored'
         if (msgs[progress.url]) {
           msgs[progress.url].done = true
@@ -381,7 +387,7 @@ export class Chat {
       }
       else if (progress.type === 'page-finished') {
         if (msgs[progress.url]) {
-          msgs[progress.url].content = makeParagraph(`Reading: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 })
+          msgs[progress.url].content = makeParagraph(`${t('chat.messages.reading')}: "${makeShortTitleLink(progress.title, progress.url)}"`, { rows: 1 })
           msgs[progress.url].done = true
         }
       }
@@ -452,8 +458,8 @@ export class Chat {
       searchKeywords = await this.questionToKeywords(nextStepContext)
     }
     else if (enableOnlineSearch === 'auto') {
-      next = await this.checkNextStep(nextStepContext).catch((e) => {
-        this.errorHandler(e, loading)
+      next = await this.checkNextStep(nextStepContext).catch(async (e) => {
+        await this.errorHandler(e, loading)
         throw e
       })
       if (next.action === 'search_online') {
@@ -514,7 +520,7 @@ export class Chat {
     catch (e) {
       logger.error('Error in chat stream', e)
       msg.isError = true
-      msg.content = e instanceof AppError ? e.toLocaleMessage() : 'Unknown error occurred'
+      msg.content = e instanceof AppError ? await e.toLocaleMessage() : 'Unknown error occurred'
     }
     finally {
       msg.done = true

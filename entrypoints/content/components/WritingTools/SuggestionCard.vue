@@ -1,50 +1,87 @@
 <template>
   <div>
-    <div class="card w-80 max-w-screen text-xs flex flex-col gap-3">
-      <div class="title font-bold">
-        <!-- Content based on type -->
-        <div v-if="props.type === 'rewrite'">
-          Rewrite Suggestion
-        </div>
-        <div v-else-if="props.type === 'proofread'">
-          Grammar & Style
-        </div>
-        <div v-else-if="props.type === 'list'">
-          Key Points
-        </div>
-        <div v-else-if="props.type === 'sparkle'">
-          Sparkle Text
-        </div>
-        <ExhaustiveError v-else />
-      </div>
-      <div class="output p-2 bg-amber-50 shadow-[-4px_0_var(--color-amber-200)] rounded-md">
-        <div
-          v-if="runningStatus === 'pending'"
-          class="loading"
+    <div class="card w-80 max-w-screen text-xs">
+      <div class="title flex items-center justify-between h-9 px-3">
+        <Text
+          size="small"
+          display="block"
         >
-          <Loading
-            :size="12"
-            class="text-gray-500"
-          />
-        </div>
-        <div v-else>
-          <MarkdownViewer :text="output" />
+          <!-- Content based on type -->
+          <div
+            v-if="props.type === 'rewrite'"
+            class="flex items-center gap-2"
+          >
+            <IconRewrite class="w-4 h-4" />
+            {{ t('writing_tools.rewrite_suggestion') }}
+          </div>
+          <div
+            v-else-if="props.type === 'proofread'"
+            class="flex items-center gap-2"
+          >
+            <IconProofread class="w-4 h-4" />
+            {{ t('writing_tools.grammar_and_style') }}
+          </div>
+          <div
+            v-else-if="props.type === 'list'"
+            class="flex items-center gap-2"
+          >
+            <IconList class="w-4 h-4" />
+            {{ t('writing_tools.key_points') }}
+          </div>
+          <div
+            v-else-if="props.type === 'sparkle'"
+            class="flex items-center gap-2"
+          >
+            <IconSparkle class="w-4 h-4" />
+            {{ t('writing_tools.sparkle_text') }}
+          </div>
+          <ExhaustiveError v-else />
+        </Text>
+        <IconClose
+          class="text-[#71717A] cursor-pointer"
+          @click="emit('close')"
+        />
+      </div>
+      <Divider />
+      <div class="output p-3 rounded-md">
+        <div class="bg-[#DCFFEA] rounded-sm p-2 flex gap-2">
+          <div class="shrink-0 h-[18px] flex items-center">
+            <Loading
+              :done="runningStatus === 'idle'"
+              :size="12"
+              strokeColor="#000000"
+            />
+          </div>
+          <div class="min-w-0 flex-1">
+            <div v-if="runningStatus === 'pending'">
+              <Text color="secondary">
+                {{ t('writing_tools.processing') }}
+              </Text>
+            </div>
+            <MarkdownViewer
+              v-else
+              class="text-[#03943D]"
+              :text="output"
+            />
+          </div>
         </div>
       </div>
-      <div class="flex items-center gap-2 justify-end">
-        <button
-          class="border border-gray-300 rounded-md bg-white px-2 h-7 text-xs text-gray-500 hover:bg-gray-100 cursor-pointer"
+      <div class="flex items-center gap-2 justify-end p-3 pt-0">
+        <Button
+          variant="secondary"
+          class="px-2 h-8 text-xs font-medium rounded-md cursor-pointer"
           @click="emit('close')"
         >
-          Dismiss
-        </button>
-        <button
-          class="bg-blue-500 text-white px-2 h-7 rounded-md text-xs hover:bg-blue-600 cursor-pointer"
+          {{ t('writing_tools.dismiss') }}
+        </Button>
+        <Button
+          variant="primary"
+          class="px-2 h-8 text-xs font-medium rounded-md cursor-pointer"
           :class="{ 'opacity-50 pointer-events-none': runningStatus !== 'idle' }"
           @click="emit('apply', output.trim())"
         >
-          Apply
-        </button>
+          {{ t('writing_tools.apply') }}
+        </Button>
       </div>
     </div>
   </div>
@@ -53,8 +90,18 @@
 <script setup lang="ts">
 import { onBeforeUnmount, ref, watch } from 'vue'
 
+import IconClose from '@/assets/icons/writing-tools-close.svg?component'
+import IconList from '@/assets/icons/writing-tools-list.svg?component'
+import IconProofread from '@/assets/icons/writing-tools-proofread.svg?component'
+// import IconClose from '@/assets/icons/close.svg?component'
+import IconRewrite from '@/assets/icons/writing-tools-rewrite.svg?component'
+import IconSparkle from '@/assets/icons/writing-tools-sparkle.svg?component'
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import Loading from '@/components/Loading.vue'
+import Button from '@/components/ui/Button.vue'
+import Divider from '@/components/ui/Divider.vue'
+import Text from '@/components/ui/Text.vue'
+import { useI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { writingToolList, writingToolProofread, writingToolRewrite, writingToolSparkle } from '@/utils/prompts'
 import { Prompt } from '@/utils/prompts/helpers'
@@ -76,6 +123,7 @@ const emit = defineEmits<{
   (event: 'close'): void
 }>()
 
+const { t } = useI18n()
 const output = ref<string>(``)
 const abortControllers: AbortController[] = []
 const runningStatus = ref<'pending' | 'streaming' | 'idle'>('idle')

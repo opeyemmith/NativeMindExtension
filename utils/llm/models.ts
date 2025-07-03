@@ -4,6 +4,7 @@ import { createOllama } from 'ollama-ai-provider'
 import { getUserConfig } from '@/utils/user-config'
 
 import { ModelNotFoundError } from '../error'
+import { makeCustomFetch } from '../fetch'
 import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
 import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
 
@@ -19,6 +20,7 @@ export async function getModelUserConfig() {
   const baseUrl = userConfig.llm.baseUrl.get()
   const apiKey = userConfig.llm.apiKey.get()
   const numCtx = userConfig.llm.numCtx.get()
+  const reasoning = userConfig.llm.reasoning.get()
   if (!model) {
     throw new ModelNotFoundError()
   }
@@ -27,6 +29,7 @@ export async function getModelUserConfig() {
     model,
     apiKey,
     numCtx,
+    reasoning,
   }
 }
 
@@ -37,14 +40,27 @@ export async function getModel(options: {
   model: string
   apiKey: string
   numCtx: number
+  reasoning: boolean
   onLoadingModel?: (prg: ModelLoadingProgressEvent) => void
 }) {
   const userConfig = await getUserConfig()
   let model: LanguageModelV1
   const endpointType = userConfig.llm.endpointType.get()
   if (endpointType === 'ollama') {
+    const customFetch = makeCustomFetch({
+      bodyTransformer: (body) => {
+        // reasoning is enabled by default in Ollama
+        if (options.reasoning) return body
+        if (typeof body !== 'string') return body
+        return JSON.stringify({
+          ...JSON.parse(body),
+          think: false, // disable reasoning
+        })
+      },
+    })
     const ollama = createOllama({
       baseURL: new URL('/api', options.baseUrl).href,
+      fetch: customFetch,
     })
     model = ollama(options.model, {
       numCtx: options.numCtx,

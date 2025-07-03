@@ -1,0 +1,191 @@
+{
+  "chat": {
+    "messages": {
+      "thought_for_seconds": "思考了{second}秒 | 思考了{second}秒",
+      "thinking": "正在思考...",
+      "reading": "讀取中",
+      "search_locally": "在瀏覽器中本地搜尋…"
+    },
+    "quick_actions": {
+      "title": "快捷操作"
+    },
+    "input": {
+      "placeholder": {
+        "ask_anything": "問些什麼...",
+        "ask_follow_up": "繼續提問..."
+      },
+      "tab_selector": {
+        "all_tabs": "所有打開的分頁"
+      }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "突出重點洞察"
+      },
+      "search_more": {
+        "title": "搜尋更多類似內容"
+      },
+      "summarize_page_content": {
+        "title": "總結頁面"
+      }
+    }
+  },
+  "onboarding": {
+    "banner": {
+      "description": "私人和安全，具有完全在裝置中執行的強大功能。",
+      "title": "裝置AI，專為您打造"
+    },
+    "guide": {
+      "already_installed": "已經安裝並執行Ollama？",
+      "features": {
+        "1": "執行DeepSeek、Qwen、Llama等高級模型",
+        "2": "自訂和切換模型完全控制",
+        "3": "您的資料在裝置上保持私密"
+      },
+      "follow_our_tutorial": "參照我們的安裝指南",
+      "get_ollama": "獲取Ollama",
+      "install_desc": "安裝Ollama來設置您的本地AI。",
+      "need_help": "需要幫助嗎？",
+      "ollama_desc": "用Ollama解鎖AI的全部力量。",
+      "setup": "設置",
+      "step1": "步驟1",
+      "download_model_to_begin": "下載模型以開始。",
+      "select_model_to_start": "選擇並下載模型以開始使用"
+    },
+    "webllm_tutorial": {
+      "desc": "在瀏覽器中使用輕巧的模型（QWEN 0.6B） - 無需設置，無需等待。",
+      "not_support_webllm": "您的裝置不支援Webllm",
+      "start_with_webllm": "從網路模型開始",
+      "title": "還沒有準備好安裝嗎？\n立即嘗試。"
+    },
+    "welcome_msg": {
+      "title": "👋歡迎來到 **NativeMind**",
+      "body": "NativeMind是一個隱私優先的AI瀏覽器擴展程式，可協助您聊天、搜尋和翻譯 - 全部由裝置語言模型提供支援。\n\n這是您可以使用NativeMind來做的：\n- 跨多個分頁聊天以跟蹤不同頁面。\n- 直接在聊天中搜尋網路以獲取更多上下文。\n- 右鍵點擊​​以立即翻譯頁面的任何部分。\n- 在設置中隨時切換或下載模型。\n\n您可以從下面嘗試快捷操作開始。"
+    },
+    "ollama_is_running": "Ollama 正在運行"
+  },
+  "settings": {
+    "advanced": {
+      "title": "進階"
+    },
+    "choose_model": "選擇模型",
+    "download": "下載",
+    "feedback": {
+      "contact_msg": "📧 有問題或反饋？加入我們的{discord}或透過{email}給我們發送電子郵件。",
+      "join_waitlist": "💼 想在工作中使用它嗎？{join_waitlist_link}獲取企業版更新。",
+      "join_waitlist_link": "加入等候名單",
+      "discord": "Discord"
+    },
+    "get_ollama": "獲取Ollama",
+    "models": {
+      "title": "模型",
+      "discover_more": "探索更多模型",
+      "no_model": "⚠️ 沒有模型",
+      "add_model_to_start": "新增模型以開始"
+    },
+    "ollama": {
+      "already_installed": "已經安裝並執行Ollama？",
+      "connected": "已連線",
+      "connection_error": "連線錯誤",
+      "downloadable_model": "可下載的模型",
+      "follow_guide": "參照我們的安裝指南",
+      "learn_more_about_models": "了解有關模型的更多資訊",
+      "need_help": "需要幫助嗎？",
+      "re_scan": "重新掃描",
+      "server_address": "伺服器地址",
+      "setup": "設定",
+      "unconnected": "未連線"
+    },
+    "prompts": {
+      "chat_system_prompt": "聊天系統提示詞",
+      "title": "提示詞",
+      "translation_system_prompt": "翻譯系統提示詞"
+    },
+    "provider": {
+      "title": "連接"
+    },
+    "provider_model": {
+      "title": "配置 Ollama"
+    },
+    "quick_actions": {
+      "description": "設置快捷操作以更快地執行您喜歡的提示詞 - 從新建聊天或右鍵選單中。",
+      "edit": {
+        "cancel": "取消",
+        "prompt": "提示詞",
+        "reset": "重置",
+        "save": "儲存",
+        "show_in_context_menu": "在右鍵選單中顯示",
+        "title": "標題"
+      },
+      "title": "自定義快捷操作"
+    },
+    "test": "測試",
+    "translation": {
+      "title": "翻譯語言"
+    },
+    "webllm-desc": "您現在正在使用 WebLLM: qwen3:0.6b 進行快速試用。如需完整模型支援和更佳效能，請安裝 Ollama。",
+    "general": {
+      "system_language": "系統語言",
+      "title": "一般"
+    },
+    "title": "設定",
+    "model_downloader": {
+      "description": "此模型需要在使用前下載。下載可能需要幾分鐘的時間。",
+      "downloading_model": "正在下載「{model}」",
+      "download_model": "下載「{model}」",
+      "downloading": "您的模型正在下載中，請稍候…",
+      "download": "下載",
+      "retry": "重試",
+      "unable_to_download": "無法開始下載",
+      "could_not_connect_ollama": "我們無法連接到 Ollama。請確保 Ollama 正在運行，然後再試一次。"
+    },
+    "webllm_downloader": {
+      "description": "要使用本機模式，您需要下載 {model} 模型（{size}）。您現在要下載嗎？"
+    }
+  },
+  "context_menu": {
+    "quick_actions": {
+      "title": "快捷操作"
+    },
+    "translation": {
+      "show_original": "顯示原始頁面",
+      "translate_page_into": "將此頁面翻譯成{language}"
+    }
+  },
+  "errors": {
+    "model_not_found": "哎呀！出了點問題。請在設置中檢查您的Ollama連接，然後重試。",
+    "model_request_error": "哎呀！出了點問題。請在設置中檢查您的Ollama連接，然後重試。",
+    "model_request_timeout": "“請求超時，請檢查您的Ollama連接或考慮啟動新會話，因為長上下文可能會影響響應時間。”",
+    "timeout_error": "操作計時：{message}",
+    "unknown_error": "發生意外錯誤：{message}",
+    "webllm_not_supported": "WebLLM 在您的裝置上不受支援。"
+  },
+  "common": {
+    "cancel": "取消"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "在 NativeMind 中使用"
+    }
+  },
+  "popup": {
+    "reload_page": "請重新載入頁面以使用 NativeMind。",
+    "page_not_supported": "此頁面不受 NativeMind 支援。"
+  },
+  "writing_tools": {
+    "processing": "處理中...",
+    "rewrite_suggestion": "重寫建議",
+    "sparkle_text": "閃爍文字",
+    "key_points": "重點",
+    "grammar_and_style": "語法與風格",
+    "proofread": "校對",
+    "list": "清單",
+    "sparkle": "美化",
+    "rewrite": "重寫",
+    "apply": "套用",
+    "dismiss": "關閉"
+  },
+  "textarea": {
+    "reset_to_default": "重設為預設值"
+  }
+}

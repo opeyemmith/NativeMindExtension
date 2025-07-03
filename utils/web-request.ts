@@ -3,11 +3,13 @@ import { browser } from 'wxt/browser'
 import logger from '@/utils/logger'
 
 const log = logger.child('web-request')
-// 一个固定 ID，方便热重载时先删后加
+// a constants for removing old rules
 const RULE_ID_REMOVE_ORIGIN = 1
 const RULE_ID_REMOVE_DISPOSITION = 2
 
 export function registerDeclarativeNetRequestRule() {
+  // firefox has some bugs with declarativeNetRequest API, we use rules.json instead
+  if (import.meta.env.FIREFOX) return
   const URL_FILTER = /http:\/\/(127.0.0.1|localhost)/
   const { resolve, promise } = Promise.withResolvers<void>()
 
@@ -17,7 +19,7 @@ export function registerDeclarativeNetRequestRule() {
   }, 1000)
 
   browser.runtime.onInstalled.addListener(async () => {
-    // 每次安装/更新都重置规则
+    // reset the rules when the extension is installed or updated
     log.debug('Registering origin-rewrite rule', browser.runtime.id)
     await browser.declarativeNetRequest.updateDynamicRules({
       removeRuleIds: [RULE_ID_REMOVE_ORIGIN],
@@ -41,6 +43,9 @@ export function registerDeclarativeNetRequestRule() {
           },
         },
       ],
+    }).catch((error) => {
+      log.error('Failed to register origin-rewrite rule', error)
+      throw error
     })
 
     log.debug('Origin‑rewrite rule registered')

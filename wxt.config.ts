@@ -3,7 +3,9 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
-import { VERSION } from './utils/constants'
+import { version } from './package.json'
+
+export const VERSION = version.split('-')[0]
 
 const IS_FIREFOX = process.argv.includes('firefox')
 
@@ -64,6 +66,9 @@ export default defineConfig({
   },
   vite: (_env) => {
     return {
+      build: {
+        target: ['chrome124', 'firefox120', 'safari16'],
+      },
       plugins: [
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),
@@ -77,6 +82,7 @@ export default defineConfig({
     default_locale: 'en',
     permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', ...extraPermissions],
     minimum_chrome_version: '124',
+    declarative_net_request: IS_FIREFOX ? { rule_resources: [{ id: 'ruleset_1', enabled: true, path: 'rules.json' }] } : undefined,
     content_security_policy: {
       extension_pages: 'script-src \'self\' \'wasm-unsafe-eval\'; object-src \'self\';',
     },

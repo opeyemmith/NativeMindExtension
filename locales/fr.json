@@ -1,0 +1,191 @@
+{
+  "chat": {
+    "messages": {
+      "thought_for_seconds": "Réflexion pendant {second} seconde | Réflexion pendant {second} secondes",
+      "thinking": "Réflexion en cours...",
+      "reading": "Lecture en cours",
+      "search_locally": "Recherche locale dans le navigateur..."
+    },
+    "quick_actions": {
+      "title": "Actions rapides"
+    },
+    "input": {
+      "placeholder": {
+        "ask_anything": "Posez n'importe quelle question...",
+        "ask_follow_up": "Posez une question complémentaire..."
+      },
+      "tab_selector": {
+        "all_tabs": "Tous les onglets ouverts"
+      }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "Mettre en évidence les informations clés"
+      },
+      "search_more": {
+        "title": "Rechercher plus de contenu comme celui-ci"
+      },
+      "summarize_page_content": {
+        "title": "Résumer la page"
+      }
+    }
+  },
+  "onboarding": {
+    "banner": {
+      "description": "Privé et sécurisé, avec des fonctionnalités puissantes qui fonctionnent entièrement sur votre appareil.",
+      "title": "IA sur appareil, conçue spécialement pour vous"
+    },
+    "guide": {
+      "already_installed": "Ollama est déjà installé et en cours d'exécution ?",
+      "features": {
+        "1": "Exécutez des modèles avancés comme DeepSeek, Qwen, Llama",
+        "2": "Personnalisez et changez de modèles avec un contrôle total",
+        "3": "Vos données restent privées, sur votre appareil"
+      },
+      "follow_our_tutorial": "Suivez notre guide d'installation",
+      "get_ollama": "Obtenir Ollama",
+      "install_desc": "Installez Ollama pour configurer votre IA locale.",
+      "need_help": "Besoin d'aide ?",
+      "ollama_desc": "Libérez toute la puissance de l'IA locale avec Ollama.",
+      "setup": "Configuration",
+      "step1": "ÉTAPE 1",
+      "download_model_to_begin": "Téléchargez un modèle pour commencer.",
+      "select_model_to_start": "Sélectionnez et téléchargez un modèle pour commencer"
+    },
+    "webllm_tutorial": {
+      "desc": "Utilisez un modèle léger (Qwen 0.6b) directement dans votre navigateur - sans configuration, sans attente.",
+      "not_support_webllm": "WebLLM n'est pas pris en charge sur votre appareil",
+      "start_with_webllm": "Commencer avec le modèle Web",
+      "title": "Pas prêt à installer ? \nEssayez-le instantanément."
+    },
+    "welcome_msg": {
+      "title": "👋 Bienvenue sur **NativeMind**",
+      "body": "NativeMind est une extension de navigateur IA qui privilégie la confidentialité et vous aide à discuter, rechercher et traduire - le tout alimenté par des modèles de langage fonctionnant sur votre appareil.\n\n\nVoici ce que vous pouvez faire avec NativeMind :\n\n\n\n- Discuter à travers plusieurs onglets pour suivre différentes pages.\n\n- Rechercher sur le Web directement dans le chat pour plus de contexte.\n\n- Cliquer avec le bouton droit pour traduire instantanément n'importe quelle partie de la page.\n\n- Changer ou télécharger des modèles à tout moment dans les Paramètres.\n\n\nVous pouvez commencer par essayer les actions rapides ci-dessous."
+    },
+    "ollama_is_running": "Ollama est en cours d'exécution"
+  },
+  "settings": {
+    "advanced": {
+      "title": "Avancé"
+    },
+    "choose_model": "Choisir le modèle",
+    "download": "Télécharger",
+    "feedback": {
+      "contact_msg": "📧 Des questions ou des commentaires ? \nRejoignez notre {discord} ou envoyez-nous un e-mail à {email}.",
+      "join_waitlist": "💼 Vous souhaitez l'utiliser au travail ? \n{join_waitlist_link} pour les mises à jour professionnelles.",
+      "join_waitlist_link": "Rejoignez la liste d'attente",
+      "discord": "Discord"
+    },
+    "get_ollama": "Obtenir Ollama",
+    "models": {
+      "title": "Modèles",
+      "discover_more": "Découvrez plus de modèles",
+      "no_model": "⚠️ Aucun modèle",
+      "add_model_to_start": "Ajouter un modèle pour commencer"
+    },
+    "ollama": {
+      "already_installed": "Ollama est déjà installé et en cours d'exécution ?",
+      "connected": "Connecté",
+      "connection_error": "Erreur de connexion",
+      "downloadable_model": "Modèles téléchargeables",
+      "follow_guide": "Suivez notre guide d'installation",
+      "learn_more_about_models": "En savoir plus sur les modèles",
+      "need_help": "Besoin d'aide ?",
+      "re_scan": "Scanner à nouveau",
+      "server_address": "Adresse du serveur",
+      "setup": "Configuration",
+      "unconnected": "Non connecté"
+    },
+    "prompts": {
+      "chat_system_prompt": "Instruction système de chat",
+      "title": "Instructions",
+      "translation_system_prompt": "Instruction système de traduction"
+    },
+    "provider": {
+      "title": "Connexion"
+    },
+    "provider_model": {
+      "title": "Configurer Ollama"
+    },
+    "quick_actions": {
+      "description": "Configurez des actions rapides pour exécuter vos instructions préférées plus rapidement - depuis le nouveau chat ou le menu contextuel.",
+      "edit": {
+        "cancel": "Annuler",
+        "prompt": "Instruction",
+        "reset": "Réinitialiser",
+        "save": "Enregistrer",
+        "show_in_context_menu": "Afficher dans le menu contextuel",
+        "title": "Titre"
+      },
+      "title": "Personnaliser les actions rapides"
+    },
+    "test": "Test",
+    "translation": {
+      "title": "Langue de traduction"
+    },
+    "webllm-desc": "Vous utilisez maintenant WebLLM : qwen3:0.6b pour un essai rapide. Pour un support complet des modèles et de meilleures performances, veuillez installer Ollama.",
+    "general": {
+      "system_language": "Langue du système",
+      "title": "Général"
+    },
+    "title": "Paramètres",
+    "model_downloader": {
+      "description": "Ce modèle doit être téléchargé avant utilisation. Le téléchargement peut prendre quelques minutes.",
+      "downloading_model": "Téléchargement de \"{model}\"",
+      "download_model": "Télécharger \"{model}\"",
+      "downloading": "Votre modèle est en cours de téléchargement. Veuillez patienter…",
+      "download": "Télécharger",
+      "retry": "Réessayer",
+      "unable_to_download": "Impossible de démarrer le téléchargement",
+      "could_not_connect_ollama": "Nous n'avons pas pu nous connecter à Ollama. Veuillez vous assurer qu'Ollama est en cours d'exécution et réessayer."
+    },
+    "webllm_downloader": {
+      "description": "Pour utiliser le mode Local, vous devez télécharger le modèle {model} ({size}). Souhaitez-vous le télécharger maintenant ?"
+    }
+  },
+  "context_menu": {
+    "quick_actions": {
+      "title": "Actions rapides"
+    },
+    "translation": {
+      "show_original": "Afficher l'original",
+      "translate_page_into": "Traduire cette page en {language}"
+    }
+  },
+  "errors": {
+    "model_not_found": "Oups ! Quelque chose s'est mal passé. Veuillez vérifier votre connexion Ollama dans les paramètres et réessayer.",
+    "model_request_error": "Oups ! Quelque chose s'est mal passé. Veuillez vérifier votre connexion Ollama dans les paramètres et réessayer.",
+    "timeout_error": "Opération expirée : {message}",
+    "unknown_error": "Une erreur inattendue s'est produite : {message}",
+    "model_request_timeout": "Délai de requête expiré. Veuillez vérifier votre connexion Ollama ou envisager de démarrer une nouvelle session, car les contextes longs peuvent affecter les temps de réponse.",
+    "webllm_not_supported": "WebLLM n'est pas pris en charge sur votre appareil."
+  },
+  "common": {
+    "cancel": "Annuler"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Utiliser dans NativeMind"
+    }
+  },
+  "popup": {
+    "reload_page": "Veuillez recharger la page pour utiliser NativeMind.",
+    "page_not_supported": "Cette page n'est pas prise en charge par NativeMind."
+  },
+  "writing_tools": {
+    "processing": "Traitement en cours...",
+    "rewrite_suggestion": "Suggestion de réécriture",
+    "sparkle_text": "Texte Scintillant",
+    "key_points": "Points clés",
+    "grammar_and_style": "Grammaire et style",
+    "proofread": "Relire",
+    "list": "Liste",
+    "sparkle": "Embellir",
+    "rewrite": "Réécrire",
+    "apply": "Appliquer",
+    "dismiss": "Fermer"
+  },
+  "textarea": {
+    "reset_to_default": "Rétablir par défaut"
+  }
+}

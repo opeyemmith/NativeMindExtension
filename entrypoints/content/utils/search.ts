@@ -12,17 +12,18 @@ export interface SearchOptions {
 
 export class SearchScraper {
   async* search(queryList: string[], options?: SearchOptions) {
-    const { portName } = await c2bRpc.searchOnline(queryList, options)
+    const { abortSignal, ...restOptions } = options || { engine: 'google' }
+    const { portName } = await c2bRpc.searchOnline(queryList, restOptions)
     const port = browser.runtime.connect({ name: portName })
     options?.abortSignal?.addEventListener('abort', () => {
       port.disconnect()
     })
     const iter = toAsyncIter<SearchingMessage>((yieldData, done) => {
       const onMessage = (message: SearchingMessage) => {
-        if (options?.abortSignal?.aborted) return done()
+        if (abortSignal?.aborted) return done()
         yieldData(message)
       }
-      options?.abortSignal?.addEventListener('abort', () => {
+      abortSignal?.addEventListener('abort', () => {
         port.onMessage.removeListener(onMessage)
         done()
       })

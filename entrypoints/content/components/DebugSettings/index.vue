@@ -8,6 +8,25 @@
         <div class="font-bold">
           Debug
         </div>
+        <Block title="UI Language">
+          <div class="flex gap-2 flex-col justify-start items-start">
+            <UILanguageSelector />
+            <Button
+              variant="secondary"
+              class="p-1 font-normal"
+              @click="localeInConfig = undefined"
+            >
+              clear local setting
+            </Button>
+            <div>Local value: {{ localeInConfig ?? 'not set' }}</div>
+            <div
+              class="text-[10px] text-gray-400 font-light"
+            >
+              clear locale setting will reset the UI language to automatically detected language in next page load
+              (if local value is set, it will override the auto-detected language)
+            </div>
+          </div>
+        </Block>
         <Block title="Onboarding">
           <div class="flex gap-2 flex-col justify-start items-start">
             <div>Reset onboarding</div>
@@ -46,76 +65,94 @@
           </div>
         </Block>
         <Block title="Models">
-          <div class="flex gap-3 justify-start items-center">
-            Provider
-            <Selector
-              v-model="endpointType"
-              :options="modelProviderOptions"
-              dropdownClass="text-xs text-black w-52"
-              dropdownAlign="left"
-            />
-          </div>
-          <div class="flex gap-3 justify-start items-center">
-            <div>num ctx = </div>
-            <Input
-              v-model.number="numCtx"
-              type="number"
-              min="0"
-              class="border-b border-gray-200 py-0"
-            />
-          </div>
-          <div class="flex gap-3 justify-start items-center">
-            <div>Pull new model</div>
-          </div>
-          <div class="mt-2 flex gap-3 justify-start items-center">
-            <Input
-              v-model="newModelId"
-              placeholder="model id"
-              class="font-light py-0"
-            />
-            <button
-              class="bg-blue-400 hover:bg-blue-500 text-white rounded-md cursor-pointer text-xs py-1 px-3"
-              :class="!newModelId.trim() && 'opacity-50 pointer-events-none'"
-              @click="onPullModel"
-            >
-              pull
-            </button>
-          </div>
-          <div class="w-full font-normal">
-            <div
-              v-for="pullingModel of pulling"
-              :key="pullingModel.modelId"
-            >
-              <div>
-                <span>
-                  {{ pullingModel.modelId }}
-                </span>
-                <span class="font-light"> ({{ pullingModel.status }}) </span>
-                <button
-                  class="text-blue-400 hover:text-blue-600 font-normal text-xs ml-2 cursor-pointer"
-                  @click="pullingModel.abort"
-                >
-                  {{ pullingModel.status !== 'success' ? 'stop' : 'clear' }}
-                </button>
-              </div>
-              <div
-                v-if="pullingModel.error"
-                class="font-light text-[8px] text-red-500"
+          <div class="flex flex-col gap-3 justify-start items-stretch">
+            <div class="flex gap-3 justify-start items-center">
+              Provider
+              <Selector
+                v-model="endpointType"
+                :options="modelProviderOptions"
+                dropdownClass="text-xs text-black w-52"
+                containerClass="py-0"
+                dropdownAlign="left"
+              />
+            </div>
+            <div class="flex gap-3 justify-start items-center">
+              <div>Num ctx</div>
+              <Input
+                v-model.number="numCtx"
+                type="number"
+                min="0"
+                class="border-b border-gray-200 py-1"
+              />
+            </div>
+            <div class="flex gap-3 justify-start items-center">
+              Reasoning
+              <Switch
+                v-model="enableReasoning"
+                slotClass="rounded-lg border-gray-200 border bg-white"
+                itemClass="h-6 flex items-center justify-center text-xs px-2"
+                thumbClass="bg-blue-500 rounded-md"
+                activeItemClass="text-white"
+                :items="[
+                  {
+                    label: 'Enable',
+                    key: true,
+                  },
+                  {
+                    label: 'Disable',
+                    key: false,
+                    activeThumbClass: 'bg-gray-200',
+                  }
+                ]"
+              />
+            </div>
+            <div class="flex gap-3 justify-start items-center">
+              <Input
+                v-model="newModelId"
+                placeholder="pull model id from Ollama"
+                class="font-light py-1"
+              />
+              <button
+                class="bg-blue-400 hover:bg-blue-500 text-white rounded-md cursor-pointer text-xs py-1 px-3"
+                :class="!newModelId.trim() && 'opacity-50 pointer-events-none'"
+                @click="onPullModel"
               >
-                {{ pullingModel.error }}
-              </div>
+                pull
+              </button>
+            </div>
+            <div class="w-full font-normal">
               <div
-                v-else
-                class="flex items-center"
+                v-for="pullingModel of pulling"
+                :key="pullingModel.modelId"
               >
-                <div class="w-full h-1 bg-gray-200">
-                  <div
-                    :style="{ width: `${(pullingModel.completed / (pullingModel.total || 1)) * 100}%` }"
-                    class="bg-blue-500 h-full"
-                  />
+                <div>
+                  <span>
+                    {{ pullingModel.modelId }}
+                  </span>
+                  <span class="font-light"> ({{ pullingModel.status }}) </span>
+                  <button
+                    class="text-blue-400 hover:text-blue-600 font-normal text-xs ml-2 cursor-pointer"
+                    @click="pullingModel.abort"
+                  >
+                    {{ pullingModel.status !== 'success' ? 'stop' : 'clear' }}
+                  </button>
                 </div>
-                <div class="whitespace-nowrap ml-2 font-light text-[8px]">
-                  {{ formatSize(pullingModel.completed) }} / {{ formatSize(pullingModel.total) }}
+                <div
+                  v-if="pullingModel.error"
+                  class="font-light text-[8px] text-red-500"
+                >
+                  {{ pullingModel.error }}
+                </div>
+                <div
+                  v-else
+                  class="flex items-center"
+                >
+                  <ProgressBar
+                    :progress="pullingModel.total ? pullingModel.completed / pullingModel.total : 0"
+                  />
+                  <div class="whitespace-nowrap ml-2 font-light text-[8px]">
+                    {{ formatSize(pullingModel.completed) }} / {{ formatSize(pullingModel.total) }}
+                  </div>
                 </div>
               </div>
             </div>
@@ -352,8 +389,11 @@ import { ref, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import Input from '@/components/Input.vue'
+import ProgressBar from '@/components/ProgressBar.vue'
 import Selector from '@/components/Selector.vue'
 import Switch from '@/components/Switch.vue'
+import Button from '@/components/ui/Button.vue'
+import UILanguageSelector from '@/components/UILanguageSelector.vue'
 import { parseDocument } from '@/utils/document-parser'
 import { formatSize } from '@/utils/formatter'
 import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
@@ -376,6 +416,7 @@ const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const chatSystemPrompt = userConfig.llm.chatSystemPrompt.toRef()
 const summarizeSystemPrompt = userConfig.llm.summarizeSystemPrompt.toRef()
 const enableOnlineSearch = userConfig.chat.onlineSearch.enable.toRef()
+const enableReasoning = userConfig.llm.reasoning.toRef()
 const onlineSearchPageReadCount = userConfig.chat.onlineSearch.pageReadCount.toRef()
 const onboardingVersion = userConfig.ui.onboarding.version.toRef()
 const enabledWritingTools = userConfig.writingTools.enable.toRef()
@@ -385,6 +426,7 @@ const writingToolsProofreadPrompt = userConfig.writingTools.proofread.systemProm
 const writingToolsListPrompt = userConfig.writingTools.list.systemPrompt.toRef()
 const writingToolsSparklePrompt = userConfig.writingTools.sparkle.systemPrompt.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
+const localeInConfig = userConfig.locale.current.toRef()
 const translationSystemPromptError = ref('')
 const newModelId = ref('')
 const pulling = ref<{ modelId: string, total: number, completed: number, abort: () => void, status: string, error?: string }[]>([])

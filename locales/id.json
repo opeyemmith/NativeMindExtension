@@ -1,0 +1,191 @@
+{
+  "chat": {
+    "messages": {
+      "thought_for_seconds": "Berpikir selama {second} detik | Berpikir selama {second} detik",
+      "thinking": "Sedang berpikir...",
+      "reading": "Sedang membaca...",
+      "search_locally": "Mencari secara lokal di browser..."
+    },
+    "quick_actions": {
+      "title": "Tindakan cepat"
+    },
+    "input": {
+      "placeholder": {
+        "ask_anything": "Tanyakan apa saja...",
+        "ask_follow_up": "Ajukan pertanyaan lanjutan..."
+      },
+      "tab_selector": {
+        "all_tabs": "Semua tab terbuka"
+      }
+    },
+    "prompt": {
+      "highlight_key_insights": {
+        "title": "Sorot wawasan kunci"
+      },
+      "search_more": {
+        "title": "Cari lebih banyak konten seperti ini"
+      },
+      "summarize_page_content": {
+        "title": "Ringkas halaman"
+      }
+    }
+  },
+  "onboarding": {
+    "banner": {
+      "description": "Privat dan aman, dengan fitur-fitur canggih yang sepenuhnya berjalan di perangkat Anda.",
+      "title": "AI di perangkat, dibuat khusus untuk Anda"
+    },
+    "guide": {
+      "already_installed": "Sudah menginstal dan menjalankan Ollama?",
+      "features": {
+        "1": "Jalankan model canggih seperti DeepSeek, Qwen, Llama",
+        "2": "Sesuaikan dan beralih antar model dengan kontrol penuh",
+        "3": "Data Anda tetap pribadi, tersimpan di perangkat Anda"
+      },
+      "follow_our_tutorial": "Ikuti panduan instalasi kami",
+      "get_ollama": "Dapatkan Ollama",
+      "install_desc": "Instal Ollama untuk mengatur AI lokal Anda.",
+      "need_help": "Butuh bantuan?",
+      "ollama_desc": "Buka kekuatan penuh AI lokal dengan Ollama.",
+      "setup": "Pengaturan",
+      "step1": "LANGKAH 1",
+      "download_model_to_begin": "Unduh model untuk memulai.",
+      "select_model_to_start": "Pilih dan unduh model untuk memulai"
+    },
+    "webllm_tutorial": {
+      "desc": "Gunakan model ringan (Qwen 0.6b) langsung di browser Anda — tanpa pengaturan, tanpa menunggu.",
+      "not_support_webllm": "WebLLM tidak didukung di perangkat Anda",
+      "start_with_webllm": "Mulai dengan Model Web",
+      "title": "Belum siap untuk menginstal? Coba langsung sekarang."
+    },
+    "welcome_msg": {
+      "title": "👋 Selamat datang di **NativeMind**",
+      "body": "NativeMind adalah ekstensi browser AI yang mengutamakan privasi dan membantu Anda mengobrol, mencari, dan menerjemahkan — semuanya didukung oleh model bahasa yang berjalan di perangkat Anda.\n\nInilah yang dapat Anda lakukan dengan NativeMind:\n\n- Mengobrol di beberapa tab untuk melacak berbagai halaman.\n- Mencari di web secara langsung dalam obrolan untuk mendapatkan konteks lebih banyak.\n- Klik kanan untuk menerjemahkan bagian mana pun dari halaman secara instan.\n- Beralih atau mengunduh model kapan saja di Pengaturan.\n\nAnda dapat mulai dengan mencoba tindakan cepat di bawah ini."
+    },
+    "ollama_is_running": "Ollama sedang berjalan"
+  },
+  "settings": {
+    "advanced": {
+      "title": "Canggih"
+    },
+    "choose_model": "Pilih Model",
+    "download": "Unduh",
+    "feedback": {
+      "contact_msg": "📧 Ada pertanyaan atau masukan? Bergabunglah dengan {discord} kami atau kirim email ke {email}.",
+      "join_waitlist": "💼 Ingin menggunakannya di tempat kerja? {join_waitlist_link} untuk mendapatkan pembaruan perusahaan.",
+      "join_waitlist_link": "Bergabung dengan daftar tunggu",
+      "discord": "Discord"
+    },
+    "get_ollama": "Dapatkan Ollama",
+    "models": {
+      "title": "Model",
+      "discover_more": "Temukan lebih banyak model",
+      "no_model": "⚠️ Tidak ada model",
+      "add_model_to_start": "Tambahkan model untuk memulai"
+    },
+    "ollama": {
+      "already_installed": "Sudah menginstal dan menjalankan Ollama?",
+      "connected": "Terhubung",
+      "connection_error": "Kesalahan koneksi",
+      "downloadable_model": "Model yang dapat diunduh",
+      "follow_guide": "Ikuti panduan instalasi kami",
+      "learn_more_about_models": "Pelajari lebih lanjut tentang model",
+      "need_help": "Butuh bantuan?",
+      "re_scan": "Pindai ulang",
+      "server_address": "Alamat server",
+      "setup": "Pengaturan",
+      "unconnected": "Tidak terhubung"
+    },
+    "prompts": {
+      "chat_system_prompt": "Prompt sistem obrolan",
+      "title": "Prompt",
+      "translation_system_prompt": "Prompt sistem penerjemah"
+    },
+    "provider": {
+      "title": "Koneksi"
+    },
+    "provider_model": {
+      "title": "Konfigurasi Ollama"
+    },
+    "quick_actions": {
+      "description": "Siapkan tindakan cepat untuk menjalankan prompt favorit Anda lebih cepat -- dari Obrolan Baru atau menu klik kanan.",
+      "edit": {
+        "cancel": "Batal",
+        "prompt": "Prompt",
+        "reset": "Atur ulang",
+        "save": "Simpan",
+        "show_in_context_menu": "Tampilkan di menu klik kanan",
+        "title": "Judul"
+      },
+      "title": "Kustomisasi tindakan cepat"
+    },
+    "test": "Tes",
+    "translation": {
+      "title": "Bahasa terjemahan"
+    },
+    "webllm-desc": "Anda sekarang menggunakan WebLLM: qwen3:0.6b untuk percobaan cepat. Untuk dukungan model lengkap dan performa yang lebih baik, silakan instal Ollama.",
+    "general": {
+      "system_language": "Bahasa sistem",
+      "title": "Umum"
+    },
+    "title": "Pengaturan",
+    "model_downloader": {
+      "description": "Model ini perlu diunduh sebelum digunakan. Pengunduhan mungkin memerlukan waktu beberapa menit.",
+      "downloading_model": "Mengunduh \"{model}\"",
+      "download_model": "Unduh \"{model}\"",
+      "downloading": "Model Anda sedang diunduh. Mohon tunggu…",
+      "download": "Unduh",
+      "retry": "Coba lagi",
+      "unable_to_download": "Tidak Dapat Memulai Unduhan",
+      "could_not_connect_ollama": "Kami tidak dapat terhubung ke Ollama. Pastikan Ollama sedang berjalan dan coba lagi."
+    },
+    "webllm_downloader": {
+      "description": "Untuk menggunakan mode Lokal, Anda perlu mengunduh model {model} ({size}). Apakah Anda ingin mengunduhnya sekarang?"
+    }
+  },
+  "context_menu": {
+    "quick_actions": {
+      "title": "Tindakan cepat"
+    },
+    "translation": {
+      "show_original": "Tampilkan asli",
+      "translate_page_into": "Terjemahkan halaman ini ke {language}"
+    }
+  },
+  "errors": {
+    "model_not_found": "Ups! Ada yang salah. Silakan periksa koneksi Ollama Anda di pengaturan dan coba lagi.",
+    "model_request_error": "Ups! Ada yang salah. Silakan periksa koneksi Ollama Anda di pengaturan dan coba lagi.",
+    "model_request_timeout": "Waktu permintaan habis. Silakan periksa koneksi Ollama Anda atau pertimbangkan untuk memulai sesi baru karena konteks yang panjang dapat memengaruhi waktu respons.",
+    "timeout_error": "Operasi waktu habis: {message}",
+    "unknown_error": "Terjadi kesalahan yang tidak terduga: {message}",
+    "webllm_not_supported": "WebLLM tidak didukung pada perangkat Anda."
+  },
+  "common": {
+    "cancel": "Batal"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Gunakan di NativeMind"
+    }
+  },
+  "popup": {
+    "reload_page": "Silakan muat ulang halaman untuk menggunakan NativeMind.",
+    "page_not_supported": "Halaman ini tidak didukung oleh NativeMind."
+  },
+  "writing_tools": {
+    "processing": "Memproses...",
+    "rewrite_suggestion": "Saran Penulisan Ulang",
+    "sparkle_text": "Teks Berkilau",
+    "key_points": "Poin-Poin Utama",
+    "grammar_and_style": "Tata Bahasa & Gaya",
+    "proofread": "Koreksi",
+    "list": "Daftar",
+    "sparkle": "Percantik",
+    "rewrite": "Tulis Ulang",
+    "apply": "Terapkan",
+    "dismiss": "Abaikan"
+  },
+  "textarea": {
+    "reset_to_default": "Atur ulang ke default"
+  }
+}

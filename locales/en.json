@@ -1,6 +1,6 @@
 {
   "settings": {
-    "webllm-desc": "Using WebLLM for quick tryout. For full model support and better performance, please install Ollama.",
+    "webllm-desc": "You are now using WebLLM: qwen3:0.6b for quick tryout. For full model support and better performance, please install Ollama.",
     "translation": {
       "title": "Translation Language"
     },
@@ -11,7 +11,13 @@
       "need_help": "Need help?",
       "follow_guide": "Follow our installation guide",
       "re_scan": "Re-scan",
-      "setup": "Setup"
+      "setup": "Setup",
+      "server_address": "Server Address",
+      "downloadable_model": "Downloadable Model",
+      "learn_more_about_models": "Learn more about models",
+      "connected": "Connected",
+      "unconnected": "Unconnected",
+      "connection_error": "Connection Error"
     },
     "choose_model": "Choose Model",
     "download": "Download",
@@ -21,16 +27,165 @@
       "chat_system_prompt": "Chat System Prompt"
     },
     "models": {
-      "title": "Active Model"
+      "title": "Models",
+      "discover_more": " Discover more models",
+      "no_model": "⚠️ No model",
+      "add_model_to_start": "Add a model to start"
     },
     "quick_actions": {
       "title": "Customize Quick Actions",
-      "description": "Set up Quick Actions to run your favorite prompts faster -- from New Chat or the right-click menu."
+      "description": "Set up Quick Actions to run your favorite prompts faster -- from New Chat or the right-click menu.",
+      "edit": {
+        "title": "Title",
+        "prompt": "Prompt",
+        "show_in_context_menu": "Show in right-click menu",
+        "cancel": "Cancel",
+        "reset": "Reset",
+        "save": "Save"
+      }
+    },
+    "feedback": {
+      "discord": "Discord",
+      "contact_msg": "📧 Questions or feedback? Join our {discord} or email us at {email}.",
+      "join_waitlist": "💼 Want to use it at work? {join_waitlist_link} for enterprise updates.",
+      "join_waitlist_link": "Join the waitlist"
+    },
+    "provider": {
+      "title": "Connection"
+    },
+    "provider_model": {
+      "title": "Configure Ollama"
+    },
+    "advanced": {
+      "title": "Advanced"
+    },
+    "general": {
+      "title": "General",
+      "system_language": "System Language"
+    },
+    "title": "Settings",
+    "model_downloader": {
+      "description": "This model needs to be downloaded before use. The download may take a few minutes.",
+      "downloading": "Your model is being downloaded. Please wait…",
+      "download": "Download",
+      "downloading_model": "Downloading “{model}“",
+      "download_model": "Download “{model}“\t",
+      "unable_to_download": "Unable to Start Download",
+      "retry": "Retry",
+      "could_not_connect_ollama": "We couldn’t connect to Ollama. Please make sure Ollama is running and try again."
+    },
+    "webllm_downloader": {
+      "description": "To use Local mode, you need to download the {model} model ({size}). Would you like to download it now?"
     }
   },
   "chat": {
     "messages": {
-      "thought_for_seconds": "Thought for {second} second | Thought for {second} seconds"
+      "thought_for_seconds": "Thought for {second} second | Thought for {second} seconds",
+      "thinking": "Thinking...",
+      "search_locally": "Searching locally in browser…",
+      "reading": "Reading"
+    },
+    "quick_actions": {
+      "title": "Quick Actions"
+    },
+    "input": {
+      "placeholder": {
+        "ask_anything": "Ask anything...",
+        "ask_follow_up": "Ask follow up..."
+      },
+      "tab_selector": {
+        "all_tabs": "All open tabs"
+      }
+    },
+    "prompt": {
+      "summarize_page_content": {
+        "title": "Summarize the page"
+      },
+      "highlight_key_insights": {
+        "title": "Highlight key insights"
+      },
+      "search_more": {
+        "title": "Search for more content like this"
+      }
     }
+  },
+  "onboarding": {
+    "banner": {
+      "title": "On-device AI, built just for you",
+      "description": "Private and secure, with powerful features that run entirely in your device."
+    },
+    "guide": {
+      "step1": "STEP 1",
+      "install_desc": "Install Ollama to set up your local AI.",
+      "ollama_desc": "Unlock full local AI power with Ollama.",
+      "features": {
+        "1": "Run advanced models like DeepSeek, Qwen, Llama",
+        "2": "Customize and switch models with full control",
+        "3": "Your data stays private, on your device"
+      },
+      "get_ollama": "Get Ollama",
+      "already_installed": "Already installed and run Ollama?",
+      "setup": "Setup",
+      "need_help": "Need help?",
+      "follow_our_tutorial": "Follow our installation guide",
+      "download_model_to_begin": "Download a model to begin.",
+      "select_model_to_start": "Select and download a model to get started"
+    },
+    "webllm_tutorial": {
+      "title": "Not ready to install? Try it instantly.",
+      "desc": "Use a lightweight model (Qwen 0.6b)right in your browser — no setup, no wait.",
+      "start_with_webllm": "Start with Web Model",
+      "not_support_webllm": "WebLLM is not supported on your device"
+    },
+    "welcome_msg": {
+      "title": "👋 Welcome to **NativeMind**",
+      "body": "NativeMind is a privacy-first AI browser extension that helps you chat, search, and translate — all powered by on-device language models.\n\nHere’s what you can do with NativeMind:\n\n\n- Chat across multiple tabs to keep track of different pages.\n- Search the web directly within the chat for more context.\n- Right-click to translate any part of the page instantly.\n- Switch or download models anytime in Settings.\n\nYou can start by trying out the quick actions below."
+    },
+    "ollama_is_running": "Ollama is running"
+  },
+  "context_menu": {
+    "quick_actions": {
+      "title": "Quick Actions"
+    },
+    "translation": {
+      "show_original": "Show Original",
+      "translate_page_into": "Translate this page into {language}"
+    }
+  },
+  "errors": {
+    "unknown_error": "An unexpected error occurred: {message}",
+    "model_request_error": "Oops! Something went wrong. Please check your Ollama connection in settings and try again.",
+    "model_not_found": "Oops! Something went wrong. Please check your Ollama connection in settings and try again.",
+    "model_request_timeout": "'Request timeout, please check your Ollama connection or consider starting a new session as long contexts may affect response times.'",
+    "timeout_error": "Operation timed out: {message}",
+    "webllm_not_supported": "WebLLM not supported on your device."
+  },
+  "common": {
+    "cancel": "Cancel"
+  },
+  "ollama": {
+    "sites": {
+      "add_to_nativemind": "Use in NativeMind"
+    }
+  },
+  "popup": {
+    "reload_page": "Please reload the page to use NativeMind.",
+    "page_not_supported": "This page is not supported by NativeMind."
+  },
+  "writing_tools": {
+    "processing": "Processing...",
+    "rewrite_suggestion": "Rewrite Suggestion",
+    "grammar_and_style": "Grammar & Style",
+    "key_points": "Key Points",
+    "sparkle_text": "Sparkle Text",
+    "rewrite": "Rewrite",
+    "proofread": "Proofread",
+    "list": "List",
+    "sparkle": "Sparkle",
+    "dismiss": "Dismiss",
+    "apply": "Apply"
+  },
+  "textarea": {
+    "reset_to_default": "Reset to default"
   }
 }

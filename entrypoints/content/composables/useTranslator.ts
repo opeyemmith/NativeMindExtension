@@ -3,6 +3,7 @@ import { onMounted, ref, watch } from 'vue'
 
 import { useToast } from '@/composables/useToast'
 import { getTranslatorEnv, handleTranslatorEnvUpdated, init, setTranslatorEnv, toggleTranslation, translation } from '@/entrypoints/content/utils/translator'
+import { useI18n } from '@/utils/i18n'
 import { LanguageCode } from '@/utils/language/detect'
 import logger from '@/utils/logger'
 import { registerContentScriptRpcEvent } from '@/utils/rpc'
@@ -14,7 +15,8 @@ import { setTranslationMenuTargetLanguage } from '../utils/context-menu'
 import { showSettings } from '../utils/settings'
 
 async function _useTranslator() {
-  // useToast must be called before the first await
+  // useToast/useI18n must be called before the first await
+  const { locale } = useI18n()
   const toast = useToast()
   onMounted(() => {
     setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
@@ -60,15 +62,9 @@ async function _useTranslator() {
     }
   })
 
-  watch(enabled, async (newVal) => {
+  watch(() => [enabled.value, targetLocale.value, locale.value] as const, async ([enabled, targetLanguage]) => {
     if (document.visibilityState === 'visible') {
-      await setTranslationMenuTargetLanguage(newVal, targetLocale.value)
-    }
-  })
-
-  watch(targetLocale, async (newVal) => {
-    if (document.visibilityState === 'visible') {
-      await setTranslationMenuTargetLanguage(enabled.value, newVal)
+      await setTranslationMenuTargetLanguage(enabled, targetLanguage)
     }
   })
 
@@ -81,12 +77,12 @@ async function _useTranslator() {
       if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
         if (!(await ollamaStatusStore.updateConnectionStatus())) {
           toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
-          showSettings(true, 'server-address-section')
+          showSettings(true, { scrollTarget: 'server-address-section' })
           return
         }
         else if ((await ollamaStatusStore.updateModelList()).length === 0) {
           toast('No model found, please download a model.', { duration: 2000 })
-          showSettings(true, 'model-download-section')
+          showSettings(true, { scrollTarget: 'model-download-section' })
           return
         }
       }

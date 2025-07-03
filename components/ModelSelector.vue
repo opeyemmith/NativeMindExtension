@@ -11,9 +11,9 @@
     >
       <Button
         variant="secondary"
-        class="flex justify-between gap-[6px] items-center cursor-pointer text-[13px] font-medium py-0 px-[10px] h-8"
+        class="flex justify-between gap-[6px] items-center cursor-pointer text-[13px] font-medium py-1 px-[10px] text-left leading-4 min-h-8"
       >
-        <IconOllamaRedirect class="w-4 h-4" />
+        <IconOllamaRedirect class="w-4 h-4 shrink-0" />
         {{ t('settings.models.add_model_to_start') }}
       </Button>
     </a>
@@ -24,7 +24,7 @@
       :placeholder="t('settings.models.no_model')"
       class="text-xs max-w-full"
       :disabled="modelList.length === 0"
-      dropdownClass="text-xs text-black w-52"
+      :dropdownClass="classNames('text-xs text-black w-52', dropdownClass)"
       :containerClass="classNames('max-w-full', containerClass)"
       :dropdownAlign="dropdownAlign"
     >
@@ -100,9 +100,9 @@
             :href="OLLAMA_SEARCH_URL"
             target="_blank"
             rel="noopener noreferrer"
-            class="h-8 px-3 flex items-center gap-2 cursor-pointer text-black hover:bg-[#EAECEF]"
+            class="px-3 flex items-center gap-2 cursor-pointer text-black hover:bg-[#EAECEF] leading-4 py-1 min-h-8"
           >
-            <IconRedirect />
+            <IconRedirect class="shrink-0" />
             <Text
               size="small"
             >
@@ -143,6 +143,7 @@ defineProps<{
   allowDelete?: boolean
   dropdownAlign?: 'left' | 'center' | 'right' | 'stretch' | undefined
   containerClass?: string
+  dropdownClass?: string
 }>()
 
 const { t } = useI18n()

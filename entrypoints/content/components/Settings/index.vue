@@ -163,7 +163,8 @@
             <div class="flex flex-col gap-2 items-start">
               <ModelSelector
                 ref="modelSelectorRef"
-                class="max-w-64"
+                class="max-w-full"
+                containerClass="max-w-64"
                 type="buttons"
                 dropdownAlign="left"
                 showDetails

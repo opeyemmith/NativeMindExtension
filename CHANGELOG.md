@@ -1,6 +1,19 @@
 # Changelog
 
 
+## v1.3.0-beta.13
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.12...v1.3.0-beta.13)
+
+### 🩹 Fixes
+
+- **writing-tools:** Update popup shadow styles for better visibility ([aa31213](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa31213))
+- **context-menu:** Implement context menu persistence and restore functionality ([2a6e50d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2a6e50d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.12
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.11...v1.3.0-beta.12)

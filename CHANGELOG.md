@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.3.0-beta.14
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.13...v1.3.0-beta.14)
+
+### 🚀 Enhancements
+
+- **settings:** Use NativeMind logo in ollama.com download buttons ([796a43e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/796a43e))
+
+### 🩹 Fixes
+
+- **manifest:** Update DNR configuration ([f049e90](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f049e90))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.13
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.12...v1.3.0-beta.13)

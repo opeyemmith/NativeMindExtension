@@ -119,6 +119,7 @@ async function _getUserConfig() {
       model: await new Config<string, undefined>('llm.model').build(),
       apiKey: await new Config('llm.apiKey').default('ollama').build(),
       numCtx: await new Config('llm.numCtx').default(1024 * 8).build(),
+      reasoning: await new Config('llm.reasoning').default(true).build(),
       chatSystemPrompt: await new Config('llm.chatSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
       summarizeSystemPrompt: await new Config('llm.summarizeSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
     },

@@ -77,7 +77,7 @@
               />
             </div>
             <div class="flex gap-3 justify-start items-center">
-              <div>num ctx = </div>
+              <div>Num ctx</div>
               <Input
                 v-model.number="numCtx"
                 type="number"
@@ -86,12 +86,30 @@
               />
             </div>
             <div class="flex gap-3 justify-start items-center">
-              <div>Pull new model</div>
+              Reasoning
+              <Switch
+                v-model="enableReasoning"
+                slotClass="rounded-lg border-gray-200 border bg-white"
+                itemClass="h-6 flex items-center justify-center text-xs px-2"
+                thumbClass="bg-blue-500 rounded-md"
+                activeItemClass="text-white"
+                :items="[
+                  {
+                    label: 'Enable',
+                    key: true,
+                  },
+                  {
+                    label: 'Disable',
+                    key: false,
+                    activeThumbClass: 'bg-gray-200',
+                  }
+                ]"
+              />
             </div>
             <div class="flex gap-3 justify-start items-center">
               <Input
                 v-model="newModelId"
-                placeholder="model id"
+                placeholder="pull model id from Ollama"
                 class="font-light py-1"
               />
               <button
@@ -398,6 +416,7 @@ const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const chatSystemPrompt = userConfig.llm.chatSystemPrompt.toRef()
 const summarizeSystemPrompt = userConfig.llm.summarizeSystemPrompt.toRef()
 const enableOnlineSearch = userConfig.chat.onlineSearch.enable.toRef()
+const enableReasoning = userConfig.llm.reasoning.toRef()
 const onlineSearchPageReadCount = userConfig.chat.onlineSearch.pageReadCount.toRef()
 const onboardingVersion = userConfig.ui.onboarding.version.toRef()
 const enabledWritingTools = userConfig.writingTools.enable.toRef()

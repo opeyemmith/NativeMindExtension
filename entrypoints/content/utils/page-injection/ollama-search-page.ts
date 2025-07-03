@@ -1,10 +1,10 @@
 import { onScopeDispose } from 'vue'
 
+import IconLogo from '@/assets/icons/logo.svg?url'
 import { useDocumentLoaded } from '@/composables/useDocumentLoaded'
 import { OLLAMA_SITE_DOWNLOAD_BUTTON_CLASS } from '@/utils/constants'
 import { debounce } from '@/utils/debounce'
 import { useI18n } from '@/utils/i18n'
-import { getModelLogoUrl } from '@/utils/llm/model-logos'
 import logger from '@/utils/logger'
 
 import { showSettings } from '../settings'
@@ -13,20 +13,11 @@ function shouldExcludeModel(modelName: string) {
   return modelName.toLowerCase().includes('embed')
 }
 
-function makeLogoElement(modelName: string) {
+function makeLogoElement(_modelName: string) {
   const logo = document.createElement('div')
   const img = document.createElement('img')
-  logo.style.cssText = `
-border-radius: 9999px;
-display: inline-flex;
-align-items: center;
-justify-content: center;
-width: 16px;
-height: 16px;
-background-color: white;
-border: 1px solid #0000000D;`
-  img.src = getModelLogoUrl(modelName)
-  img.style.cssText = `width: 12px; height: 12px; object-fit: contain;`
+  img.src = IconLogo
+  img.style.cssText = `width: 16px; height: 16px; object-fit: contain;`
   logo.appendChild(img)
   return logo
 }

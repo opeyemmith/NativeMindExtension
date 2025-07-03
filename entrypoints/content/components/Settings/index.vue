@@ -167,16 +167,9 @@
                 type="buttons"
                 dropdownAlign="left"
                 showDetails
+                showDiscoverMore
                 allowDelete
               />
-              <a
-                href="https://ollama.com/search"
-                class="text-xs text-icon-link hover:underline flex gap-1 items-center"
-                target="_blank"
-              >
-                <!-- <IconOllamaComponent class="h-[13px]" /> -->
-                {{ t('settings.models.discover_more') }}
-              </a>
               <a
                 :href="OLLAMA_TUTORIAL_URL"
                 target="_blank"

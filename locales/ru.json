@@ -79,7 +79,9 @@
     "get_ollama": "Получить Ollama",
     "models": {
       "title": "Модели",
-      "discover_more": "Откройте для себя больше моделей"
+      "discover_more": "Откройте для себя больше моделей",
+      "no_model": "⚠️ Модель отсутствует",
+      "add_model_to_start": "Добавьте модель для начала"
     },
     "ollama": {
       "already_installed": "Уже установлен и запущен Ollama?",

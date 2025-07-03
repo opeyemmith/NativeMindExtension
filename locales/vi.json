@@ -79,7 +79,9 @@
     "get_ollama": "Nhận Ollama",
     "models": {
       "title": "Mô hình",
-      "discover_more": "Khám phá thêm các mô hình"
+      "discover_more": "Khám phá thêm các mô hình",
+      "no_model": "⚠️ Không có mô hình",
+      "add_model_to_start": "Thêm một mô hình để bắt đầu"
     },
     "ollama": {
       "already_installed": "Bạn đã cài đặt và chạy Ollama?",

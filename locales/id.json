@@ -79,7 +79,9 @@
     "get_ollama": "Dapatkan Ollama",
     "models": {
       "title": "Model",
-      "discover_more": "Temukan lebih banyak model"
+      "discover_more": "Temukan lebih banyak model",
+      "no_model": "⚠️ Tidak ada model",
+      "add_model_to_start": "Tambahkan model untuk memulai"
     },
     "ollama": {
       "already_installed": "Sudah menginstal dan menjalankan Ollama?",

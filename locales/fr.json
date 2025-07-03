@@ -79,7 +79,9 @@
     "get_ollama": "Obtenir Ollama",
     "models": {
       "title": "Modèles",
-      "discover_more": "Découvrez plus de modèles"
+      "discover_more": "Découvrez plus de modèles",
+      "no_model": "⚠️ Aucun modèle",
+      "add_model_to_start": "Ajouter un modèle pour commencer"
     },
     "ollama": {
       "already_installed": "Ollama est déjà installé et en cours d'exécution ?",

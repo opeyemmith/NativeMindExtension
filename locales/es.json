@@ -100,7 +100,9 @@
     "get_ollama": "Obtener Ollama",
     "models": {
       "title": "Modelos",
-      "discover_more": "Descubre más modelos"
+      "discover_more": "Descubre más modelos",
+      "no_model": "⚠️ Sin modelo",
+      "add_model_to_start": "Añadir un modelo para empezar"
     },
     "ollama": {
       "already_installed": "¿Ya instalaste y ejecutaste Ollama?",

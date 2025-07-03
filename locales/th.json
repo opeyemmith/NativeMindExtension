@@ -79,7 +79,9 @@
     "get_ollama": "รับ Ollama",
     "models": {
       "title": "โมเดล",
-      "discover_more": "ค้นหาโมเดลเพิ่มเติม"
+      "discover_more": "ค้นหาโมเดลเพิ่มเติม",
+      "no_model": "⚠️ ไม่มีโมเดล",
+      "add_model_to_start": "เพิ่มโมเดลเพื่อเริ่มต้น"
     },
     "ollama": {
       "already_installed": "ติดตั้งและใช้งาน Ollama อยู่แล้ว?",

@@ -28,7 +28,9 @@
     },
     "models": {
       "title": "Models",
-      "discover_more": " Discover more models"
+      "discover_more": " Discover more models",
+      "no_model": "⚠️ No model",
+      "add_model_to_start": "Add a model to start"
     },
     "quick_actions": {
       "title": "Customize Quick Actions",

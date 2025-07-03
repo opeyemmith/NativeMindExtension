@@ -28,7 +28,9 @@
     },
     "models": {
       "title": "模型",
-      "discover_more": "发现更多模型"
+      "discover_more": "发现更多模型",
+      "no_model": "⚠️ 无模型",
+      "add_model_to_start": "添加模型以开始"
     },
     "quick_actions": {
       "title": "自定义快捷操作",

@@ -3,10 +3,25 @@
     class="flex justify-between items-center gap-3 relative"
     @click="onClick"
   >
+    <a
+      v-if="modelList.length === 0 && showDiscoverMore"
+      :href="OLLAMA_SEARCH_URL"
+      rel="noopener noreferrer"
+      target="_blank"
+    >
+      <Button
+        variant="secondary"
+        class="flex justify-between gap-[6px] items-center cursor-pointer text-[13px] font-medium py-0 px-[10px] h-8"
+      >
+        <IconOllamaRedirect class="w-4 h-4" />
+        {{ t('settings.models.add_model_to_start') }}
+      </Button>
+    </a>
     <Selector
+      v-else
       v-model="selectedModel"
       :options="modelOptions"
-      placeholder="⚠️ No model"
+      :placeholder="t('settings.models.no_model')"
       class="text-xs max-w-full"
       :disabled="modelList.length === 0"
       dropdownClass="text-xs text-black w-52"
@@ -75,6 +90,27 @@
           />
         </div>
       </template>
+      <template
+        v-if="showDiscoverMore"
+        #bottom
+      >
+        <div class="text-gray-500 text-xs">
+          <Divider />
+          <a
+            :href="OLLAMA_SEARCH_URL"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="h-8 px-3 flex items-center gap-2 cursor-pointer text-black hover:bg-[#EAECEF]"
+          >
+            <IconRedirect />
+            <Text
+              size="small"
+            >
+              {{ t('settings.models.discover_more') }}
+            </Text>
+          </a>
+        </div>
+      </template>
     </Selector>
   </div>
 </template>
@@ -83,24 +119,33 @@
 import { computed, onMounted, toRefs, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
+import IconOllamaRedirect from '@/assets/icons/ollama-redirect.svg?component'
+import IconRedirect from '@/assets/icons/redirect.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'
 import { useOllamaStatusStore } from '@/entrypoints/content/store'
 import { deleteOllamaModel } from '@/entrypoints/content/utils/llm'
 import { showSettings } from '@/entrypoints/content/utils/settings'
+import { OLLAMA_SEARCH_URL } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
+import { useI18n } from '@/utils/i18n'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
 import { getUserConfig } from '@/utils/user-config'
 import { classNames } from '@/utils/vue/utils'
 
 import Selector from './Selector.vue'
+import Button from './ui/Button.vue'
+import Divider from './ui/Divider.vue'
+import Text from './ui/Text.vue'
 
 defineProps<{
   showDetails?: boolean
+  showDiscoverMore?: boolean
   allowDelete?: boolean
   dropdownAlign?: 'left' | 'center' | 'right' | 'stretch' | undefined
   containerClass?: string
 }>()
 
+const { t } = useI18n()
 const { modelList: ollamaModelList } = toRefs(useOllamaStatusStore())
 const { updateModelList: updateOllamaModelList } = useOllamaStatusStore()
 

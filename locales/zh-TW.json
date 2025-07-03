@@ -79,7 +79,9 @@
     "get_ollama": "獲取Ollama",
     "models": {
       "title": "模型",
-      "discover_more": "探索更多模型"
+      "discover_more": "探索更多模型",
+      "no_model": "⚠️ 沒有模型",
+      "add_model_to_start": "新增模型以開始"
     },
     "ollama": {
       "already_installed": "已經安裝並執行Ollama？",

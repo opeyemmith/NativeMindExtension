@@ -129,12 +129,9 @@
                   v-else
                   class="flex items-center"
                 >
-                  <div class="w-full h-1 bg-gray-200">
-                    <div
-                      :style="{ width: `${(pullingModel.completed / (pullingModel.total || 1)) * 100}%` }"
-                      class="bg-blue-500 h-full"
-                    />
-                  </div>
+                  <ProgressBar
+                    :progress="pullingModel.total ? pullingModel.completed / pullingModel.total : 0"
+                  />
                   <div class="whitespace-nowrap ml-2 font-light text-[8px]">
                     {{ formatSize(pullingModel.completed) }} / {{ formatSize(pullingModel.total) }}
                   </div>
@@ -374,6 +371,7 @@ import { ref, watch } from 'vue'
 
 import IconDelete from '@/assets/icons/delete.svg?component'
 import Input from '@/components/Input.vue'
+import ProgressBar from '@/components/ProgressBar.vue'
 import Selector from '@/components/Selector.vue'
 import Switch from '@/components/Switch.vue'
 import Button from '@/components/ui/Button.vue'

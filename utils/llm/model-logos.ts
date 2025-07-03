@@ -28,6 +28,12 @@ import LogoQwenUrl from '@/assets/icons/model-logo-qwen.svg?url'
 
 const matcher = [
   {
+    match: /ollama/i,
+    component: LogoFallback,
+    svg: LogoFallbackSvg,
+    url: LogoFallbackUrl,
+  },
+  {
     match: /deepseek/i,
     component: LogoDeepseek,
     svg: LogoDeepseekSvg,

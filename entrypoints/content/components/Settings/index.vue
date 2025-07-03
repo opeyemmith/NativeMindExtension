@@ -171,15 +171,16 @@
               />
               <a
                 href="https://ollama.com/search"
-                class="underline text-xs"
+                class="text-xs text-icon-link hover:underline flex gap-1 items-center"
                 target="_blank"
               >
+                <!-- <IconOllamaComponent class="h-[13px]" /> -->
                 {{ t('settings.models.discover_more') }}
               </a>
               <a
                 :href="OLLAMA_TUTORIAL_URL"
                 target="_blank"
-                class="underline text-xs"
+                class="text-xs text-icon-link hover:underline"
               >
                 {{ t('settings.ollama.learn_more_about_models') }}
               </a>
@@ -309,6 +310,7 @@ import { useCountdown } from '@vueuse/core'
 import { onMounted, ref, toRef, watch } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
+// import IconOllamaComponent from '@/assets/icons/logo-ollama.svg?component'
 import IconOllama from '@/assets/icons/ollama.png'
 import Input from '@/components/Input.vue'
 import Loading from '@/components/Loading.vue'

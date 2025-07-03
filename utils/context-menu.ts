@@ -1,6 +1,8 @@
 import { Browser, browser } from 'wxt/browser'
+import { storage } from 'wxt/utils/storage'
 
 import { nonNullable } from './array'
+import { CONTEXT_MENU_STORAGE_KEY } from './constants'
 import logger from './logger'
 import { Entrypoint, only } from './runtime'
 import { ArrayNonEmpty } from './type-utils'
@@ -58,14 +60,30 @@ export class ContextMenuManager {
   private pendingReconstruct = false
   private constructor() {}
 
-  static getInstance() {
+  static async getInstance() {
     if (!ContextMenuManager.instance) {
       ContextMenuManager.instance = new ContextMenuManager()
+      ContextMenuManager.instance.restoreCurrentMenuMap()
     }
     return ContextMenuManager.instance
   }
 
   currentMenuMap = new Map<ContextMenuId | undefined, ContextMenuMapItem>()
+
+  private saveCurrentMenuMap() {
+    return storage.setItem(CONTEXT_MENU_STORAGE_KEY, [...this.currentMenuMap.entries()])
+  }
+
+  private async restoreCurrentMenuMap() {
+    const storedMap = await storage.getItem<[ContextMenuId | undefined, ContextMenuMapItem][]>(CONTEXT_MENU_STORAGE_KEY)
+    if (storedMap) {
+      this.currentMenuMap = new Map<ContextMenuId | undefined, ContextMenuMapItem>(storedMap.map(([id, item]) => [id ?? undefined, item]))
+      log.debug('Restored context menu map from storage', structuredClone(this.currentMenuMap))
+    }
+    else {
+      log.debug('No stored context menu map found, starting with an empty map')
+    }
+  }
 
   private async reconstructContextMenu() {
     if (this.reconstructing) {
@@ -73,6 +91,7 @@ export class ContextMenuManager {
       log.debug('Context menu is being reconstructed, pending...')
       return
     }
+    await this.saveCurrentMenuMap()
     this.reconstructing = true
     try {
       log.debug('Reconstructing context menu', this.currentMenuMap)

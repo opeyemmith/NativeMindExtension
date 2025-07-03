@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.3.0-beta.15
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.14...v1.3.0-beta.15)
+
+### 🚀 Enhancements
+
+- **debug-settings:** Add reasoning toggle; implement custom fetch utility ([2652224](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2652224))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.14
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.13...v1.3.0-beta.14)

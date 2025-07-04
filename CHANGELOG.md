@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.3.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.17...v1.3.0)
+
+## v1.3.0-beta.17
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.16...v1.3.0-beta.17)
+
+### 🩹 Fixes
+
+- **settings:** Adjust button padding and dropdown class for better layout ([1d57e03](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1d57e03))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0-beta.16
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.15...v1.3.0-beta.16)

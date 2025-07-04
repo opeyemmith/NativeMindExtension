@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0...v1.4.0-beta.0)
+
+### 🚀 Enhancements
+
+- **writing-tools:** Enhance writing tools functionality and UI improvements ([4e3426b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4e3426b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.17...v1.3.0)

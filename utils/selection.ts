@@ -31,6 +31,10 @@ export function isInputOrTextArea(el: HTMLElement): el is HTMLInputElement | HTM
   return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'
 }
 
+export function isContentEditableElement(el: HTMLElement): el is HTMLDivElement | HTMLSpanElement {
+  return !!el.closest('[contenteditable]') || el.isContentEditable || el.hasAttribute('contenteditable')
+}
+
 export function isContentEditable(el: HTMLElement): boolean {
   return el.isContentEditable
 }

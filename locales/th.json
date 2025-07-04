@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "หากต้องการใช้โหมดท้องถิ่น คุณจำเป็นต้องดาวน์โหลดโมเดล {model} ({size}) คุณต้องการดาวน์โหลดตอนนี้หรือไม่?"
+    },
+    "writing_tools": {
+      "title": "เครื่องมือการเขียน"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "กำลังประมวลผล...",
     "rewrite_suggestion": "ข้อเสนอแนะในการเขียนใหม่",
-    "sparkle_text": "ข้อความเปล่งประกาย",
+    "sparkle_text": "ข้อความที่ได้รับการตกแต่ง",
     "key_points": "จุดสำคัญ",
     "grammar_and_style": "ไวยากรณ์และรูปแบบ",
     "proofread": "พิสูจน์อักษร",

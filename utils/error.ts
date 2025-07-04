@@ -1,6 +1,6 @@
 import { useGlobalI18n } from './i18n'
 
-export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError' | 'modelNotFound'
+export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError' | 'modelNotFound' | 'createTabStreamCaptureError'
 
 export abstract class AppError<Code extends ErrorCode> extends Error {
   private _appError = true
@@ -74,6 +74,16 @@ export class AbortError extends AppError<'abortError'> {
   }
 }
 
+export class CreateTabStreamCaptureError extends AppError<'createTabStreamCaptureError'> {
+  constructor(message?: string) {
+    super('createTabStreamCaptureError', message)
+  }
+
+  async toLocaleMessage() {
+    return 'Failed to create tab stream capture'
+  }
+}
+
 // common timeout error for various operations
 export class TimeoutError extends AppError<'timeoutError'> {
   constructor(message: string) {
@@ -93,6 +103,7 @@ const errors = {
   abortError: AbortError,
   timeoutError: TimeoutError,
   modelNotFound: ModelNotFoundError,
+  createTabStreamCaptureError: CreateTabStreamCaptureError,
 } satisfies Record<ErrorCode, typeof AppError<ErrorCode>>
 
 export function fromError(error: unknown): AppError<ErrorCode> {

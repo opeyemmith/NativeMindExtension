@@ -22,7 +22,6 @@ const log = logger.child('MarkdownViewer')
 
 const props = defineProps<{
   text?: string
-  imageRenderer?: (href: string, title: string | null, text: string) => string
 }>()
 
 const inlineDirective: DirectiveConfig = {
@@ -173,12 +172,7 @@ renderer.link = ({ href, title, text }) => {
 }
 
 renderer.image = ({ href, title, text }) => {
-  if (props.imageRenderer) {
-    return props.imageRenderer(href, title, text)
-  }
-  else {
-    return `<img src="${href}" alt="${text}" title="${title || text}" draggable="true" />`
-  }
+  return `<img src="${href}" alt="${text}" title="${title || text}" draggable="true" />`
 }
 const originalTableRenderer = renderer.table
 renderer.table = function (token: Tokens.Table) {

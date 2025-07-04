@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "Pour utiliser le mode Local, vous devez télécharger le modèle {model} ({size}). Souhaitez-vous le télécharger maintenant ?"
+    },
+    "writing_tools": {
+      "title": "Outils de rédaction"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "Traitement en cours...",
     "rewrite_suggestion": "Suggestion de réécriture",
-    "sparkle_text": "Texte Scintillant",
+    "sparkle_text": "Embellir le Texte",
     "key_points": "Points clés",
     "grammar_and_style": "Grammaire et style",
     "proofread": "Relire",

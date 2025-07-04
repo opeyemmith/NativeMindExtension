@@ -28,7 +28,7 @@
 import { onMounted, ref, shallowRef, watch } from 'vue'
 import { ShadowRoot as ShadowRootComponent } from 'vue-shadow-dom'
 
-import { useObserveElements } from '@/composables/useObserverElements'
+import { useFocusedElements } from '@/composables/useObserverElements'
 import { loadContentScriptStyleSheet } from '@/utils/css'
 import logger from '@/utils/logger'
 import { getUserConfig } from '@/utils/user-config'
@@ -39,25 +39,32 @@ const styleSheet = shallowRef<CSSStyleSheet | null>(null)
 const shadowRootRef = ref<ShadowRoot | null>(null)
 const userConfig = await getUserConfig()
 const enableWritingTools = userConfig.writingTools.enable.toRef()
-const initialElements = [...document.querySelectorAll('textarea, input:not([type="hidden"]), [contenteditable]')] as HTMLElement[]
-const { elements } = enableWritingTools.value
-  ? useObserveElements((el) => {
-      if (el.tagName === 'TEXTAREA') return true
-      if (el.tagName === 'INPUT') {
-        const inputEl = el as HTMLInputElement
-        return inputEl.type !== 'hidden' && inputEl.type !== 'file' && inputEl.type !== 'button' && inputEl.type !== 'submit'
-      }
-      return !!el.getAttribute('contenteditable')
-    }, initialElements as HTMLElement[])
-  : { elements: ref([]) }
+const { elements, start, stop } = useFocusedElements((el) => {
+  if (el.tagName === 'TEXTAREA') return true
+  if (el.tagName === 'INPUT') {
+    const inputEl = el as HTMLInputElement
+    const SUPPORTED_TYPES = ['text', 'search', 'url', 'tel']
+    return SUPPORTED_TYPES.includes(inputEl.type) && !inputEl.disabled && !inputEl.readOnly
+  }
+  return !!el.closest('[contenteditable]') || el.hasAttribute('contenteditable') || el.isContentEditable
+})
 
 onMounted(async () => {
-  if (enableWritingTools.value && shadowRootRef.value) {
-    styleSheet.value = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
-  }
+  styleSheet.value = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
 })
 
 watch(elements, (newElements) => {
-  logger.debug('Writing tools elements updated:', newElements)
+  logger.debug('Focused elements updated:', newElements)
+})
+
+watch(enableWritingTools, (enable) => {
+  if (enable) {
+    start()
+    logger.info('Writing tools enabled')
+  }
+  else {
+    stop()
+    logger.info('Writing tools disabled')
+  }
 }, { immediate: true })
 </script>

@@ -202,30 +202,33 @@ const onWheel = (e: WheelEvent) => {
   }
 }
 
-const snapToBottom = () => {
+const snapToBottom = (smooth: boolean = false) => {
   if (scrollContainerRef.value && scrollContentRef.value) {
-    scrollContainerRef.value.scrollTop = scrollContentRef.value.getBoundingClientRect().height
+    scrollContainerRef.value.scrollTo({
+      top: scrollContentRef.value.getBoundingClientRect().height,
+      behavior: smooth ? 'smooth' : 'instant',
+    })
   }
 }
 
 defineExpose({
-  snapToBottom: () => {
+  snapToBottom: (smooth: boolean = false) => {
     shouldSnapToBottom.value = true
-    snapToBottom()
+    snapToBottom(smooth)
   },
 })
 
 watch(scrollContentHeight, () => {
   scroll.measure()
   if (shouldSnapToBottom.value) {
-    snapToBottom()
+    snapToBottom(true)
   }
 })
 
 watch(scrollContainerHeight, () => {
   scroll.measure()
   if (shouldSnapToBottom.value) {
-    snapToBottom()
+    snapToBottom(true)
   }
 })
 </script>

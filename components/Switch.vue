@@ -2,8 +2,8 @@
   <div>
     <div
       ref="containerRef"
-      class="relative inline-flex transition-colors bg-gray-100"
-      :class="[props.slotClass, currentItem?.activeSlotClass, props.disabled && (props.disabledClass ?? 'cursor-not-allowed opacity-50')]"
+      class="relative inline-flex transition-colors"
+      :class="classNames(props.slotClass, currentItem?.activeSlotClass, props.disabled ? (props.disabledClass ?? 'cursor-not-allowed opacity-50') : '')"
       :style="{
         background: currentItem?.activeSlotColor || props.slotColor,
         padding: `${padding.y}px ${padding.x}px`,
@@ -72,6 +72,7 @@ import { useElementBounding } from '@vueuse/core'
 import { computed, type CSSProperties, nextTick, onMounted, reactive, ref, type UnwrapRef, type VNode, watch } from 'vue'
 
 import { debounce } from '@/utils/debounce'
+import { classNames } from '@/utils/vue/utils'
 
 export interface SwitchItem<T = unknown, Key extends string | boolean = string> {
   name?: string

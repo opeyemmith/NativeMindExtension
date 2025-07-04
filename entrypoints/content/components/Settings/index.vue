@@ -248,14 +248,35 @@
         </Block>
       </ScrollTarget>
       <Block :title="t('settings.advanced.title')">
-        <Section :title="t('settings.translation.title')">
-          <Selector
-            v-model="targetLocale"
-            :options="translationLanguageOptions"
-            dropdownClass="text-xs text-black w-52"
-            dropdownAlign="left"
-          />
-        </Section>
+        <div class="flex flex-col gap-4">
+          <Section :title="t('settings.translation.title')">
+            <Selector
+              v-model="targetLocale"
+              :options="translationLanguageOptions"
+              dropdownClass="text-xs text-black w-52"
+              dropdownAlign="left"
+            />
+          </Section>
+          <Section :title="t('settings.writing_tools.title')">
+            <Switch
+              v-model="enabledWritingTools"
+              slotClass="rounded-full shadow-[0px_2.8px_5.6px_0px_#0000000A,0px_0px_11.2px_0px_#00000005_inset,0px_0px_0px_1.05px_#0000000F_inset,0px_2.8px_5.6px_0px_#0000000A_inset,0px_1.4px_1.4px_0px_#0000000A_inset]"
+              thumbClass="bg-white rounded-full shadow-[0px_0px_1.4px_0px_#00000014,0px_1.4px_2.8px_0px_#0000001F,0px_4.2px_4.2px_0px_#0000000A,0px_7px_5.6px_0px_#00000005,0px_0px_0px_0.7px_#00000005]"
+              itemClass="w-4 h-4"
+              selectMode="loop"
+              :items="[
+                {
+                  key: false,
+                  activeSlotClass: 'bg-[#E4E4E7]',
+                },
+                {
+                  key: true,
+                  activeSlotClass: 'bg-[#24B960]',
+                },
+              ]"
+            />
+          </Section>
+        </div>
       </Block>
       <div class="font-light text-[10px] text-gray-500 flex flex-col gap-1">
         <i18n-t
@@ -314,6 +335,7 @@ import ModelSelector from '@/components/ModelSelector.vue'
 import ScrollTarget from '@/components/ScrollTarget.vue'
 import Selector from '@/components/Selector.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
+import Switch from '@/components/Switch.vue'
 import Textarea from '@/components/Textarea.vue'
 import Button from '@/components/ui/Button.vue'
 import Text from '@/components/ui/Text.vue'
@@ -363,6 +385,7 @@ const translationSystemPromptError = ref('')
 const chatSystemPrompt = userConfig.llm.chatSystemPrompt.toRef()
 const quickActions = userConfig.chat.quickActions.actions.toRef()
 const defaultQuickActions = userConfig.chat.quickActions.actions.getDefault()
+const enabledWritingTools = userConfig.writingTools.enable.toRef()
 
 const onDownloadOllamaModelFinished = async () => {
   await ollamaStatusStore.updateModelList()

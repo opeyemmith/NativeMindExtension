@@ -151,7 +151,7 @@ async function _getUserConfig() {
       enabled: await new Config('debug.enabled').default(false).build(),
     },
     writingTools: {
-      enable: await new Config('writingTools.enable').default(false).build(),
+      enable: await new Config('writingTools.enable_1').default(true).build(),
       rewrite: {
         systemPrompt: await new Config('writingTools.rewrite.systemPrompt').default(DEFAULT_WRITING_TOOLS_REWRITE_SYSTEM_PROMPT).build(),
       },

@@ -76,6 +76,9 @@
     },
     "webllm_downloader": {
       "description": "To use Local mode, you need to download the {model} model ({size}). Would you like to download it now?"
+    },
+    "writing_tools": {
+      "title": "Writing Tools"
     }
   },
   "chat": {

@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "ローカルモードを使用するには、{model}モデル（{size}）をダウンロードする必要があります。今すぐダウンロードしますか？"
+    },
+    "writing_tools": {
+      "title": "ライティングツール"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "処理中...",
     "rewrite_suggestion": "書き直しの提案",
-    "sparkle_text": "キラキラテキスト",
+    "sparkle_text": "文字の美化",
     "key_points": "重要なポイント",
     "grammar_and_style": "文法とスタイル",
     "proofread": "校正",

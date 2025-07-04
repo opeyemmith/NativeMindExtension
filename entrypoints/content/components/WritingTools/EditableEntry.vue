@@ -76,7 +76,7 @@
 
 <script setup lang="ts">
 import { useElementBounding, useEventListener } from '@vueuse/core'
-import { computed, ref, UnwrapRef } from 'vue'
+import { computed, ref, UnwrapRef, watch } from 'vue'
 
 import IconList from '@/assets/icons/writing-tools-list.svg?component'
 import IconProofread from '@/assets/icons/writing-tools-proofread.svg?component'
@@ -88,7 +88,7 @@ import Text from '@/components/ui/Text.vue'
 import { useDeferredValue } from '@/composables/useDeferredValue'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
 import { useI18n } from '@/utils/i18n'
-import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
+import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isContentEditableElement, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
 import { extendedComputed } from '@/utils/vue/utils'
 
 import SuggestionCard from './SuggestionCard.vue'
@@ -112,7 +112,11 @@ const regenerateSymbol = ref(0)
 const isShowToolBar = computed(() => {
   return isEditableFocus.value && !!writingToolSelectedText.value.trim()
 })
-const isShowToolBarDeferred = useDeferredValue(isShowToolBar, 300, (v) => !v)
+const isShowToolBarDeferred = useDeferredValue(isShowToolBar, 200, (v) => !v)
+
+watch(() => props.editableElement, (newEl) => {
+  isEditableFocus.value = newEl === document.activeElement || (document.hasFocus() && newEl.contains(document.activeElement))
+}, { immediate: true })
 
 const selectedRange = computed(() => {
   const _ = writingToolSelectedText.value // reactive to selected text changes
@@ -165,7 +169,7 @@ const updateEditableElementText = () => {
   if (props.editableElement.tagName === 'TEXTAREA' || props.editableElement.tagName === 'INPUT') {
     editableElementText.value = (props.editableElement as HTMLTextAreaElement | HTMLInputElement).value
   }
-  else if (props.editableElement.isContentEditable) {
+  else if (isContentEditableElement(props.editableElement)) {
     editableElementText.value = props.editableElement.textContent || ''
   }
 }
@@ -247,7 +251,7 @@ const onInputFocus = () => {
 }
 
 const updateSelectedText = () => {
-  if (props.editableElement.isContentEditable) {
+  if (isContentEditableElement(props.editableElement)) {
     const selection = window.getSelection()
     const selectedEl = getCommonAncestorElement(selection)
     if (props.editableElement.contains(selectedEl) && selection) {
@@ -282,11 +286,6 @@ const onClosePopup = () => {
   writingToolSelectedText.value = ''
 }
 
-// const onCloseToolBar = () => {
-//   writingToolSelectedText.value = ''
-//   isEditableFocus.value = false
-// }
-
 const onClickToClosePopup = (ev: Event) => {
   const target = ev.composed ? ev.composedPath()[0] as HTMLElement : ev.target as HTMLElement
   if (!(target instanceof Node) || toolBarRef.value?.contains(target) || props.editableElement.contains(target) || popupRef.value?.contains(target)) {
@@ -306,26 +305,22 @@ const onApply = (text: string, el: HTMLElement, range?: UnwrapRef<typeof selecte
       el.value = text
     }
   }
-  else if (el.isContentEditable && range instanceof Range) {
+  else if (isContentEditableElement(el) && range instanceof Range) {
     replaceContentInRange(range, text)
   }
   onClosePopup()
 }
 
-if (props.editableElement.isContentEditable) {
-  useEventListener(document, 'selectionchange', () => {
-    updateSelectedText()
-  })
-}
-else if (isInputOrTextArea(props.editableElement)) {
-  useEventListener(props.editableElement, 'selectionchange', onInputSelectionChange)
-}
-useEventListener(props.editableElement, 'focus', onInputFocus)
-useEventListener(props.editableElement, 'click', () => {
+useEventListener(document, 'selectionchange', () => {
+  updateSelectedText()
+})
+useEventListener(() => props.editableElement, 'selectionchange', onInputSelectionChange)
+useEventListener(() => props.editableElement, 'focusin', onInputFocus)
+useEventListener(() => props.editableElement, 'click', () => {
   isEditableFocus.value = true
 })
 useEventListener(window, 'mousedown', onClickToClosePopup, { capture: true })
-useEventListener(props.editableElement, 'input', () => {
+useEventListener(() => props.editableElement, 'input', () => {
   updateEditableElementText()
 })
 </script>

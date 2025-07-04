@@ -7,7 +7,7 @@ import { z } from 'zod'
 import logger from '@/utils/logger'
 
 import { ContextMenuManager } from '../context-menu'
-import { AppError, ModelRequestError, UnknownError } from '../error'
+import { AppError, CreateTabStreamCaptureError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
 import { deleteModel, getLocalModelList, pullModel } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
@@ -462,6 +462,29 @@ export function registerBackgroundRpcEvent<E extends EventKey>(ev: E, fn: (...ar
   }
 }
 
+function getTabCaptureMediaStreamId(tabId: number, consumerTabId?: number) {
+  return new Promise<string | undefined>((resolve, reject) => {
+    browser.tabCapture.getMediaStreamId(
+      { targetTabId: tabId, consumerTabId },
+      (streamId) => {
+        if (browser.runtime.lastError) {
+          logger.error('Failed to get media stream ID:', browser.runtime.lastError.message)
+          reject(new CreateTabStreamCaptureError(browser.runtime.lastError.message))
+        }
+        else {
+          resolve(streamId)
+        }
+      },
+    )
+  })
+}
+
+function captureVisibleTab(windowId?: number, options?: Browser.tabs.CaptureVisibleTabOptions) {
+  const wid = windowId ?? browser.windows.WINDOW_ID_CURRENT
+  const screenCaptureBase64Url = browser.tabs.captureVisibleTab(wid, options ?? {})
+  return screenCaptureBase64Url
+}
+
 export const backgroundFunctions = {
   emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
     eventEmitter.emit(ev, ...args)
@@ -483,6 +506,7 @@ export const backgroundFunctions = {
   updateContextMenu: (...args: Parameters<ContextMenuManager['updateContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.updateContextMenu(...args)),
   createContextMenu: (...args: Parameters<ContextMenuManager['createContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.createContextMenu(...args)),
   deleteContextMenu: (...args: Parameters<ContextMenuManager['deleteContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.deleteContextMenu(...args)),
+  getTabCaptureMediaStreamId,
   initWebLLMEngine,
   hasWebLLMModelInCache,
   deleteWebLLMModelInCache,
@@ -491,5 +515,6 @@ export const backgroundFunctions = {
   checkSupportWebLLM,
   getSystemMemoryInfo,
   testOllamaConnection,
+  captureVisibleTab,
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

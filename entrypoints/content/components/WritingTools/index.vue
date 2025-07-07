@@ -3,10 +3,7 @@
     v-if="enableWritingTools"
     to="body"
   >
-    <ShadowRootComponent
-      ref="shadowRootRef"
-      :adoptedStyleSheets="styleSheet ? [styleSheet] : []"
-    >
+    <ShadowRootComponent ref="shadowRootRef">
       <div
         ref="containerRef"
         class="nativemind-writing-tools nativemind-style-boundary"
@@ -25,11 +22,11 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch, watchEffect } from 'vue'
 import { ShadowRoot as ShadowRootComponent } from 'vue-shadow-dom'
 
 import { useFocusedElements } from '@/composables/useObserverElements'
-import { loadContentScriptStyleSheet } from '@/utils/css'
+import { injectStyleSheetToDocument, loadContentScriptStyleSheet } from '@/utils/css'
 import logger from '@/utils/logger'
 import { isContentEditableElement, isEditorFrameworkElement, shouldExcludeEditableElement } from '@/utils/selection'
 import { getUserConfig } from '@/utils/user-config'
@@ -37,7 +34,7 @@ import { getUserConfig } from '@/utils/user-config'
 import EditableEntry from './EditableEntry.vue'
 
 const styleSheet = shallowRef<CSSStyleSheet | null>(null)
-const shadowRootRef = ref<ShadowRoot | null>(null)
+const shadowRootRef = ref<InstanceType<typeof ShadowRoot>>()
 const userConfig = await getUserConfig()
 const enableWritingTools = userConfig.writingTools.enable.toRef()
 const { elements, start, stop } = useFocusedElements((el) => {
@@ -69,4 +66,15 @@ watch(enableWritingTools, (enable) => {
     logger.info('Writing tools disabled')
   }
 }, { immediate: true })
+
+watchEffect((onCleanup) => {
+  const shadowRoot = (shadowRootRef.value as { shadow_root?: ShadowRoot } | undefined)?.shadow_root
+  if (shadowRoot && styleSheet.value) {
+    const remove = injectStyleSheetToDocument(shadowRoot, styleSheet.value)
+    onCleanup(() => {
+      remove()
+      logger.debug('Style sheet removed from shadow root')
+    })
+  }
+})
 </script>

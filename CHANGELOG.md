@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.1...v1.4.0-beta.2)
+
+### 🩹 Fixes
+
+- **writing-tools:** Firefox compatibility ([0501f88](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0501f88))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.0...v1.4.0-beta.1)

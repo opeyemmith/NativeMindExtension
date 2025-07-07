@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.0...v1.4.0-beta.1)
+
+### 🏡 Chore
+
+- **onboarding:** Hide try-webllm in firefox onboarding ([f30e759](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f30e759))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0...v1.4.0-beta.0)

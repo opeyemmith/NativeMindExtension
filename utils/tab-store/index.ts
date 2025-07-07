@@ -1,8 +1,8 @@
 import { customRef, ref, toRaw, watch } from 'vue'
 import { storage } from 'wxt/utils/storage'
 
-import { lazyInitialize } from '../cache'
 import { debounce } from '../debounce'
+import { lazyInitialize } from '../memo'
 import { c2bRpc } from '../rpc'
 import type { SettingsScrollTarget } from '../scroll-targets'
 import type { HistoryItemV1 } from './history'

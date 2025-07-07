@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser'
 
-import { memoFunction } from './cache'
 import logger from './logger'
+import { memoFunction } from './memo'
 
 export function convertPropertiesIntoSimpleVariables(sheet: CSSStyleSheet, scopeInShadowDom = true) {
   const properties = []

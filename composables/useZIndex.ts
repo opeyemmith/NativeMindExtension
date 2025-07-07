@@ -1,6 +1,6 @@
 import { ref } from 'vue'
 
-import { lazyInitialize } from '@/utils/cache'
+import { lazyInitialize } from '@/utils/memo'
 
 const getZIndexStore = lazyInitialize(() => {
   const groups = new Map<string, number>()

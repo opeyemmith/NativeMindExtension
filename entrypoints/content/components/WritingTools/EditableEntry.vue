@@ -88,7 +88,7 @@ import Text from '@/components/ui/Text.vue'
 import { useDeferredValue } from '@/composables/useDeferredValue'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
 import { useI18n } from '@/utils/i18n'
-import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isContentEditableElement, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
+import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isContentEditableElement, isEditorFrameworkElement, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
 import { extendedComputed } from '@/utils/vue/utils'
 
 import SuggestionCard from './SuggestionCard.vue'
@@ -169,7 +169,7 @@ const updateEditableElementText = () => {
   if (props.editableElement.tagName === 'TEXTAREA' || props.editableElement.tagName === 'INPUT') {
     editableElementText.value = (props.editableElement as HTMLTextAreaElement | HTMLInputElement).value
   }
-  else if (isContentEditableElement(props.editableElement)) {
+  else if (isContentEditableElement(props.editableElement) || isEditorFrameworkElement(props.editableElement)) {
     editableElementText.value = props.editableElement.textContent || ''
   }
 }
@@ -251,7 +251,7 @@ const onInputFocus = () => {
 }
 
 const updateSelectedText = () => {
-  if (isContentEditableElement(props.editableElement)) {
+  if (isContentEditableElement(props.editableElement) || isEditorFrameworkElement(props.editableElement)) {
     const selection = window.getSelection()
     const selectedEl = getCommonAncestorElement(selection)
     if (props.editableElement.contains(selectedEl) && selection) {
@@ -305,7 +305,7 @@ const onApply = (text: string, el: HTMLElement, range?: UnwrapRef<typeof selecte
       el.value = text
     }
   }
-  else if (isContentEditableElement(el) && range instanceof Range) {
+  else if ((isContentEditableElement(el) || isEditorFrameworkElement(el)) && range instanceof Range) {
     replaceContentInRange(range, text)
   }
   onClosePopup()

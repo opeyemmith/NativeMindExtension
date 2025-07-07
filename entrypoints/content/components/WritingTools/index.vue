@@ -31,6 +31,7 @@ import { ShadowRoot as ShadowRootComponent } from 'vue-shadow-dom'
 import { useFocusedElements } from '@/composables/useObserverElements'
 import { loadContentScriptStyleSheet } from '@/utils/css'
 import logger from '@/utils/logger'
+import { isContentEditableElement, isEditorFrameworkElement, shouldExcludeEditableElement } from '@/utils/selection'
 import { getUserConfig } from '@/utils/user-config'
 
 import EditableEntry from './EditableEntry.vue'
@@ -40,13 +41,14 @@ const shadowRootRef = ref<ShadowRoot | null>(null)
 const userConfig = await getUserConfig()
 const enableWritingTools = userConfig.writingTools.enable.toRef()
 const { elements, start, stop } = useFocusedElements((el) => {
+  if (shouldExcludeEditableElement(el)) return false
   if (el.tagName === 'TEXTAREA') return true
   if (el.tagName === 'INPUT') {
     const inputEl = el as HTMLInputElement
     const SUPPORTED_TYPES = ['text', 'search', 'url', 'tel']
     return SUPPORTED_TYPES.includes(inputEl.type) && !inputEl.disabled && !inputEl.readOnly
   }
-  return !!el.closest('[contenteditable]') || el.hasAttribute('contenteditable') || el.isContentEditable
+  return isContentEditableElement(el) || isEditorFrameworkElement(el)
 })
 
 onMounted(async () => {

@@ -30,7 +30,7 @@
       class="absolute top-12 left-0 right-0 bottom-0"
     >
       <div
-        class="flex flex-col items-stretch gap-4 justify-start px-4 py-2 min-h-full"
+        class="flex flex-col items-stretch gap-4 justify-start px-4 py-2 pb-4 min-h-full"
       >
         <Logo
           showText
@@ -45,7 +45,10 @@
             @installed="onOllamaInstalled"
             @settings="onOpenSettings"
           />
-          <WebLLMTutorialCard @installed="onWebLLMInstalled" />
+          <WebLLMTutorialCard
+            v-if="!isFirefox"
+            @installed="onWebLLMInstalled"
+          />
         </div>
         <div
           v-else-if="panel === 'model-downloader'"
@@ -82,6 +85,7 @@ import OllamaTutorialCard from './OllamaTutorialCard.vue'
 import SloganCard from './SloganCard.vue'
 import WebLLMTutorialCard from './WebLLMTutorialCard.vue'
 
+const isFirefox = import.meta.env.FIREFOX
 const { t } = useI18n()
 const userConfig = await getUserConfig()
 const chat = await Chat.getInstance()

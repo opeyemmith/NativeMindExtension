@@ -1,7 +1,7 @@
-import { lazyInitialize } from '../cache'
 import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
+import { lazyInitialize } from '../memo'
 import { Config } from './helpers'
 
 export const DEFAULT_TRANSLATOR_SYSTEM_PROMPT = `You are a highly skilled translator, you will be provided an html string array in JSON format, and your task is to translate each string into {{LANGUAGE}}, preserving any html tag. The result should only contain all strings in JSON array format.
@@ -125,7 +125,7 @@ async function _getUserConfig() {
     },
     chromeAI: {
       polyfill: {
-        enable: await new Config('chromeAI.polyfill.enable').default(true).build(),
+        enable: await new Config('chromeAI.polyfill.enable_1').default(false).build(),
       },
     },
     chat: {

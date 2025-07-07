@@ -31,8 +31,19 @@ export function isInputOrTextArea(el: HTMLElement): el is HTMLInputElement | HTM
   return el.tagName === 'INPUT' || el.tagName === 'TEXTAREA'
 }
 
+export function shouldExcludeEditableElement(element: HTMLElement): boolean {
+  if (element.id === 'read-only-cursor-text-area') return true // Exclude specific read-only text area (github code editor)
+  if (element.closest('.cm-editor') || element.closest('.CodeMirror')) return true // Exclude CodeMirror editors
+  return false
+}
+
 export function isContentEditableElement(el: HTMLElement): el is HTMLDivElement | HTMLSpanElement {
   return !!el.closest('[contenteditable]') || el.isContentEditable || el.hasAttribute('contenteditable')
+}
+
+export function isEditorFrameworkElement(el: HTMLElement): el is HTMLDivElement | HTMLSpanElement {
+  // TODO: Implement logic to detect specific editor framework elements
+  return false
 }
 
 export function isContentEditable(el: HTMLElement): boolean {

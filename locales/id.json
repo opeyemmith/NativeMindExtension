@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Atur ulang ke default"
+  },
+  "tooltips": {
+    "clear_chat": "Hapus obrolan",
+    "settings": "Pengaturan",
+    "pin_sidebar": "Sematkan bilah samping",
+    "unpin_sidebar": "Lepas sematan",
+    "close": "Tutup"
   }
 }

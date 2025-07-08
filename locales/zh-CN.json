@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "重置为默认"
+  },
+  "tooltips": {
+    "clear_chat": "清空聊天",
+    "settings": "设置",
+    "pin_sidebar": "固定侧边栏",
+    "unpin_sidebar": "取消固定",
+    "close": "关闭"
   }
 }

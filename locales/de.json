@@ -190,5 +190,12 @@
     "sites": {
       "add_to_nativemind": "Verwendung in NativeMind"
     }
+  },
+  "tooltips": {
+    "clear_chat": "Chat löschen",
+    "settings": "Einstellungen",
+    "pin_sidebar": "Seitenleiste anheften",
+    "unpin_sidebar": "Anheftung aufheben",
+    "close": "Schließen"
   }
 }

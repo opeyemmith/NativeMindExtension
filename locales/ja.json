@@ -194,7 +194,7 @@
   "tooltips": {
     "clear_chat": "チャットをクリア",
     "settings": "設定",
-    "pin_sidebar": "サイドバーを固定",
+    "pin_sidebar": "固定",
     "unpin_sidebar": "固定を解除",
     "close": "閉じる"
   }

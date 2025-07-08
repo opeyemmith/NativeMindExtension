@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Restablecer valores predeterminados"
+  },
+  "tooltips": {
+    "clear_chat": "Limpiar chat",
+    "settings": "Configuración",
+    "pin_sidebar": "Fijar barra lateral",
+    "unpin_sidebar": "Desfijar",
+    "close": "Cerrar"
   }
 }

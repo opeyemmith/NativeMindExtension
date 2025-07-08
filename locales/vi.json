@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Đặt lại về mặc định"
+  },
+  "tooltips": {
+    "clear_chat": "Xóa trò chuyện",
+    "settings": "Cài đặt",
+    "pin_sidebar": "Ghim thanh bên",
+    "unpin_sidebar": "Bỏ ghim",
+    "close": "Đóng"
   }
 }

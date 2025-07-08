@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Сбросить к настройкам по умолчанию"
+  },
+  "tooltips": {
+    "clear_chat": "Очистить чат",
+    "settings": "Настройки",
+    "pin_sidebar": "Закрепить боковую панель",
+    "unpin_sidebar": "Открепить",
+    "close": "Закрыть"
   }
 }

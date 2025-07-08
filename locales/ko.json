@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "기본값으로 재설정"
+  },
+  "tooltips": {
+    "clear_chat": "채팅 지우기",
+    "settings": "설정",
+    "pin_sidebar": "사이드바 고정",
+    "unpin_sidebar": "고정 해제",
+    "close": "닫기"
   }
 }

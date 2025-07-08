@@ -190,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "รีเซ็ตเป็นค่าเริ่มต้น"
+  },
+  "tooltips": {
+    "clear_chat": "ล้างแชท",
+    "settings": "การตั้งค่า",
+    "pin_sidebar": "ปักหมุดแถบด้านข้าง",
+    "unpin_sidebar": "ยกเลิกการปักหมุด",
+    "close": "ปิด"
   }
 }

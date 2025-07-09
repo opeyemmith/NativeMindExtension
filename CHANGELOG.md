@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.4...v1.4.0-beta.5)
+
+### 🩹 Fixes
+
+- **writing-tools:** Implement async parsing for inline and block content replacement ([37a5d81](https://github.com/NativeMindBrowser/NativeMindExtension/commit/37a5d81))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.3...v1.4.0-beta.4)

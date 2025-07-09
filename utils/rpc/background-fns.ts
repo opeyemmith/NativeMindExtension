@@ -9,7 +9,7 @@ import logger from '@/utils/logger'
 import { ContextMenuManager } from '../context-menu'
 import { AppError, CreateTabStreamCaptureError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList, pullModel } from '../llm/ollama'
+import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { selectTools, ToolName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
@@ -274,6 +274,10 @@ const deleteOllamaModel = async (modelId: string) => {
   await deleteModel(modelId)
 }
 
+const showOllamaModelDetails = async (modelId: string) => {
+  return showModelDetails(modelId)
+}
+
 const pullOllamaModel = async (modelId: string) => {
   const abortController = new AbortController()
   const portName = `streamText-${Date.now().toString(32)}`
@@ -497,6 +501,7 @@ export const backgroundFunctions = {
   getLocalModelList,
   deleteOllamaModel,
   pullOllamaModel,
+  showOllamaModelDetails,
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,

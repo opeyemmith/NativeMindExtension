@@ -157,7 +157,6 @@ export const bgBroadcastRpc = only([Entrypoint.background], () => {
               },
             ]
           }
-          logger.debug('background message received', msg)
           fn(msg.data)
         }
       })

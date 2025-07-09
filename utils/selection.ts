@@ -50,10 +50,10 @@ export function isContentEditable(el: HTMLElement): boolean {
   return el.isContentEditable
 }
 
-export function getSelectionBoundingRect(el: HTMLElement, selection?: Selection | null) {
+export function getSelectionBoundingRect(el: HTMLElement, domRect: DOMRect, selection?: Selection | null) {
   if (isInputOrTextArea(el)) {
     const coord = getCaretCoordinates(el, el.selectionStart ?? 0, el.selectionEnd ?? 0)
-    const rect = el.getBoundingClientRect()
+    const rect = domRect
     return {
       top: coord.top + rect.top - el.scrollTop,
       left: coord.left + rect.left - el.scrollLeft,
@@ -69,7 +69,20 @@ export function getSelectionBoundingRect(el: HTMLElement, selection?: Selection 
     return rect
   }
   else {
-    return el.getBoundingClientRect()
+    return domRect
+  }
+}
+
+export function getSelectionBoundingRectWithinElement(el: HTMLElement, selection?: Selection | null) {
+  const elRect = el.getBoundingClientRect()
+  const selectionRect = getSelectionBoundingRect(el, elRect, selection)
+  return {
+    top: Math.max(selectionRect.top, elRect.top),
+    left: Math.max(selectionRect.left, elRect.left),
+    width: Math.min(selectionRect.width, elRect.width),
+    height: Math.min(selectionRect.height, elRect.height),
+    bottom: Math.min(selectionRect.bottom, elRect.bottom),
+    right: Math.min(selectionRect.right, elRect.right),
   }
 }
 

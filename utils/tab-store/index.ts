@@ -2,6 +2,7 @@ import { customRef, ref, toRaw, watch } from 'vue'
 import { storage } from 'wxt/utils/storage'
 
 import { debounce } from '../debounce'
+import { Base64ImageData } from '../image'
 import { lazyInitialize } from '../memo'
 import { c2bRpc } from '../rpc'
 import type { SettingsScrollTarget } from '../scroll-targets'
@@ -64,6 +65,7 @@ async function _getTabStore() {
     chatHistory: await defineTabValue(`chatHistory-${tabId}`, [] as ChatHistory),
     pageSummary: await defineTabValue(`summary-${tabId}`, { content: '', summary: '' } as PageSummary),
     contextTabIds: await defineTabValue(`contextTabs-${tabId}`, [tabId] as number[]),
+    contextImages: await defineTabValue(`contextImages-${tabId}`, [] as Base64ImageData[]),
     tabInfo: await defineTabValue(`tabInfo-${tabId}`, {
       url,
       title,

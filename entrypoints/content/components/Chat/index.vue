@@ -52,6 +52,9 @@
       <div>
         <TabSelector v-model:selectedTabs="contextTabs" />
       </div>
+      <div v-if="enableChatWithImage">
+        <ImageSelector v-model:selectedImages="contextImages" />
+      </div>
       <div class="flex gap-1 relative">
         <ScrollContainer
           class="max-h-72 grow shadow-02 bg-white rounded-md overflow-hidden"
@@ -118,8 +121,10 @@ import {
   initChatSideEffects,
 } from '@/entrypoints/content/utils/chat/index'
 import { useI18n } from '@/utils/i18n'
+import { getUserConfig } from '@/utils/user-config'
 
 import { showSettings } from '../../utils/settings'
+import ImageSelector from '../ImageSelector.vue'
 import MarkdownViewer from '../MarkdownViewer.vue'
 import TabSelector from '../TabSelector.vue'
 import MessageAction from './Messages/Action.vue'
@@ -137,8 +142,12 @@ const isComposing = ref(false)
 const chat = await Chat.getInstance()
 const scrollContainerRef = ref<InstanceType<typeof ScrollContainer>>()
 const contextTabs = chat.contextTabs
+const contextImages = chat.contextImages
 
 initChatSideEffects()
+
+const userConfig = await getUserConfig()
+const enableChatWithImage = userConfig.chat.chatWithImage.enable.toRef()
 
 const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   if (actionEvent.action === 'customInput') {

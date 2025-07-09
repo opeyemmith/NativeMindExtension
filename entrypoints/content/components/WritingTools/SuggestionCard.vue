@@ -153,7 +153,7 @@ const start = async () => {
     output.value = ''
     const prompt = await prompts[props.type](props.selectedText)
     const iter = streamTextInBackground({
-      prompt: prompt.user,
+      prompt: prompt.user.extractText(),
       system: prompt.system,
       abortSignal: abortController.signal,
     })

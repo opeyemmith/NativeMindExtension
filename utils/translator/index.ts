@@ -21,7 +21,7 @@ export async function* translateParagraphs(paragraphs: string[], options: Transl
     model: await getModel({ ...(await getModelUserConfig()) }),
     output: 'object',
     schema: selectSchema('translateParagraphs'),
-    prompt: prompt.user,
+    prompt: prompt.user.extractText(),
     system: prompt.system,
     abortSignal,
   })

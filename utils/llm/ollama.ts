@@ -1,4 +1,4 @@
-import { Ollama } from 'ollama/browser'
+import { Ollama, ShowResponse } from 'ollama/browser'
 
 import logger from '@/utils/logger'
 
@@ -10,10 +10,6 @@ async function getOllamaClient() {
   const origin = new URL(baseUrl).origin
   const ollama = new Ollama({ host: origin })
   return ollama
-}
-
-export function getDefaultModelList() {
-  return ['qwen3:8b', 'deepseek-r1:1.5b']
 }
 
 export async function getLocalModelList() {
@@ -60,4 +56,13 @@ export async function pullModel(modelId: string) {
     stream: true,
   })
   return pulling
+}
+
+export type ModelCapability = 'vision' | 'audio' | 'text' | 'code' | 'chat' | 'embedding'
+export async function showModelDetails(modelId: string) {
+  const ollama = await getOllamaClient()
+  const info = await ollama.show({ model: modelId })
+  return info as ShowResponse & {
+    capabilities?: ModelCapability[]
+  }
 }

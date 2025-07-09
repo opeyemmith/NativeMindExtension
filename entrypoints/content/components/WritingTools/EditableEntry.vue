@@ -87,8 +87,9 @@ import Button from '@/components/ui/Button.vue'
 import Text from '@/components/ui/Text.vue'
 import { useDeferredValue } from '@/composables/useDeferredValue'
 import { useRefSnapshot } from '@/composables/useRefSnapshot'
+import { MIN_SELECTION_LENGTH_TO_SHOW_WRITING_TOOLS } from '@/utils/constants'
 import { useI18n } from '@/utils/i18n'
-import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRect, isContentEditableElement, isEditorFrameworkElement, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
+import { getCommonAncestorElement, getEditableElementSelectedText, getSelectionBoundingRectWithinElement, isContentEditableElement, isEditorFrameworkElement, isInputOrTextArea, replaceContentInRange } from '@/utils/selection'
 import { extendedComputed } from '@/utils/vue/utils'
 
 import SuggestionCard from './SuggestionCard.vue'
@@ -110,7 +111,7 @@ const writingToolSelectedText = ref<string>('')
 const editableElementText = ref('')
 const regenerateSymbol = ref(0)
 const isShowToolBar = computed(() => {
-  return isEditableFocus.value && !!writingToolSelectedText.value.trim()
+  return isEditableFocus.value && writingToolSelectedText.value.trim().length >= MIN_SELECTION_LENGTH_TO_SHOW_WRITING_TOOLS
 })
 const isShowToolBarDeferred = useDeferredValue(isShowToolBar, 200, (v) => !v)
 
@@ -140,7 +141,7 @@ const selectedBounding = computed(() => {
   const _ = editableElementBounding.top.value // reactive to top changes
   const _1 = editableElementBounding.left.value // reactive to left changesleft: 0 }
   const _2 = writingToolSelectedText.value // reactive to selected text changes
-  const rect = getSelectionBoundingRect(props.editableElement, window.getSelection())
+  const rect = getSelectionBoundingRectWithinElement(props.editableElement, window.getSelection())
   return rect
 })
 

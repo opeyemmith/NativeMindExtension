@@ -22,7 +22,7 @@ export async function* translateParagraphs(
   const prompt = await translateTextList(paragraphs, targetLanguage)
   const resp = streamObjectInBackground({
     schema: 'translateParagraphs',
-    prompt: prompt.user,
+    prompt: prompt.user.extractText(),
     system: prompt.system,
     abortSignal,
   })

@@ -1,3 +1,4 @@
+import { CoreMessage } from 'ai'
 import EventEmitter from 'events'
 import { type Ref, ref, watch } from 'vue'
 
@@ -5,8 +6,10 @@ import { nonNullable } from '@/utils/array'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
+import { Base64ImageData } from '@/utils/image'
 import logger from '@/utils/logger'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'
+import { UserPrompt } from '@/utils/prompts/helpers'
 import { SearchingMessage } from '@/utils/search'
 import { getTabStore, type HistoryItemV1 } from '@/utils/tab-store'
 import { ActionMessageV1, ActionTypeV1, ActionV1, AssistantMessageV1, pickByRoles, TaskMessageV1, UserMessageV1 } from '@/utils/tab-store/history'
@@ -59,14 +62,15 @@ export class ReactiveHistoryManager extends EventEmitter {
     this.systemMessage = message
   }
 
-  getLLMMessages(extra: { system?: string, user?: string, lastUser?: string } = {}) {
+  // this method will not change the underlying history, it will just return a new array of messages
+  getLLMMessages(extra: { system?: string, user?: UserPrompt, lastUser?: UserPrompt } = {}) {
     const systemMessage = extra.system || this.systemMessage
     const userMessage = extra.user
     const lastUserMessage = extra.lastUser
     const fullHistory = pickByRoles(this.history.value.filter((m) => m.done), ['assistant', 'user', 'system']).map((item) => ({
       role: item.role,
       content: item.content,
-    }))
+    })) as CoreMessage[]
     if (systemMessage) {
       fullHistory.unshift({
         role: 'system',
@@ -76,18 +80,18 @@ export class ReactiveHistoryManager extends EventEmitter {
     if (userMessage) {
       fullHistory.push({
         role: 'user',
-        content: userMessage,
+        content: userMessage.content,
       })
     }
     if (lastUserMessage) {
       const lastMsg = fullHistory[fullHistory.length - 1]
       if (lastMsg.role === 'user') {
-        lastMsg.content = lastUserMessage
+        lastMsg.content = lastUserMessage.content
       }
       else {
         fullHistory.push({
           role: 'user',
-          content: lastUserMessage,
+          content: lastUserMessage.content,
         })
       }
     }
@@ -242,7 +246,7 @@ export class Chat {
         watch(contextTabs, () => {
           tabStore.contextTabIds.value = contextTabs.value.map((tab) => tab.tabId)
         })
-        return new Chat(new ReactiveHistoryManager(history), contextTabs)
+        return new Chat(new ReactiveHistoryManager(history), contextTabs, tabStore.contextImages)
       })
     }
     return Chat.instance
@@ -268,7 +272,7 @@ export class Chat {
     }
   }
 
-  constructor(public historyManager: ReactiveHistoryManager, public contextTabs: Ref<TabInfo[]>) { }
+  constructor(public historyManager: ReactiveHistoryManager, public contextTabs: Ref<TabInfo[]>, public contextImages: Ref<Base64ImageData[]>) { }
 
   isAnswering() {
     return this.status.value === 'pending' || this.status.value === 'streaming'
@@ -312,7 +316,7 @@ export class Chat {
     const prompt = await nextStep(contextMsgs, pages.filter(nonNullable))
     const next = await generateObjectInBackground({
       schema: 'nextStep',
-      prompt: prompt.user,
+      prompt: prompt.user.extractText(),
       system: prompt.system,
       abortSignal: abortController.signal,
     })
@@ -422,7 +426,7 @@ export class Chat {
     const r = await generateObjectInBackground({
       schema: 'searchKeywords',
       system: prompt.system,
-      prompt: prompt.user,
+      prompt: prompt.user.extractText(),
       abortSignal: abortController.signal,
     })
     return r.object.queryKeywords
@@ -448,7 +452,7 @@ export class Chat {
 
     question && this.historyManager.appendUserMessage(question)
     await this.prepareModel()
-    const nextStepContext = pickByRoles(this.historyManager.getLLMMessages(), ['user', 'assistant']).slice(-4)
+    const nextStepContext = pickByRoles(this.historyManager.history.value, ['user', 'assistant']).slice(-4)
     let loading: AssistantMessageV1 | undefined = this.historyManager.appendAssistantMessage()
     const enableOnlineSearch = userConfig.chat.onlineSearch.enable.get()
     let onlineResults: undefined | Page[]
@@ -472,19 +476,21 @@ export class Chat {
       loading = undefined
     }
     const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
+    const relevantImages = this.contextImages.value
     const pages = await getDocumentContentOfTabs(relevantTabIds)
-    const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults)
+    const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults, relevantImages)
     await this.sendMessage(prompt.user, prompt.system, { assistantMsg: loading })
   }
 
-  private async sendMessage(user: string, system?: string, options: { autoDeleteEmptyResponseMsg?: boolean, assistantMsg?: AssistantMessageV1 } = {}) {
+  private async sendMessage(user: UserPrompt, system?: string, options: { autoDeleteEmptyResponseMsg?: boolean, assistantMsg?: AssistantMessageV1 } = {}) {
     const abortController = new AbortController()
     this.abortControllers.push(abortController)
     const autoDeleteEmptyMsg = options.autoDeleteEmptyResponseMsg ?? true
 
+    const messages = this.historyManager.getLLMMessages({ system, lastUser: user })
     const response = streamTextInBackground({
       abortSignal: abortController.signal,
-      messages: this.historyManager.getLLMMessages({ system, lastUser: user }),
+      messages,
     })
     const msg = options.assistantMsg ?? this.historyManager.appendAssistantMessage()
     let reasoningStart: number | undefined

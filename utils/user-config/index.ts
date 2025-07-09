@@ -136,6 +136,9 @@ async function _getUserConfig() {
       quickActions: {
         actions: await new Config('chat.quickActions.actions_4').default(DEFAULT_QUICK_ACTIONS).build(),
       },
+      chatWithImage: {
+        enable: await new Config('chat.chatWithImage.enable').default(false).build(),
+      },
     },
     translation: {
       targetLocale: await new Config('translation.targetLocale').default('zh' as LanguageCode).build(),

@@ -87,6 +87,21 @@ export default defineBackground(() => {
     logger.debug('Extension is suspending')
   })
 
+  if (import.meta.env.FIREFOX) {
+    // In Chrome extensions, selection and page type context menus are mutually exclusive, so we don't need to handle onShown event
+    // In Firefox, selection and page type context menus can coexist, so we need to handle onShown event
+    // The logic here is: if the current context menu is selection type and text is selected, don't show the translate page context menu
+    // If the current context menu is page type, show the translate page context menu
+    // This prevents the translate page context menu from appearing when text is selected
+    browser.menus.onShown.addListener(async (info) => {
+      const shouldShowTranslateMenu = !(info.contexts.includes(browser.contextMenus.ContextType.SELECTION) && info.selectionText)
+      const instance = await ContextMenuManager.getInstance()
+      await instance.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
+        visible: shouldShowTranslateMenu,
+      })
+    })
+  }
+
   browser.runtime.onInstalled.addListener(async () => {
     ContextMenuManager.getInstance().then((instance) => {
       for (const menu of CONTEXT_MENU) {

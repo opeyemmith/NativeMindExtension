@@ -1,6 +1,24 @@
 # Changelog
 
 
+## v1.4.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.3...v1.4.0-beta.4)
+
+### 🚀 Enhancements
+
+- **tooltip:** Add tooltip component with i18n and integrate with icon buttons ([aa69bfb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa69bfb))
+
+### 🩹 Fixes
+
+- **localization:** Update tooltip translations for sidebar pinning in multiple languages ([a38ab40](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a38ab40))
+- **context-menu:** Add Firefox-specific context menu types and functionality ([4639e33](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4639e33))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- NekoWings ([@NekoWings](http://github.com/NekoWings))
+
 ## v1.4.0-beta.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.2...v1.4.0-beta.3)

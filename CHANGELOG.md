@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.5...v1.4.0-beta.6)
+
+### 🩹 Fixes
+
+- **writing-tools:** Streamline content replacement logic and improve markdown parsing ([bacda38](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bacda38))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.5
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.4...v1.4.0-beta.5)

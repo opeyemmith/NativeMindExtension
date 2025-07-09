@@ -295,7 +295,7 @@ const onClickToClosePopup = (ev: Event) => {
   isEditableFocus.value = false
 }
 
-const onApply = (text: string, el: HTMLElement, range?: UnwrapRef<typeof selectedRange>) => {
+const onApply = async (text: string, el: HTMLElement, range?: UnwrapRef<typeof selectedRange>) => {
   if (isInputOrTextArea(el)) {
     if (!(range instanceof Range) && range?.start !== undefined) {
       el.select()
@@ -307,7 +307,7 @@ const onApply = (text: string, el: HTMLElement, range?: UnwrapRef<typeof selecte
     }
   }
   else if ((isContentEditableElement(el) || isEditorFrameworkElement(el)) && range instanceof Range) {
-    replaceContentInRange(range, text)
+    await replaceContentInRange(range, text, writingToolType.value !== 'list')
   }
   onClosePopup()
 }

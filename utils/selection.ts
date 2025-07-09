@@ -1,4 +1,4 @@
-import { getMarkedInstance } from '@/entrypoints/content/utils/markdown/parser'
+import { markdownToElement } from '@/entrypoints/content/utils/markdown/parser'
 
 import { getCaretCoordinates } from './textarea'
 
@@ -105,24 +105,13 @@ export function getEditableElementSelectedText(el: HTMLElement): string {
   return el.textContent?.trim() || ''
 }
 
-export async function replaceContentInRange(range: Range, replacement: string, inline = false) {
+export async function replaceContentInRange(range: Range, replacement: string) {
   const sel = window.getSelection()
   if (sel) {
     sel.removeAllRanges()
     sel.addRange(range)
   }
   range.deleteContents()
-  if (inline) {
-    const html = await getMarkedInstance().parseInline(replacement)
-    const containerEl = document.createElement('span')
-    containerEl.innerHTML = html
-    range.insertNode(containerEl)
-  }
-  else {
-    const html = await getMarkedInstance().parse(replacement)
-    const containerEl = document.createElement('div')
-    containerEl.innerHTML = html
-    const firstElement = containerEl.firstElementChild
-    range.insertNode(firstElement || document.createTextNode(replacement))
-  }
+  const el = await markdownToElement(replacement)
+  range.insertNode(el)
 }

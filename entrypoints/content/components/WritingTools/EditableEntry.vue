@@ -307,7 +307,7 @@ const onApply = async (text: string, el: HTMLElement, range?: UnwrapRef<typeof s
     }
   }
   else if ((isContentEditableElement(el) || isEditorFrameworkElement(el)) && range instanceof Range) {
-    await replaceContentInRange(range, text, writingToolType.value !== 'list')
+    await replaceContentInRange(range, text)
   }
   onClosePopup()
 }

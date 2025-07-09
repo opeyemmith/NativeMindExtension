@@ -194,7 +194,7 @@
   "tooltips": {
     "clear_chat": "ล้างแชท",
     "settings": "การตั้งค่า",
-    "pin_sidebar": "ปักหมุดแถบด้านข้าง",
+    "pin_sidebar": "ปักหมุด",
     "unpin_sidebar": "ยกเลิกการปักหมุด",
     "close": "ปิด"
   }

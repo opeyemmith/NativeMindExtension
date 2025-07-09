@@ -194,7 +194,7 @@
   "tooltips": {
     "clear_chat": "Chat löschen",
     "settings": "Einstellungen",
-    "pin_sidebar": "Seitenleiste anheften",
+    "pin_sidebar": "Anheften",
     "unpin_sidebar": "Anheftung aufheben",
     "close": "Schließen"
   }

@@ -194,7 +194,7 @@
   "tooltips": {
     "clear_chat": "Effacer le chat",
     "settings": "Paramètres",
-    "pin_sidebar": "Épingler la barre latérale",
+    "pin_sidebar": "Épingler",
     "unpin_sidebar": "Désépingler",
     "close": "Fermer"
   }

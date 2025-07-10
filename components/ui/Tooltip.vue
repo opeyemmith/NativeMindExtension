@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
+import { useEventListener } from '@vueuse/core'
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { useInjectContext } from '@/composables/useInjectContext'
@@ -135,8 +136,6 @@ const updateTooltipPosition = (useEstimatedSize = false) => {
   if (!triggerRef.value) return
 
   const triggerRect = triggerRef.value.getBoundingClientRect()
-  const scrollX = window.pageXOffset || document.documentElement.scrollLeft
-  const scrollY = window.pageYOffset || document.documentElement.scrollTop
 
   // Get tooltip dimensions
   let tooltipWidth: number
@@ -154,7 +153,7 @@ const updateTooltipPosition = (useEstimatedSize = false) => {
   }
 
   let top = 0
-  let left = triggerRect.left + scrollX + (triggerRect.width / 2)
+  let left = triggerRect.left + (triggerRect.width / 2)
 
   // Smart position detection
   let positionToUse = props.position
@@ -172,34 +171,34 @@ const updateTooltipPosition = (useEstimatedSize = false) => {
   // Calculate position based on placement
   switch (positionToUse) {
     case 'top':
-      top = triggerRect.top + scrollY - tooltipHeight - TOOLTIP_GAP
+      top = triggerRect.top - tooltipHeight - TOOLTIP_GAP
       break
     case 'bottom':
-      top = triggerRect.bottom + scrollY + TOOLTIP_GAP
+      top = triggerRect.bottom + TOOLTIP_GAP
       break
     case 'left':
-      top = triggerRect.top + scrollY + (triggerRect.height / 2) - (tooltipHeight / 2)
-      left = triggerRect.left + scrollX - tooltipWidth - TOOLTIP_GAP
+      top = triggerRect.top + (triggerRect.height / 2) - (tooltipHeight / 2)
+      left = triggerRect.left - tooltipWidth - TOOLTIP_GAP
       break
     case 'right':
-      top = triggerRect.top + scrollY + (triggerRect.height / 2) - (tooltipHeight / 2)
-      left = triggerRect.right + scrollX + TOOLTIP_GAP
+      top = triggerRect.top + (triggerRect.height / 2) - (tooltipHeight / 2)
+      left = triggerRect.right + TOOLTIP_GAP
       break
     case 'top-start':
-      top = triggerRect.top + scrollY - tooltipHeight - TOOLTIP_GAP
-      left = triggerRect.left + scrollX
+      top = triggerRect.top - tooltipHeight - TOOLTIP_GAP
+      left = triggerRect.left
       break
     case 'top-end':
-      top = triggerRect.top + scrollY - tooltipHeight - TOOLTIP_GAP
-      left = triggerRect.right + scrollX - tooltipWidth
+      top = triggerRect.top - tooltipHeight - TOOLTIP_GAP
+      left = triggerRect.right - tooltipWidth
       break
     case 'bottom-start':
-      top = triggerRect.bottom + scrollY + TOOLTIP_GAP
-      left = triggerRect.left + scrollX
+      top = triggerRect.bottom + TOOLTIP_GAP
+      left = triggerRect.left
       break
     case 'bottom-end':
-      top = triggerRect.bottom + scrollY + TOOLTIP_GAP
-      left = triggerRect.right + scrollX - tooltipWidth
+      top = triggerRect.bottom + TOOLTIP_GAP
+      left = triggerRect.right - tooltipWidth
       break
   }
 
@@ -241,14 +240,10 @@ const handleScroll = () => {
   }
 }
 
-onMounted(() => {
-  window.addEventListener('resize', handleResize)
-  window.addEventListener('scroll', handleScroll, true)
-})
+useEventListener(window, 'resize', handleResize)
+useEventListener(window, 'scroll', handleScroll)
 
 onUnmounted(() => {
-  window.removeEventListener('resize', handleResize)
-  window.removeEventListener('scroll', handleScroll, true)
   if (timeoutRef.value) {
     clearTimeout(timeoutRef.value)
   }

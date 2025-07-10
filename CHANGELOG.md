@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.9...v1.4.0)
+
+### 🚀 Enhancements
+
+- **release:** Add options for patch release in workflow and scripts ([01f54a7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/01f54a7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.9
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.8...v1.4.0-beta.9)

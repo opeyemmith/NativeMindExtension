@@ -17,6 +17,7 @@
         </div>
         <div class="right flex items-center gap-2">
           <Tooltip
+            v-if="!chat.historyManager.onlyHasDefaultMessages()"
             :content="t('tooltips.clear_chat')"
           >
             <div
@@ -24,7 +25,6 @@
               @click="onNewChat"
             >
               <IconClearChat
-                v-if="!chat.historyManager.onlyHasDefaultMessages()"
                 class="size-4"
               />
             </div>

@@ -1,5 +1,6 @@
 import tailwindcss from '@tailwindcss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import { analyzer } from 'vite-bundle-analyzer'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
@@ -8,6 +9,8 @@ import { version } from './package.json'
 export const VERSION = version.split('-')[0]
 
 const IS_FIREFOX = process.argv.includes('firefox')
+const FIREFOX_EXTENSION_ID = '{93170c64-eed9-4108-bb64-ade943a68ad9}'
+const ENABLE_BUNDLE_ANALYZER = process.argv.includes('--analyze') || process.env.ANALYZE === 'true'
 
 const permissionsForChrome = ['system.memory']
 const permissionsForFirefox = ['menus']
@@ -69,8 +72,11 @@ export default defineConfig({
     return {
       build: {
         target: ['chrome124', 'firefox120', 'safari16'],
+        // firefox does't support js file larger than 5MB, so we exclude @mlc-ai/web-llm from the bundle (which firefox does not use)
+        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm'] : undefined },
       },
       plugins: [
+        analyzer({ enabled: ENABLE_BUNDLE_ANALYZER }),
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),
       ],
@@ -87,6 +93,7 @@ export default defineConfig({
     content_security_policy: {
       extension_pages: 'script-src \'self\' \'wasm-unsafe-eval\'; object-src \'self\';',
     },
+    browser_specific_settings: IS_FIREFOX ? { gecko: { id: FIREFOX_EXTENSION_ID } } : undefined,
     content_scripts: [
       {
         matches: ['<all_urls>'],

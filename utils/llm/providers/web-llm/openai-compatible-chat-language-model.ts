@@ -8,7 +8,7 @@ import {
   LanguageModelV1StreamPart,
 } from '@ai-sdk/provider'
 import { createJsonErrorResponseHandler, generateId, isParsableJson, ResponseHandler } from '@ai-sdk/provider-utils'
-import { ChatCompletionChunk } from '@mlc-ai/web-llm'
+import type { ChatCompletionChunk } from '@mlc-ai/web-llm'
 import { z } from 'zod'
 
 import { UnknownError } from '@/utils/error'

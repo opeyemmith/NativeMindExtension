@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.8...v1.4.0-beta.9)
+
+### 🩹 Fixes
+
+- **Tooltip:** Tooltip position calculation ([14a64bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/14a64bc))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.8
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.7...v1.4.0-beta.8)

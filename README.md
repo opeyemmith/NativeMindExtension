@@ -4,7 +4,7 @@
   <a href="https://nativemind.app" style="text-decoration: none; color: inherit;">NativeMind</a><br>
   Private, On-device Al Assistant
 </h1>
-<img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
+<img src="docs/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
 *NativeMind is a private, open-source alternative to ChatGPT — a fully local browser extension built on Ollama that brings local AI models into your workflow.*
 

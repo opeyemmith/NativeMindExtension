@@ -76,8 +76,9 @@ NativeMind currently supports **Chromium-based browsers** such as **Chrome**, **
 ### ⚡ First-Time Setup
 
 <div align="center">
+
 <img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
-  
+
 <br>
 <em>For more details, visit our official website: <strong><a href="https://nativemind.app/?utm_source=github">nativemind.app</a></strong></em>
 </div>

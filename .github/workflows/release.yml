@@ -12,7 +12,8 @@ on:
         type: choice
         options:
           - beta
-          - prod
+          - prod # bump major version
+          - patch # bump patch version for hotfix
 
 jobs:
   release:

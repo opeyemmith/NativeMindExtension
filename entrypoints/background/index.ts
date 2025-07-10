@@ -3,12 +3,14 @@ import '@/utils/rpc'
 
 import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
+import { storage } from 'wxt/utils/storage'
 
 import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuManager } from '@/utils/context-menu'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
 import { isTabValid } from '@/utils/tab'
+import { getTabKeys } from '@/utils/tab-store'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
 export default defineBackground(() => {
@@ -61,12 +63,18 @@ export default defineBackground(() => {
   })
 
   browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
-    logger.info('tab removed', { tabId })
+    logger.info('tab removed', { tabId, removeInfo, isFirefox: import.meta.env.FIREFOX })
     tabsWaitingForOpen.delete(tabId)
     bgBroadcastRpc.emit('tabRemoved', {
       tabId,
       ...removeInfo,
     })
+    if (import.meta.env.FIREFOX) {
+      // Firefox does not support session storage in content scripts, so we need to clean up the tab store
+      const keys = getTabKeys(tabId)
+      logger.info('Cleaning up tab store for removed tab', { tabId, keys })
+      await storage.removeItems(keys)
+    }
   })
 
   browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {

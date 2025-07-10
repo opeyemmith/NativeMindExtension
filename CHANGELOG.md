@@ -1,6 +1,59 @@
 # Changelog
 
 
+## v1.4.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.9...v1.4.0)
+
+### 🚀 Enhancements
+
+- **release:** Add options for patch release in workflow and scripts ([01f54a7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/01f54a7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.8...v1.4.0-beta.9)
+
+### 🩹 Fixes
+
+- **Tooltip:** Tooltip position calculation ([14a64bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/14a64bc))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.7...v1.4.0-beta.8)
+
+### 💅 Refactors
+
+- **firefox:** Tab storage handling for Firefox compatibility ([9fe3de7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9fe3de7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.6...v1.4.0-beta.7)
+
+### 🩹 Fixes
+
+- **Tooltip:** Tooltip of clear chat not dismiss when button hidden ([0909fbb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0909fbb))
+
+### 🏡 Chore
+
+- **readme:** Update demo screenshot ([f1a2d2b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f1a2d2b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- NekoWings ([@NekoWings](http://github.com/NekoWings))
+
 ## v1.4.0-beta.6
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.5...v1.4.0-beta.6)

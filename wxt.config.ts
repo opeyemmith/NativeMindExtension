@@ -10,7 +10,8 @@ export const VERSION = version.split('-')[0]
 const IS_FIREFOX = process.argv.includes('firefox')
 
 const permissionsForChrome = ['system.memory']
-const extraPermissions = IS_FIREFOX ? [] : permissionsForChrome
+const permissionsForFirefox = ['menus']
+const extraPermissions = IS_FIREFOX ? permissionsForFirefox : permissionsForChrome
 
 const svgLoaderPlugin = svgLoader({
   svgoConfig: {

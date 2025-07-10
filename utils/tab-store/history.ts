@@ -68,8 +68,8 @@ export interface ActionMessageV1<ActionType extends ActionTypeV1 = ActionTypeV1>
 export type HistoryItemV1 = UserMessageV1 | AssistantMessageV1 | TaskMessageV1 | SystemMessageV1 | ActionMessageV1
 export type Role = HistoryItemV1['role']
 
-export function pickByRoles<R extends Role[], Item extends { role: Role }>(arr: Item[], roles: R): (Item & { role: R[number] })[] {
-  return arr.filter((item) => roles.includes(item.role)) as (Item & { role: R[number] })[]
+export function pickByRoles<R extends string, Item extends { role: string }>(arr: Item[], roles: R[]): (Item & { role: R })[] {
+  return arr.filter((item) => roles.includes(item.role as R)) as (Item & { role: R })[]
 }
 
 export function isRoleMessage(item: HistoryItemV1, role: Role): item is HistoryItemV1 & { role: Role } {

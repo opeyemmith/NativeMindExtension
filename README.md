@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/icon.png" alt="NativeMind Logo" width="32" height="32">
+<img src="docs/images/icon.png" alt="NativeMind Logo" width="32" height="32">
 
 # NativeMind - Private, on-device AI Assistant, no cloud dependencies
 
@@ -13,7 +13,7 @@
 
 **Vote to help more people discover private, convenient AI** 🙏
 
-<img src="assets/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
+<img src="docs/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
 [![Privacy First](https://img.shields.io/badge/Privacy-First-brightgreen?style=flat-square&logo=security&logoColor=white)]()
 [![No Tracking](https://img.shields.io/badge/Tracking-None-success?style=flat-square&logo=shield&logoColor=white)]()
@@ -49,7 +49,7 @@ Install directly from the [Chrome Web Store](https://chromewebstore.google.com/d
 3. **Start Using**: Click the NativeMind icon in your browser toolbar
 
 <div align="center">
-<img src="assets/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
+<img src="docs/images/extension-popup.png" alt="NativeMind Extension Interface" width="600">
 <br>
 <em>For more details, visit our official website: <strong><a href="https://nativemind.app/?utm_source=github">nativemind.app</a></strong></em>
 </div>

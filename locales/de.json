@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "Um den lokalen Modus zu verwenden, müssen Sie das {model}-Modell ({size}) herunterladen. Möchten Sie es jetzt herunterladen?"
+    },
+    "writing_tools": {
+      "title": "Schreibwerkzeuge"
     }
   },
   "context_menu": {
@@ -167,7 +170,7 @@
   "writing_tools": {
     "processing": "Verarbeitung...",
     "rewrite_suggestion": "Umschreibungsvorschlag",
-    "sparkle_text": "Glitzertext",
+    "sparkle_text": "Text Verschönern",
     "key_points": "Kernpunkte",
     "grammar_and_style": "Grammatik & Stil",
     "proofread": "Korrekturlesen",
@@ -187,5 +190,12 @@
     "sites": {
       "add_to_nativemind": "Verwendung in NativeMind"
     }
+  },
+  "tooltips": {
+    "clear_chat": "Chat löschen",
+    "settings": "Einstellungen",
+    "pin_sidebar": "Anheften",
+    "unpin_sidebar": "Anheftung aufheben",
+    "close": "Schließen"
   }
 }

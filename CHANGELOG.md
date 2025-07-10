@@ -1,6 +1,137 @@
 # Changelog
 
 
+## v1.4.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.8...v1.4.0-beta.9)
+
+### 🩹 Fixes
+
+- **Tooltip:** Tooltip position calculation ([14a64bc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/14a64bc))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.7...v1.4.0-beta.8)
+
+### 💅 Refactors
+
+- **firefox:** Tab storage handling for Firefox compatibility ([9fe3de7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9fe3de7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.6...v1.4.0-beta.7)
+
+### 🩹 Fixes
+
+- **Tooltip:** Tooltip of clear chat not dismiss when button hidden ([0909fbb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0909fbb))
+
+### 🏡 Chore
+
+- **readme:** Update demo screenshot ([f1a2d2b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f1a2d2b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- NekoWings ([@NekoWings](http://github.com/NekoWings))
+
+## v1.4.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.5...v1.4.0-beta.6)
+
+### 🩹 Fixes
+
+- **writing-tools:** Streamline content replacement logic and improve markdown parsing ([bacda38](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bacda38))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.4...v1.4.0-beta.5)
+
+### 🩹 Fixes
+
+- **writing-tools:** Implement async parsing for inline and block content replacement ([37a5d81](https://github.com/NativeMindBrowser/NativeMindExtension/commit/37a5d81))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.3...v1.4.0-beta.4)
+
+### 🚀 Enhancements
+
+- **tooltip:** Add tooltip component with i18n and integrate with icon buttons ([aa69bfb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa69bfb))
+
+### 🩹 Fixes
+
+- **localization:** Update tooltip translations for sidebar pinning in multiple languages ([a38ab40](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a38ab40))
+- **context-menu:** Add Firefox-specific context menu types and functionality ([4639e33](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4639e33))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- NekoWings ([@NekoWings](http://github.com/NekoWings))
+
+## v1.4.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.2...v1.4.0-beta.3)
+
+### 💅 Refactors
+
+- **i18n:** Enhance locale normalization and acceptance language matching ([afa0d4b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/afa0d4b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.1...v1.4.0-beta.2)
+
+### 🩹 Fixes
+
+- **writing-tools:** Firefox compatibility ([0501f88](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0501f88))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.0...v1.4.0-beta.1)
+
+### 🏡 Chore
+
+- **onboarding:** Hide try-webllm in firefox onboarding ([f30e759](https://github.com/NativeMindBrowser/NativeMindExtension/commit/f30e759))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0...v1.4.0-beta.0)
+
+### 🚀 Enhancements
+
+- **writing-tools:** Enhance writing tools functionality and UI improvements ([4e3426b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4e3426b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.3.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.3.0-beta.17...v1.3.0)

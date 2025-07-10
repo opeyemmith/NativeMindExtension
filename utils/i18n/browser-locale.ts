@@ -2,23 +2,34 @@ import { browser } from 'wxt/browser'
 
 function normalizeLocale(locale: string): string {
   // Normalize locale to a standard format (e.g., 'en_US' to 'en-US')
-  return locale.toLowerCase().replace('_', '-')
+  locale = locale.replaceAll('_', '-')
+  const parts = locale.split('-')
+  if (parts.length === 1) {
+    return parts[0].toLowerCase() // e.g., 'en'
+  }
+  if (parts.length === 2) {
+    return `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}` // e.g., 'en-US'
+  }
+  if (parts.length === 3) {
+    return `${parts[0].toLowerCase()}-${parts[1].toUpperCase()}` // e.g., 'en-US-GB'
+  }
+  return locale.toLowerCase() // Fallback to lower case if format is unexpected
 }
 
 export async function getAcceptLanguages<L extends string>(languages: L[], fallback: L): Promise<L> {
   const languageList = await browser.i18n.getAcceptLanguages()
+  const acceptedLanguages = languageList.map(normalizeLocale)
   if (languageList.length > 0) {
-    const normalizedLanguages = languageList.map(normalizeLocale)
-    const exactMatch = languages.find((lang) => normalizedLanguages.includes(lang))
+    const exactMatch = acceptedLanguages.find((lang) => languages.includes(lang as L)) as L | undefined
     if (exactMatch) return exactMatch
-    const widestMatch = languages.find((lang) => {
-      const [langCode] = lang.split('-')
-      return normalizedLanguages.some((l) => {
-        const [lCode] = l.split('-')
-        return lCode === langCode
+    for (const lang of acceptedLanguages) {
+      const parts = lang.split('-')
+      const match = languages.find((l) => {
+        const lParts = l.split('-')
+        return lParts[0] === parts[0]
       })
-    })
-    if (widestMatch) return widestMatch
+      if (match) return match
+    }
   }
   return fallback
 }

@@ -1,5 +1,6 @@
+import { Base64ImageData } from '../image'
 import { getUserConfig } from '../user-config'
-import { definePrompt } from './helpers'
+import { definePrompt, UserPrompt } from './helpers'
 
 export interface Page {
   title: string
@@ -7,7 +8,7 @@ export interface Page {
   textContent?: string | null
 }
 
-export const chatWithPageContent = definePrompt(async (question: string, pages: Page[], onlineInfo: Page[] = []) => {
+export const chatWithPageContent = definePrompt(async (question: string, pages: Page[], onlineInfo: Page[] = [], images: Base64ImageData[]) => {
   const userConfig = await getUserConfig()
   const system = userConfig.llm.chatSystemPrompt.get()
 
@@ -39,12 +40,17 @@ ${text}
   .join('\n')}
 </tabs_context>`
 
+  const imageContext = images.length
+    ? `The following ${images.length} image(s) have been uploaded by the user.`
+    : ''
+
   const user = `
 ${tabContext}
 ${searchResults}
+${imageContext}
 
 Question: ${question}`
-  return { user, system }
+  return { user: UserPrompt.fromTextAndImages(user, images), system }
 })
 
 export const summarizeWithPageContent = definePrompt(async (page: Page, question: string) => {
@@ -58,7 +64,7 @@ ${pageText}
 </tab_context>
 
 Question: ${question}`
-  return { user, system }
+  return { user: new UserPrompt(user), system }
 })
 
 export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistant' | string, content: string }[], pages: Page[]) => {
@@ -106,7 +112,7 @@ ${truncatedText}
   ${messages.map((m) => `${m.role}: ${m.content}`).join('\n')}
 </conversation>
 `
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const generateSearchKeywords = definePrompt(async (messages: { role: 'user' | 'assistant' | string, content: string }[], pages: Page[]) => {
@@ -145,7 +151,7 @@ ${messages.map((m) => `${m.role}: ${m.content}`).join('\n')}
 
   const user = `${tabContext}${conversationContext}`
 
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const translateTextList = definePrompt(async (textList: string[], targetLanguage: string) => {
@@ -153,7 +159,7 @@ export const translateTextList = definePrompt(async (textList: string[], targetL
   const rawSystem = userConfig.translation.systemPrompt.get()
   const system = rawSystem.replace(/\{\{LANGUAGE\}\}/g, targetLanguage)
   const user = JSON.stringify(textList, null, 2).replace(/,\n/g, ',\n\n')
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const writingToolRewrite = definePrompt(async (text: string) => {
@@ -161,7 +167,7 @@ export const writingToolRewrite = definePrompt(async (text: string) => {
   const system = userConfig.writingTools.rewrite.systemPrompt.get()
   const user = text
 
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const writingToolProofread = definePrompt(async (text: string) => {
@@ -169,7 +175,7 @@ export const writingToolProofread = definePrompt(async (text: string) => {
   const system = userConfig.writingTools.proofread.systemPrompt.get()
   const user = text
 
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const writingToolList = definePrompt(async (text: string) => {
@@ -177,7 +183,7 @@ export const writingToolList = definePrompt(async (text: string) => {
   const system = userConfig.writingTools.list.systemPrompt.get()
   const user = text
 
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 export const writingToolSparkle = definePrompt(async (text: string) => {
@@ -185,7 +191,7 @@ export const writingToolSparkle = definePrompt(async (text: string) => {
   const system = userConfig.writingTools.sparkle.systemPrompt.get()
   const user = text
 
-  return { system, user }
+  return { system, user: new UserPrompt(user) }
 })
 
 // TODO: This is a placeholder for the Chrome AI summarizer prompt.
@@ -204,5 +210,5 @@ Your responses should be:
 - Well-formatted using markdown for readability
 - Clear about which source information comes from by using proper citations
 `
-  return { system, user: input.trim() }
+  return { system, user: new UserPrompt(input.trim()) }
 })

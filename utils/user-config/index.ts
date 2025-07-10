@@ -1,7 +1,7 @@
-import { lazyInitialize } from '../cache'
 import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
+import { lazyInitialize } from '../memo'
 import { Config } from './helpers'
 
 export const DEFAULT_TRANSLATOR_SYSTEM_PROMPT = `You are a highly skilled translator, you will be provided an html string array in JSON format, and your task is to translate each string into {{LANGUAGE}}, preserving any html tag. The result should only contain all strings in JSON array format.
@@ -125,7 +125,7 @@ async function _getUserConfig() {
     },
     chromeAI: {
       polyfill: {
-        enable: await new Config('chromeAI.polyfill.enable').default(true).build(),
+        enable: await new Config('chromeAI.polyfill.enable_1').default(false).build(),
       },
     },
     chat: {
@@ -135,6 +135,9 @@ async function _getUserConfig() {
       },
       quickActions: {
         actions: await new Config('chat.quickActions.actions_4').default(DEFAULT_QUICK_ACTIONS).build(),
+      },
+      chatWithImage: {
+        enable: await new Config('chat.chatWithImage.enable').default(false).build(),
       },
     },
     translation: {
@@ -151,7 +154,7 @@ async function _getUserConfig() {
       enabled: await new Config('debug.enabled').default(false).build(),
     },
     writingTools: {
-      enable: await new Config('writingTools.enable').default(false).build(),
+      enable: await new Config('writingTools.enable_1').default(true).build(),
       rewrite: {
         systemPrompt: await new Config('writingTools.rewrite.systemPrompt').default(DEFAULT_WRITING_TOOLS_REWRITE_SYSTEM_PROMPT).build(),
       },

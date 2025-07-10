@@ -158,6 +158,37 @@
             </div>
           </div>
         </Block>
+        <Block title="Chat">
+          <div class="flex gap-3 justify-start items-center">
+            <div>
+              Chat with image
+            </div>
+            <Switch
+              v-model="enableChatWithImage"
+              slotClass="rounded-lg border-gray-200 border bg-white"
+              itemClass="h-6 flex items-center justify-center text-xs px-2"
+              thumbClass="bg-blue-500 rounded-md"
+              activeItemClass="text-white"
+              :items="[
+                {
+                  label: 'Enable',
+                  key: true,
+                },
+                {
+                  label: 'Disable',
+                  key: false,
+                  activeThumbClass: 'bg-gray-200',
+                },
+              ]"
+            >
+              <template #label="{ item }">
+                <div class="flex p-2 items-center justify-center text-xs">
+                  {{ item.label }}
+                </div>
+              </template>
+            </Switch>
+          </div>
+        </Block>
         <Block title="System Prompts">
           <div>
             <div class="flex flex-col gap-3 justify-start items-stretch">
@@ -315,33 +346,6 @@
             </Switch>
           </div>
         </Block>
-        <Block title="Writing Tools">
-          <div class="flex gap-3 justify-start items-stretch">
-            <Switch
-              v-model="enabledWritingTools"
-              slotClass="rounded-lg border-gray-200 border bg-white"
-              thumbClass="bg-blue-500 w-4 h-4 rounded-md"
-              activeItemClass="text-white"
-              :items="[
-                {
-                  label: 'Enable',
-                  key: true,
-                },
-                {
-                  label: 'Disable',
-                  key: false,
-                  activeThumbClass: 'bg-gray-200',
-                },
-              ]"
-            >
-              <template #label="{ item }">
-                <div class="flex p-2 items-center justify-center text-xs">
-                  {{ item.label }}
-                </div>
-              </template>
-            </Switch>
-          </div>
-        </Block>
         <Block title="Page">
           <div class="flex flex-col gap-3 justify-start items-stretch">
             <div>
@@ -419,12 +423,12 @@ const enableOnlineSearch = userConfig.chat.onlineSearch.enable.toRef()
 const enableReasoning = userConfig.llm.reasoning.toRef()
 const onlineSearchPageReadCount = userConfig.chat.onlineSearch.pageReadCount.toRef()
 const onboardingVersion = userConfig.ui.onboarding.version.toRef()
-const enabledWritingTools = userConfig.writingTools.enable.toRef()
 const enabledChromeAIPolyfill = userConfig.chromeAI.polyfill.enable.toRef()
 const writingToolsRewritePrompt = userConfig.writingTools.rewrite.systemPrompt.toRef()
 const writingToolsProofreadPrompt = userConfig.writingTools.proofread.systemPrompt.toRef()
 const writingToolsListPrompt = userConfig.writingTools.list.systemPrompt.toRef()
 const writingToolsSparklePrompt = userConfig.writingTools.sparkle.systemPrompt.toRef()
+const enableChatWithImage = userConfig.chat.chatWithImage.enable.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
 const localeInConfig = userConfig.locale.current.toRef()
 const translationSystemPromptError = ref('')

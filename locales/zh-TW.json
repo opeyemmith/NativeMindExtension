@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "要使用本機模式，您需要下載 {model} 模型（{size}）。您現在要下載嗎？"
+    },
+    "writing_tools": {
+      "title": "寫作工具"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "處理中...",
     "rewrite_suggestion": "重寫建議",
-    "sparkle_text": "閃爍文字",
+    "sparkle_text": "美化文字",
     "key_points": "重點",
     "grammar_and_style": "語法與風格",
     "proofread": "校對",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "重設為預設值"
+  },
+  "tooltips": {
+    "clear_chat": "清空聊天",
+    "settings": "設定",
+    "pin_sidebar": "固定",
+    "unpin_sidebar": "取消固定",
+    "close": "關閉"
   }
 }

@@ -13,7 +13,7 @@ export default defineContentScript({
     logger.debug('main world script loaded')
     polyfillForBuiltInAI()
     exposeToGlobal({
-      __NATIVEMIND: {
+      __NATIVEMIND__: {
         ping,
         generateText,
       },

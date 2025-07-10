@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "Для использования локального режима необходимо загрузить модель {model} ({size}). Хотите загрузить её сейчас?"
+    },
+    "writing_tools": {
+      "title": "Инструменты для письма"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "Обработка...",
     "rewrite_suggestion": "Предложение по переписыванию",
-    "sparkle_text": "Блестящий текст",
+    "sparkle_text": "Улучшение текста",
     "key_points": "Ключевые моменты",
     "grammar_and_style": "Грамматика и стиль",
     "proofread": "Вычитать",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Сбросить к настройкам по умолчанию"
+  },
+  "tooltips": {
+    "clear_chat": "Очистить чат",
+    "settings": "Настройки",
+    "pin_sidebar": "Закрепить",
+    "unpin_sidebar": "Открепить",
+    "close": "Закрыть"
   }
 }

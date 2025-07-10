@@ -1,7 +1,7 @@
 import { browser } from 'wxt/browser'
 
-import { memoFunction } from './cache'
 import logger from './logger'
+import { memoFunction } from './memo'
 
 export function convertPropertiesIntoSimpleVariables(sheet: CSSStyleSheet, scopeInShadowDom = true) {
   const properties = []
@@ -113,12 +113,23 @@ export function injectStyleSheetToDocument(doc: ShadowRoot | Document, sheet: CS
     else {
       doc.head.appendChild(styleElement)
     }
+    return () => {
+      if (styleElement.parentNode) {
+        styleElement.parentNode.removeChild(styleElement)
+      }
+    }
   }
   else {
     if (doc.adoptedStyleSheets.includes(sheet)) {
       logger.warn('StyleSheet is already adopted in the document', sheet)
-      return
+      return () => {}
     }
     doc.adoptedStyleSheets.push(sheet)
+    return () => {
+      const index = doc.adoptedStyleSheets.indexOf(sheet)
+      if (index !== -1) {
+        doc.adoptedStyleSheets.splice(index, 1)
+      }
+    }
   }
 }

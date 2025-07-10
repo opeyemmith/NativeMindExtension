@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "Untuk menggunakan mode Lokal, Anda perlu mengunduh model {model} ({size}). Apakah Anda ingin mengunduhnya sekarang?"
+    },
+    "writing_tools": {
+      "title": "Alat Tulis"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "Memproses...",
     "rewrite_suggestion": "Saran Penulisan Ulang",
-    "sparkle_text": "Teks Berkilau",
+    "sparkle_text": "Percantik Teks",
     "key_points": "Poin-Poin Utama",
     "grammar_and_style": "Tata Bahasa & Gaya",
     "proofread": "Koreksi",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Atur ulang ke default"
+  },
+  "tooltips": {
+    "clear_chat": "Hapus obrolan",
+    "settings": "Pengaturan",
+    "pin_sidebar": "Sematkan",
+    "unpin_sidebar": "Lepas sematan",
+    "close": "Tutup"
   }
 }

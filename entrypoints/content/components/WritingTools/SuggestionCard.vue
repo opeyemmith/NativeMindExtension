@@ -58,11 +58,15 @@
                 {{ t('writing_tools.processing') }}
               </Text>
             </div>
-            <MarkdownViewer
+            <div
               v-else
-              class="text-[#03943D]"
-              :text="output"
-            />
+              class="max-h-[min(90vh,500px)] overflow-y-auto"
+            >
+              <MarkdownViewer
+                class="text-[#03943D]"
+                :text="output"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -149,7 +153,7 @@ const start = async () => {
     output.value = ''
     const prompt = await prompts[props.type](props.selectedText)
     const iter = streamTextInBackground({
-      prompt: prompt.user,
+      prompt: prompt.user.extractText(),
       system: prompt.system,
       abortSignal: abortController.signal,
     })

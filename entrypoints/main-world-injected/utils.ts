@@ -120,7 +120,7 @@ class PatchSummarizer implements Summarizer {
     this._input.push(text)
     const prompt = await chromeAISummarizer(text)
     const resp = await generateText({
-      prompt: prompt.user,
+      prompt: prompt.user.extractText(),
       system: options?.context ?? prompt.system,
     })
     return resp.text

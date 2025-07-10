@@ -76,6 +76,9 @@
     },
     "webllm_downloader": {
       "description": "要使用本地模式，您需要下载 {model} 模型（{size}）。您现在想要下载吗？"
+    },
+    "writing_tools": {
+      "title": "写作工具"
     }
   },
   "chat": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "正在处理...",
     "rewrite_suggestion": "重写建议",
-    "sparkle_text": "闪光文字",
+    "sparkle_text": "美化文字",
     "key_points": "关键要点",
     "grammar_and_style": "语法与文体",
     "proofread": "校对",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "重置为默认"
+  },
+  "tooltips": {
+    "clear_chat": "清空聊天",
+    "settings": "设置",
+    "pin_sidebar": "固定",
+    "unpin_sidebar": "取消固定",
+    "close": "关闭"
   }
 }

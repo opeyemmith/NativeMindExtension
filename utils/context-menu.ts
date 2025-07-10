@@ -63,7 +63,7 @@ export class ContextMenuManager {
   static async getInstance() {
     if (!ContextMenuManager.instance) {
       ContextMenuManager.instance = new ContextMenuManager()
-      ContextMenuManager.instance.restoreCurrentMenuMap()
+      await ContextMenuManager.instance.restoreCurrentMenuMap()
     }
     return ContextMenuManager.instance
   }
@@ -72,6 +72,20 @@ export class ContextMenuManager {
 
   private saveCurrentMenuMap() {
     return storage.setItem(CONTEXT_MENU_STORAGE_KEY, [...this.currentMenuMap.entries()])
+  }
+
+  private createMenuItem(params: Browser.contextMenus.CreateProperties) {
+    return new Promise<void>((resolve, reject) => {
+      browser.contextMenus.create(params, () => {
+        if (browser.runtime.lastError) {
+          log.error('Failed to create root context menu:', browser.runtime.lastError)
+          reject(browser.runtime.lastError)
+        }
+        else {
+          resolve()
+        }
+      })
+    })
   }
 
   private async restoreCurrentMenuMap() {
@@ -91,20 +105,22 @@ export class ContextMenuManager {
       log.debug('Context menu is being reconstructed, pending...')
       return
     }
-    await this.saveCurrentMenuMap()
     this.reconstructing = true
+    await this.saveCurrentMenuMap()
     try {
       log.debug('Reconstructing context menu', this.currentMenuMap)
       await browser.contextMenus.removeAll()
       const firstLevelMenus = Array.from(this.currentMenuMap.values()).filter((item) => item.parentId === undefined)
       const reconstructMenuItem = async (parentId: string | undefined, items: ContextMenuMapItem[], titlePrefix?: string) => {
         for (const item of items) {
-          browser.contextMenus.create({
+          await this.createMenuItem({
             id: item.id,
             title: `${titlePrefix || ''}${item.title}`,
             contexts: item.contexts,
             parentId,
             visible: item.visible,
+          }).catch((error) => {
+            log.error('Failed to create context menu item', item.id, error)
           })
           const children = item.children.map((childId) => this.currentMenuMap.get(childId)).filter(nonNullable)
           await reconstructMenuItem(item.id, children)
@@ -141,15 +157,21 @@ export class ContextMenuManager {
       }
       groups.delete(contextTypeGroup[ContextType.ACTION])
       if (groups.size > 1) {
-        browser.contextMenus.create({
+        await this.createMenuItem({
           id: 'native-mind-root-menu',
           title: 'NativeMind',
           contexts: ['all'],
+        }).catch((error) => {
+          log.error('Failed to create root context menu:', error)
         })
         await reconstructMenuItem('native-mind-root-menu', firstLevelMenus)
       }
       else {
         await reconstructMenuItem(undefined, firstLevelMenus, 'NativeMind: ')
+      }
+
+      if (import.meta.env.FIREFOX) {
+        await browser.menus.refresh()
       }
     }
     catch (error) {
@@ -183,9 +205,9 @@ export class ContextMenuManager {
         oldParentItem.children = oldParentItem.children.filter((childId) => childId !== id)
       }
     }
-    r.parentId = props.parentId as ContextMenuId | undefined
-    r.title = props.title
-    r.contexts = props.contexts as ContextTypeList
+    r.parentId = (props.parentId ?? r.parentId) as ContextMenuId | undefined
+    r.title = props.title ?? r.title
+    r.contexts = (props.contexts ?? r.contexts) as ContextTypeList
     r.visible = props.visible ?? true
     log.debug('Updating context menu', id, props, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()

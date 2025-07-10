@@ -1,7 +1,7 @@
 import { effectScope, watch } from 'vue'
 
-import { lazyInitialize } from '@/utils/cache'
 import { useGlobalI18n } from '@/utils/i18n'
+import { lazyInitialize } from '@/utils/memo'
 import { ActionMessageV1 } from '@/utils/tab-store/history'
 import { getUserConfig } from '@/utils/user-config'
 

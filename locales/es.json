@@ -158,6 +158,9 @@
     },
     "webllm_downloader": {
       "description": "Para usar el modo Local, necesitas descargar el modelo {model} ({size}). ¿Te gustaría descargarlo ahora?"
+    },
+    "writing_tools": {
+      "title": "Herramientas de Escritura"
     }
   },
   "common": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "Procesando...",
     "rewrite_suggestion": "Sugerencia de Reescritura",
-    "sparkle_text": "Texto Brillante",
+    "sparkle_text": "Embellecer Texto",
     "key_points": "Puntos Clave",
     "grammar_and_style": "Gramática y Estilo",
     "proofread": "Revisar",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Restablecer valores predeterminados"
+  },
+  "tooltips": {
+    "clear_chat": "Limpiar chat",
+    "settings": "Configuración",
+    "pin_sidebar": "Fijar",
+    "unpin_sidebar": "Desfijar",
+    "close": "Cerrar"
   }
 }

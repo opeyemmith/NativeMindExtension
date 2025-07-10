@@ -10,7 +10,7 @@ const RULE_ID_REMOVE_DISPOSITION = 2
 export function registerDeclarativeNetRequestRule() {
   // firefox has some bugs with declarativeNetRequest API, we use rules.json instead
   if (import.meta.env.FIREFOX) return
-  const URL_FILTER = /http:\/\/(127.0.0.1|localhost)/
+  const URL_FILTER = /https?:\/\/[^/]*:11434\/.*/
   const { resolve, promise } = Promise.withResolvers<void>()
 
   const timeout = setTimeout(() => {

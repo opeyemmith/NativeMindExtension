@@ -76,6 +76,9 @@
     },
     "webllm_downloader": {
       "description": "To use Local mode, you need to download the {model} model ({size}). Would you like to download it now?"
+    },
+    "writing_tools": {
+      "title": "Writing Tools"
     }
   },
   "chat": {
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "Reset to default"
+  },
+  "tooltips": {
+    "clear_chat": "Clear chat",
+    "settings": "Settings",
+    "pin_sidebar": "Pin",
+    "unpin_sidebar": "Unpin",
+    "close": "Close"
   }
 }

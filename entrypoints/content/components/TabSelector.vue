@@ -1,62 +1,71 @@
 <template>
   <div class="relative">
-    <Transition name="selector">
+    <Transition
+      enterActiveClass="transition-all duration-300 ease-cubic-1"
+      leaveActiveClass="transition-all duration-300 ease-cubic-1"
+      enterFromClass="opacity-0 translate-y-8"
+      leaveToClass="opacity-0 translate-y-8"
+      enterToClass="opacity-100 translate-y-0"
+      leaveFromClass="opacity-100 translate-y-0"
+    >
       <div
         v-if="isShowSelector"
         ref="selectorListContainer"
-        class="absolute top-0 w-full z-50 translate-y-[calc(-100%-1rem)] bg-bg-component rounded-lg shadow-01 p-1"
+        class="absolute top-0 h-0 w-full z-50"
       >
-        <div class="flex flex-col">
-          <div class="w-full mb-px">
-            <div
-              class="w-full flex items-center gap-1 px-1 py-2 cursor-pointer rounded-sm"
-              :class="[isAllTabSelected ? 'bg-[#DFE1E5]' : 'hover:bg-[#EAECEF]']"
-              @click="selectAllTabs"
-            >
-              <IconTab class="w-4 h-4" />
-              <span>
-                {{ t('chat.input.tab_selector.all_tabs') }}
-              </span>
-              <span>
-                ({{ allTabs.length }})
-              </span>
-            </div>
-          </div>
-          <ScrollContainer
-            itemContainerClass="h-max"
-            containerClass="max-h-[max(calc(50vh-120px),250px)]"
-          >
-            <div class="flex flex-col h-max gap-px">
+        <div class="translate-y-[calc(-100%-1rem)] bg-bg-component rounded-lg shadow-01 p-1 w-full">
+          <div class="flex flex-col">
+            <div class="w-full mb-px">
               <div
-                v-for="tab in allTabs"
-                :key="tab.tabId"
-                class="flex flex-col px-1 py-2 cursor-pointer rounded-sm"
-                :class="[isTabSelected(tab) ? 'bg-[#DFE1E5]' : 'hover:bg-[#EAECEF]']"
-                @click="toggleSelect(tab)"
+                class="w-full flex items-center gap-1 px-1 py-2 cursor-pointer rounded-sm"
+                :class="[isAllTabSelected ? 'bg-[#DFE1E5]' : 'hover:bg-[#EAECEF]']"
+                @click="selectAllTabs"
               >
+                <IconTab class="w-4 h-4" />
+                <span>
+                  {{ t('chat.input.tab_selector.all_tabs') }}
+                </span>
+                <span>
+                  ({{ allTabs.length }})
+                </span>
+              </div>
+            </div>
+            <ScrollContainer
+              itemContainerClass="h-max"
+              containerClass="max-h-[max(calc(50vh-120px),250px)]"
+            >
+              <div class="flex flex-col h-max gap-px">
                 <div
-                  class="flex gap-2 items-center"
+                  v-for="tab in allTabs"
+                  :key="tab.tabId"
+                  class="flex flex-col px-1 py-2 cursor-pointer rounded-sm"
+                  :class="[isTabSelected(tab) ? 'bg-[#DFE1E5]' : 'hover:bg-[#EAECEF]']"
+                  @click="toggleSelect(tab)"
                 >
-                  <ExternalImage
-                    v-if="tab.faviconUrl"
-                    :src="tab.faviconUrl"
-                    alt=""
-                    class="w-4 h-4 rounded-full grow-0 shrink-0 bg-gray-300"
-                  >
-                    <template #fallback>
-                      <div class="w-4 h-4 rounded-full grow-0 shrink-0 bg-gray-300" />
-                    </template>
-                  </ExternalImage>
                   <div
-                    :for="`tab-${tab.tabId}`"
-                    class="wrap-anywhere"
+                    class="flex gap-2 items-center"
                   >
-                    {{ tab.title }}
+                    <ExternalImage
+                      v-if="tab.faviconUrl"
+                      :src="tab.faviconUrl"
+                      alt=""
+                      class="w-4 h-4 rounded-full grow-0 shrink-0 bg-gray-300"
+                    >
+                      <template #fallback>
+                        <div class="w-4 h-4 rounded-full grow-0 shrink-0 bg-gray-300" />
+                      </template>
+                    </ExternalImage>
+                    <div
+                      :for="`tab-${tab.tabId}`"
+                      class="wrap-anywhere"
+                    >
+                      {{ tab.title }}
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          </ScrollContainer>
+            </ScrollContainer>
+          </div>
         </div>
       </div>
     </Transition>
@@ -241,17 +250,3 @@ onBeforeUnmount(() => {
   cleanUpTabRemovedListener()
 })
 </script>
-
-<style lang="scss">
-.selector-enter-active,
-.selector-leave-active {
-  transition: all 0.3s var(--ease-cubic-1);
-  transform: translateY(0%);
-}
-
-.selector-enter-from,
-.selector-leave-to {
-  opacity: 0;
-  transform: translateY(50%);
-}
-</style>

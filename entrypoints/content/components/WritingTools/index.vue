@@ -1,16 +1,13 @@
 <template>
   <Teleport
     v-if="enableWritingTools"
-    to="body"
+    :to="rootElement"
   >
-    <ShadowRootComponent
-      ref="shadowRootRef"
-      :adoptedStyleSheets="styleSheet ? [styleSheet] : []"
-    >
+    <ShadowRootComponent ref="shadowRootRef">
       <div
         ref="containerRef"
         class="nativemind-writing-tools nativemind-style-boundary"
-        :style="{'all': 'initial', position: 'fixed', top: '0', left: '0', width: '0px', height: '0px', zIndex: 'calc(Infinity)'}"
+        :style="{'all': 'initial', position: 'fixed', top: '0', left: '0', width: '0px', height: '0px'}"
       >
         <div class="container bg-white text-black font-inter">
           <EditableEntry
@@ -25,39 +22,62 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, shallowRef, watch } from 'vue'
+import { onMounted, ref, shallowRef, watch, watchEffect } from 'vue'
 import { ShadowRoot as ShadowRootComponent } from 'vue-shadow-dom'
 
-import { useObserveElements } from '@/composables/useObserverElements'
-import { loadContentScriptStyleSheet } from '@/utils/css'
-import logger from '@/utils/logger'
+import { useLogger } from '@/composables/useLogger'
+import { useFocusedElements } from '@/composables/useObserverElements'
+import { injectStyleSheetToDocument, loadContentScriptStyleSheet } from '@/utils/css'
+import { isContentEditableElement, isEditorFrameworkElement, shouldExcludeEditableElement } from '@/utils/selection'
 import { getUserConfig } from '@/utils/user-config'
 
+import { useRootElement } from '../../composables/useRootElement'
 import EditableEntry from './EditableEntry.vue'
 
+const logger = useLogger()
+const rootElement = useRootElement()
 const styleSheet = shallowRef<CSSStyleSheet | null>(null)
-const shadowRootRef = ref<ShadowRoot | null>(null)
+const shadowRootRef = ref<InstanceType<typeof ShadowRoot>>()
 const userConfig = await getUserConfig()
 const enableWritingTools = userConfig.writingTools.enable.toRef()
-const initialElements = [...document.querySelectorAll('textarea, input:not([type="hidden"]), [contenteditable]')] as HTMLElement[]
-const { elements } = enableWritingTools.value
-  ? useObserveElements((el) => {
-      if (el.tagName === 'TEXTAREA') return true
-      if (el.tagName === 'INPUT') {
-        const inputEl = el as HTMLInputElement
-        return inputEl.type !== 'hidden' && inputEl.type !== 'file' && inputEl.type !== 'button' && inputEl.type !== 'submit'
-      }
-      return !!el.getAttribute('contenteditable')
-    }, initialElements as HTMLElement[])
-  : { elements: ref([]) }
+const { elements, start, stop } = useFocusedElements((el) => {
+  if (shouldExcludeEditableElement(el)) return false
+  if (el.tagName === 'TEXTAREA') return true
+  if (el.tagName === 'INPUT') {
+    const inputEl = el as HTMLInputElement
+    const SUPPORTED_TYPES = ['text', 'search', 'url', 'tel']
+    return SUPPORTED_TYPES.includes(inputEl.type) && !inputEl.disabled && !inputEl.readOnly
+  }
+  return isContentEditableElement(el) || isEditorFrameworkElement(el)
+})
 
 onMounted(async () => {
-  if (enableWritingTools.value && shadowRootRef.value) {
-    styleSheet.value = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
-  }
+  styleSheet.value = await loadContentScriptStyleSheet(import.meta.env.ENTRYPOINT)
 })
 
 watch(elements, (newElements) => {
-  logger.debug('Writing tools elements updated:', newElements)
+  logger.debug('Focused elements updated:', newElements)
+})
+
+watch(enableWritingTools, (enable) => {
+  if (enable) {
+    start()
+    logger.info('Writing tools enabled')
+  }
+  else {
+    stop()
+    logger.info('Writing tools disabled')
+  }
 }, { immediate: true })
+
+watchEffect((onCleanup) => {
+  const shadowRoot = (shadowRootRef.value as { shadow_root?: ShadowRoot } | undefined)?.shadow_root
+  if (shadowRoot && styleSheet.value) {
+    const remove = injectStyleSheetToDocument(shadowRoot, styleSheet.value)
+    onCleanup(() => {
+      remove()
+      logger.debug('Style sheet removed from shadow root')
+    })
+  }
+})
 </script>

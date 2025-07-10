@@ -16,7 +16,7 @@ import vi from '@/locales/vi.json'
 import zhCN from '@/locales/zh-CN.json'
 import zhTW from '@/locales/zh-TW.json'
 
-import { lazyInitialize } from '../cache'
+import { lazyInitialize } from '../memo'
 import { Entrypoint, only } from '../runtime'
 import { getUserConfig } from '../user-config'
 import { getAcceptLanguages } from './browser-locale'

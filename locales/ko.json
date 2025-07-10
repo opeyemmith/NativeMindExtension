@@ -141,6 +141,9 @@
     },
     "webllm_downloader": {
       "description": "로컬 모드를 사용하려면 {model} 모델({size})을 다운로드해야 합니다. 지금 다운로드하시겠습니까?"
+    },
+    "writing_tools": {
+      "title": "글쓰기 도구"
     }
   },
   "context_menu": {
@@ -175,7 +178,7 @@
   "writing_tools": {
     "processing": "처리 중...",
     "rewrite_suggestion": "다시 쓰기 제안",
-    "sparkle_text": "반짝이는 텍스트",
+    "sparkle_text": "텍스트 미화",
     "key_points": "주요 사항",
     "grammar_and_style": "문법 및 문체",
     "proofread": "교정하다",
@@ -187,5 +190,12 @@
   },
   "textarea": {
     "reset_to_default": "기본값으로 재설정"
+  },
+  "tooltips": {
+    "clear_chat": "채팅 지우기",
+    "settings": "설정",
+    "pin_sidebar": "고정",
+    "unpin_sidebar": "고정 해제",
+    "close": "닫기"
   }
 }

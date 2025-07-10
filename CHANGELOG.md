@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.7...v1.4.0-beta.8)
+
+### 💅 Refactors
+
+- **firefox:** Tab storage handling for Firefox compatibility ([9fe3de7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9fe3de7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.0-beta.7
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.6...v1.4.0-beta.7)

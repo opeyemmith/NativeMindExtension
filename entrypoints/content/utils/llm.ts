@@ -10,6 +10,8 @@ import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
 
+import { BackgroundAliveKeeper } from './keepalive'
+
 const log = logger.child('llm')
 
 const DEFAULT_PENDING_TIMEOUT = 60000 // 60 seconds
@@ -22,9 +24,11 @@ interface ExtraOptions {
 export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.streamText>[0] & ExtraOptions) {
   const { abortSignal, timeout = DEFAULT_PENDING_TIMEOUT, ...restOptions } = options
   const { portName } = await c2bRpc.streamText(restOptions)
+  const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
   if (abortSignal) {
     abortSignal.addEventListener('abort', () => {
+      aliveKeeper.dispose()
       port.disconnect()
     })
   }
@@ -42,6 +46,7 @@ export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.
         yieldData(message)
       })
       port.onDisconnect.addListener(() => {
+        aliveKeeper.dispose()
         done()
       })
       abortSignal?.addEventListener('abort', () => {
@@ -59,9 +64,11 @@ export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.
 export async function* streamObjectInBackground(options: Parameters<typeof c2bRpc.streamObjectFromSchema>[0] & ExtraOptions) {
   const { abortSignal, timeout = DEFAULT_PENDING_TIMEOUT, ...restOptions } = options
   const { portName } = await c2bRpc.streamObjectFromSchema(restOptions)
+  const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
   if (abortSignal) {
     abortSignal.addEventListener('abort', () => {
+      aliveKeeper.dispose()
       port.disconnect()
     })
   }
@@ -79,6 +86,7 @@ export async function* streamObjectInBackground(options: Parameters<typeof c2bRp
         done()
       })
       port.onDisconnect.addListener(() => {
+        aliveKeeper.dispose()
         done()
       })
     },
@@ -92,8 +100,10 @@ export async function* streamObjectInBackground(options: Parameters<typeof c2bRp
 export async function generateObjectInBackground<S extends SchemaName>(options: Parameters<typeof c2bRpc.generateObjectFromSchema<S>>[0] & ExtraOptions) {
   const { promise: abortPromise, resolve, reject } = Promise.withResolvers<Awaited<ReturnType<typeof c2bRpc.generateObjectFromSchema<S>>>>()
   const { abortSignal, timeout = DEFAULT_PENDING_TIMEOUT, ...restOptions } = options
+  const aliveKeeper = new BackgroundAliveKeeper()
   abortSignal?.addEventListener('abort', () => {
     log.debug('generate object request aborted')
+    aliveKeeper.dispose()
     reject(new AbortError('Aborted'))
   })
   const timeoutTimer = setTimeout(() => {
@@ -111,6 +121,8 @@ export async function generateObjectInBackground<S extends SchemaName>(options: 
       return result
     }).catch((error) => {
       throw fromError(error)
+    }).finally(() => {
+      aliveKeeper.dispose()
     })
   return await Promise.race([abortPromise, promise])
 }
@@ -121,6 +133,7 @@ export async function deleteOllamaModel(modelId: string) {
 
 export async function* pullOllamaModel(modelId: string, abortSignal?: AbortSignal) {
   const { portName } = await c2bRpc.pullOllamaModel(modelId)
+  const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
   abortSignal?.addEventListener('abort', () => {
     port.disconnect()
@@ -137,6 +150,7 @@ export async function* pullOllamaModel(modelId: string, abortSignal?: AbortSigna
       }
     })
     port.onDisconnect.addListener(() => {
+      aliveKeeper.dispose()
       done()
     })
   })

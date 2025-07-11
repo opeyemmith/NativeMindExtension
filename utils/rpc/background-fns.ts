@@ -490,10 +490,15 @@ function captureVisibleTab(windowId?: number, options?: Browser.tabs.CaptureVisi
   return screenCaptureBase64Url
 }
 
+function ping() {
+  return 'pong'
+}
+
 export const backgroundFunctions = {
   emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
     eventEmitter.emit(ev, ...args)
   },
+  ping,
   getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as { tabId: number, title: string, faviconUrl?: string, url: string }, // a trick to get tabId
   generateText,
   generateTextAsync,

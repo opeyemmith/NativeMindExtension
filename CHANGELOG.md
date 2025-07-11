@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.4...v1.5.0-beta.0)
+
+### 🚀 Enhancements
+
+- **chat:** Support chat with image ([c895f32](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c895f32))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.3...v1.4.4)

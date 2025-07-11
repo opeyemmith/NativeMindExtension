@@ -26,12 +26,10 @@ export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.
   const { portName } = await c2bRpc.streamText(restOptions)
   const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
-  if (abortSignal) {
-    abortSignal.addEventListener('abort', () => {
-      aliveKeeper.dispose()
-      port.disconnect()
-    })
-  }
+  abortSignal?.addEventListener('abort', () => {
+    aliveKeeper.dispose()
+    port.disconnect()
+  })
   const iter = toAsyncIter<TextStreamPart<ToolSet>>(
     (yieldData, done) => {
       port.onMessage.addListener((message: TextStreamPart<ToolSet>) => {

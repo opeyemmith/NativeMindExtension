@@ -18,12 +18,14 @@ import zhTW from '@/locales/zh-TW.json'
 
 import { lazyInitialize } from '../memo'
 import { Entrypoint, only } from '../runtime'
+import { JsonPaths } from '../type-utils'
 import { getUserConfig } from '../user-config'
 import { getAcceptLanguages } from './browser-locale'
 import { SUPPORTED_LOCALES, SupportedLocaleCode } from './constants'
 
 // Type-define 'en-US' as the master schema for the resource
 type MessageSchema = typeof en
+export type TranslationKey = JsonPaths<MessageSchema>
 
 const messages = {
   en,

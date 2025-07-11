@@ -1,3 +1,4 @@
+import { TabContent, TabInfo } from '@/types/tab'
 import { INVALID_URLS } from '@/utils/constants'
 import { parseDocument } from '@/utils/document-parser'
 import logger from '@/utils/logger'
@@ -6,17 +7,6 @@ import { getTabStore } from '@/utils/tab-store'
 import { timeout } from '@/utils/timeout'
 
 const log = logger.child('tabs')
-
-export type TabInfo = {
-  tabId: number
-  title?: string
-  url: string
-  faviconUrl?: string
-}
-
-export type TabContent = TabInfo & {
-  textContent: string
-}
 
 export async function getValidTabs(): Promise<TabInfo[]> {
   const tabs = await c2bRpc.getAllTabs()

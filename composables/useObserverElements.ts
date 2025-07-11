@@ -12,6 +12,9 @@ export function useFocusedElements(matched: (el: HTMLElement) => boolean) {
 
   const start = () => {
     stop()
+    if (document.hasFocus() && document.activeElement && matched(document.activeElement as HTMLElement)) {
+      elements.value = [document.activeElement as HTMLElement]
+    }
     window.addEventListener('focusin', onFocus, true)
   }
   const stop = () => {

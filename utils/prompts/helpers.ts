@@ -1,7 +1,8 @@
 import { UserContent } from 'ai'
 
+import { Base64ImageData } from '@/types/image'
+
 import { nonNullable } from '../array'
-import { Base64ImageData } from '../image'
 
 export class UserPrompt {
   constructor(private _content: UserContent) { }

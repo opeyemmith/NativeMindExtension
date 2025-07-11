@@ -1,9 +1,10 @@
 import { customRef, ref, toRaw, watch } from 'vue'
 import { storage } from 'wxt/utils/storage'
 
+import { ContextAttachment } from '@/types/chat'
+
 import { TAB_STORE_STORAGE_KEY_PREFIX } from '../constants'
 import { debounce } from '../debounce'
-import { Base64ImageData } from '../image'
 import { lazyInitialize } from '../memo'
 import { c2bRpc } from '../rpc'
 import type { SettingsScrollTarget } from '../scroll-targets'
@@ -60,7 +61,8 @@ export type PageSummary = {
 type ShowSettingsParams = { show: boolean, scrollTarget?: SettingsScrollTarget, downloadModel?: string }
 
 async function _getTabStore() {
-  const { tabId, faviconUrl, url, title } = await c2bRpc.getTabInfo()
+  const currentTabInfo = await c2bRpc.getTabInfo()
+  const { tabId, url, title, faviconUrl } = currentTabInfo
   if (!tabId) throw new Error('no tab id')
   return {
     currentTabId: await defineTabValue(tabId, 'currentTabId', tabId),
@@ -68,8 +70,7 @@ async function _getTabStore() {
     showSetting: await defineTabValue<ShowSettingsParams>(tabId, `showSetting`, { show: false }),
     chatHistory: await defineTabValue(tabId, `chatHistory`, [] as ChatHistory),
     pageSummary: await defineTabValue(tabId, `summary`, { content: '', summary: '' } as PageSummary),
-    contextTabIds: await defineTabValue(tabId, `contextTabs`, [tabId] as number[]),
-    contextImages: await defineTabValue(tabId, `contextImages`, [] as Base64ImageData[]),
+    contextAttachments: await defineTabValue(tabId, `contextAttachments`, [{ type: 'tab', value: currentTabInfo }] as ContextAttachment[]),
     tabInfo: await defineTabValue(tabId, `tabInfo`, {
       url,
       title,
@@ -88,9 +89,8 @@ export const getTabKeys = (tabId: number) => {
     'showSetting',
     'chatHistory',
     'summary',
-    'contextTabs',
-    'contextImages',
     'tabInfo',
+    'contextAttachments',
   ]
   return keys.map((key) => constructStorageKey(tabId, key))
 }

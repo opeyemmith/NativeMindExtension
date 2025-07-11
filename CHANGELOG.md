@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.2...v1.4.3)
+
+### 🚀 Enhancements
+
+- **manifest:** Add Firefox-specific extension name and description ([4caf067](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4caf067))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.1...v1.4.2)

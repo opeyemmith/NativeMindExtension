@@ -1,6 +1,52 @@
 # Changelog
 
 
+## v1.4.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.2...v1.4.3)
+
+### 🚀 Enhancements
+
+- **manifest:** Add Firefox-specific extension name and description ([4caf067](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4caf067))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.1...v1.4.2)
+
+### 🩹 Fixes
+
+- **firefox:** Implement BackgroundAliveKeeper for managing background ping intervals ([41d73de](https://github.com/NativeMindBrowser/NativeMindExtension/commit/41d73de))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0...v1.4.1)
+
+### 🚀 Enhancements
+
+- **docs:** Add demo gifs ([4407158](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4407158))
+- **config:** Add Firefox extension ID and browser-specific settings ([dc10d20](https://github.com/NativeMindBrowser/NativeMindExtension/commit/dc10d20))
+
+### 🩹 Fixes
+
+- **readme:** Update image path for extension popup interface ([04e6a9b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/04e6a9b))
+
+### 🏡 Chore
+
+- **readme:** Update README.md ([bbeb60b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bbeb60b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- Judith Xia ([@judithx0314](http://github.com/judithx0314))
+
 ## v1.4.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0-beta.9...v1.4.0)

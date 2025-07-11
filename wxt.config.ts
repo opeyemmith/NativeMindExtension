@@ -83,8 +83,8 @@ export default defineConfig({
     }
   },
   manifest: {
-    name: '__MSG_extName__',
-    description: '__MSG_extDesc__',
+    name: IS_FIREFOX ? '__MSG_extNameFirefox__' : '__MSG_extName__',
+    description: IS_FIREFOX ? '__MSG_extDescFirefox__' : '__MSG_extDesc__',
     version: VERSION,
     default_locale: 'en',
     permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', ...extraPermissions],

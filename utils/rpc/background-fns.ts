@@ -1,4 +1,3 @@
-import { deleteModelInCache, hasModelInCache } from '@mlc-ai/web-llm'
 import { generateObject as originalGenerateObject, GenerateObjectResult, generateText as originalGenerateText, streamObject as originalStreamObject, streamText as originalStreamText } from 'ai'
 import { EventEmitter } from 'events'
 import { Browser, browser } from 'wxt/browser'
@@ -401,12 +400,14 @@ async function getSystemMemoryInfo() {
 }
 
 async function hasWebLLMModelInCache(model: WebLLMSupportedModel) {
+  const { hasModelInCache } = await import('@mlc-ai/web-llm')
   const hasCache = await hasModelInCache(model)
   logger.debug('Checking cache for model', model, hasCache)
   return hasCache
 }
 
 async function deleteWebLLMModelInCache(model: WebLLMSupportedModel) {
+  const { deleteModelInCache, hasModelInCache } = await import('@mlc-ai/web-llm')
   const hasCache = await hasModelInCache(model)
   logger.debug(`Deleting model ${model} from cache`, hasCache)
   try {

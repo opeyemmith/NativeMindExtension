@@ -1,4 +1,4 @@
-import { InitProgressReport } from '@mlc-ai/web-llm'
+import type { InitProgressReport } from '@mlc-ai/web-llm'
 import { TextStreamPart, ToolSet } from 'ai'
 import type { ProgressResponse } from 'ollama/browser'
 import { browser } from 'wxt/browser'

@@ -41,9 +41,7 @@ async function _useTranslator() {
 
   let initialized = false
   async function onInit() {
-    if (initialized) {
-      return
-    }
+    if (initialized) return
     initialized = true
     await init(targetLocale.value)
     translation.task.pieceNormalQueue.onChange((cur) => {

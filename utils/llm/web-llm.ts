@@ -1,5 +1,5 @@
 import { AutoTokenizer, PreTrainedTokenizer, ProgressInfo } from '@huggingface/transformers'
-import { CreateMLCEngine, InitProgressReport, MLCEngineInterface, ModelRecord } from '@mlc-ai/web-llm'
+import type { InitProgressReport, MLCEngineInterface, ModelRecord } from '@mlc-ai/web-llm'
 
 import logger from '@/utils/logger'
 
@@ -54,6 +54,7 @@ export async function getWebLLMEngine(config: WebLLMModelConfig): Promise<Extend
     config.onInitProgress?.(report)
   }
   log.debug('Loading model', config.model)
+  const { CreateMLCEngine } = await import('@mlc-ai/web-llm')
   const engine: MLCEngineInterface = await CreateMLCEngine(
     [config.model],
     { initProgressCallback: initProgressCallback },

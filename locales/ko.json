@@ -14,8 +14,13 @@
         "ask_anything": "무엇이든 물어보세요...",
         "ask_follow_up": "추가 질문하기..."
       },
-      "tab_selector": {
-        "all_tabs": "모든 열린 탭"
+      "attachment_selector": {
+        "all_tabs": "모든 열린 탭",
+        "upload_from_computer": "내 컴퓨터에서 업로드",
+        "image_oversize": "이미지 크기는 {size}보다 작아야 합니다",
+        "too_many_images": "최대 {max}개의 이미지 파일이 허용됩니다",
+        "unsupported_image_type": "지원되지 않는 이미지 형식입니다. JPEG 또는 PNG 파일을 업로드해 주세요.",
+        "unsupported_model": "이미지 업로드에는 비전 기능이 있는 모델이 필요합니다. Gemma3 또는 유사한 비전 모델로 전환해 주세요."
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "원본 표시",
-      "translate_page_into": "이 페이지를 {language}로 번역하기"
+      "translate_page_into": "이 페이지를 {language}로 번역하기",
+      "translate_selected_text": "선택된 텍스트 번역"
+    },
+    "add_image": {
+      "title": "채팅에 이미지 추가"
+    },
+    "settings": {
+      "title": "설정"
     }
   },
   "errors": {

@@ -83,6 +83,8 @@
     "marked-highlight": "^2.2.1",
     "marked-katex-extension": "^5.1.4",
     "md5": "^2.3.0",
+    "mime": "^4.0.7",
+    "nanoid": "^5.1.5",
     "ollama": "^0.5.15",
     "ollama-ai-provider": "^1.2.0",
     "pinia": "^3.0.2",

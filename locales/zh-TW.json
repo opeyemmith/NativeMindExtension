@@ -14,8 +14,13 @@
         "ask_anything": "問些什麼...",
         "ask_follow_up": "繼續提問..."
       },
-      "tab_selector": {
-        "all_tabs": "所有打開的分頁"
+      "attachment_selector": {
+        "all_tabs": "所有打開的分頁",
+        "upload_from_computer": "從我的電腦上傳",
+        "image_oversize": "圖片大小必須小於 {size}",
+        "too_many_images": "最多允許 {max} 個圖片檔案",
+        "unsupported_image_type": "不支援的圖片格式。請上傳 JPEG 或 PNG 檔案。",
+        "unsupported_model": "圖片上傳需要具備視覺能力的模型。請切換至 Gemma3 或類似的視覺模型。"
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "顯示原始頁面",
-      "translate_page_into": "將此頁面翻譯成{language}"
+      "translate_page_into": "將此頁面翻譯成{language}",
+      "translate_selected_text": "翻譯選取的文字"
+    },
+    "add_image": {
+      "title": "新增圖片至聊天"
+    },
+    "settings": {
+      "title": "設定"
     }
   },
   "errors": {

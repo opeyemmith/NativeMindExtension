@@ -96,8 +96,13 @@
         "ask_anything": "Ask anything...",
         "ask_follow_up": "Ask follow up..."
       },
-      "tab_selector": {
-        "all_tabs": "All open tabs"
+      "attachment_selector": {
+        "all_tabs": "All open tabs",
+        "upload_from_computer": "Upload from my computer",
+        "too_many_images": "Maximum {max} Image files allowed",
+        "unsupported_image_type": "Unsupported image format. Please upload JPEG or PNG files.",
+        "image_oversize": "Image size must be less than {size}",
+        "unsupported_model": "Image upload requires a vision-capable model. Please switch to Gemma3 or similar vision model."
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "Show Original",
-      "translate_page_into": "Translate this page into {language}"
+      "translate_page_into": "Translate this page into {language}",
+      "translate_selected_text": "Translate selected text"
+    },
+    "settings": {
+      "title": "Settings"
+    },
+    "add_image": {
+      "title": "Add Image to Chat"
     }
   },
   "errors": {

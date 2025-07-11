@@ -1,12 +1,14 @@
 import { CoreMessage } from 'ai'
 import EventEmitter from 'events'
-import { type Ref, ref, watch } from 'vue'
+import { type Ref, ref } from 'vue'
 
+import { ContextAttachment } from '@/types/chat'
+import { Base64ImageData } from '@/types/image'
+import { TabInfo } from '@/types/tab'
 import { nonNullable } from '@/utils/array'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
-import { Base64ImageData } from '@/utils/image'
 import logger from '@/utils/logger'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'
 import { UserPrompt } from '@/utils/prompts/helpers'
@@ -18,7 +20,7 @@ import { getUserConfig } from '@/utils/user-config'
 import { generateObjectInBackground, initCurrentModel, isCurrentModelReady, streamTextInBackground } from '../llm'
 import { makeMarkdownIcon, makeParagraph } from '../markdown/content'
 import { SearchScraper } from '../search'
-import { getCurrentTabInfo, getDocumentContentOfTabs, getValidTabs, TabInfo } from '../tabs'
+import { getCurrentTabInfo, getDocumentContentOfTabs } from '../tabs'
 
 const log = logger.child('chat')
 
@@ -237,16 +239,8 @@ export class Chat {
     if (!Chat.instance) {
       Chat.instance = getTabStore().then(async (tabStore) => {
         const history = tabStore.chatHistory
-        const validTabs = await getValidTabs()
-        const contextTabs = ref<TabInfo[]>([])
-        contextTabs.value = tabStore.contextTabIds.value.map((tabId) => {
-          const tab = validTabs.find((t) => t.tabId === tabId)
-          return tab
-        }).filter((v) => !!v) as TabInfo[]
-        watch(contextTabs, () => {
-          tabStore.contextTabIds.value = contextTabs.value.map((tab) => tab.tabId)
-        })
-        return new Chat(new ReactiveHistoryManager(history), contextTabs, tabStore.contextImages)
+        const contextAttachments = tabStore.contextAttachments
+        return new Chat(new ReactiveHistoryManager(history), contextAttachments)
       })
     }
     return Chat.instance
@@ -272,7 +266,15 @@ export class Chat {
     }
   }
 
-  constructor(public historyManager: ReactiveHistoryManager, public contextTabs: Ref<TabInfo[]>, public contextImages: Ref<Base64ImageData[]>) { }
+  constructor(public historyManager: ReactiveHistoryManager, public contextAttachments: Ref<ContextAttachment[]>) { }
+
+  get contextTabs() {
+    return this.contextAttachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value) as TabInfo[]
+  }
+
+  get contextImages() {
+    return this.contextAttachments.value.filter((attachment) => attachment.type === 'image').map((attachment) => attachment.value) as Base64ImageData[]
+  }
 
   isAnswering() {
     return this.status.value === 'pending' || this.status.value === 'streaming'
@@ -304,13 +306,13 @@ export class Chat {
 
   async resetContextTabs() {
     const currentTabInfo = await getCurrentTabInfo()
-    this.contextTabs.value.length = 0
-    this.contextTabs.value.push(currentTabInfo)
+    this.contextAttachments.value = this.contextAttachments.value.filter((attachment) => attachment.type !== 'tab')
+    this.contextAttachments.value.unshift({ type: 'tab', value: currentTabInfo })
   }
 
   async checkNextStep(contextMsgs: { role: 'user' | 'assistant', content: string }[]) {
     log.debug('checkNextStep', contextMsgs)
-    const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
+    const relevantTabIds = this.contextTabs.map((tab) => tab.tabId)
     const pages = await getDocumentContentOfTabs(relevantTabIds)
     const abortController = this.createAbortController()
     const prompt = await nextStep(contextMsgs, pages.filter(nonNullable))
@@ -420,7 +422,7 @@ export class Chat {
 
   private async questionToKeywords(contextMsgs: { role: 'user' | 'assistant', content: string }[]) {
     const abortController = this.createAbortController()
-    const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
+    const relevantTabIds = this.contextTabs.map((tab) => tab.tabId)
     const pages = await getDocumentContentOfTabs(relevantTabIds)
     const prompt = await generateSearchKeywords(contextMsgs, pages.filter(nonNullable))
     const r = await generateObjectInBackground({
@@ -475,8 +477,8 @@ export class Chat {
       onlineResults = await this.searchOnline(searchKeywords, { onStartQuery: () => loading && this.historyManager.deleteMessage(loading), resultLimit: userConfig.chat.onlineSearch.pageReadCount.get() })
       loading = undefined
     }
-    const relevantTabIds = this.contextTabs.value.map((tab) => tab.tabId)
-    const relevantImages = this.contextImages.value
+    const relevantTabIds = this.contextTabs.map((tab) => tab.tabId)
+    const relevantImages = this.contextImages
     const pages = await getDocumentContentOfTabs(relevantTabIds)
     const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults, relevantImages)
     await this.sendMessage(prompt.user, prompt.system, { assistantMsg: loading })

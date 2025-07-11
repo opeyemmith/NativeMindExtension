@@ -14,8 +14,13 @@
         "ask_anything": "ถามอะไรก็ได้...",
         "ask_follow_up": "ถามต่อ..."
       },
-      "tab_selector": {
-        "all_tabs": "แท็บที่เปิดทั้งหมด"
+      "attachment_selector": {
+        "all_tabs": "แท็บที่เปิดทั้งหมด",
+        "upload_from_computer": "อัปโหลดจากคอมพิวเตอร์ของฉัน",
+        "image_oversize": "ขนาดรูปภาพต้องน้อยกว่า {size}",
+        "too_many_images": "อนุญาตไฟล์รูปภาพสูงสุด {max} ไฟล์",
+        "unsupported_image_type": "รูปแบบไฟล์รูปภาพไม่รองรับ กรุณาอัปโหลดไฟล์ JPEG หรือ PNG",
+        "unsupported_model": "การอัปโหลดรูปภาพต้องใช้โมเดลที่มีความสามารถด้านการมองเห็น กรุณาเปลี่ยนไปใช้ Gemma3 หรือโมเดลที่มีความสามารถด้านการมองเห็นที่คล้ายกัน"
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "แสดงต้นฉบับ",
-      "translate_page_into": "แปลหน้านี้เป็น {language}"
+      "translate_page_into": "แปลหน้านี้เป็น {language}",
+      "translate_selected_text": "แปลข้อความที่เลือก"
+    },
+    "add_image": {
+      "title": "เพิ่มรูปภาพในแชท"
+    },
+    "settings": {
+      "title": "การตั้งค่า"
     }
   },
   "errors": {

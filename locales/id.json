@@ -14,8 +14,13 @@
         "ask_anything": "Tanyakan apa saja...",
         "ask_follow_up": "Ajukan pertanyaan lanjutan..."
       },
-      "tab_selector": {
-        "all_tabs": "Semua tab terbuka"
+      "attachment_selector": {
+        "all_tabs": "Semua tab terbuka",
+        "upload_from_computer": "Unggah dari komputer saya",
+        "image_oversize": "Ukuran gambar harus kurang dari {size}",
+        "too_many_images": "Maksimal {max} file gambar diizinkan",
+        "unsupported_image_type": "Format gambar tidak didukung. Silakan unggah file JPEG atau PNG.",
+        "unsupported_model": "Unggah gambar memerlukan model yang mampu memproses visual. Silakan beralih ke Gemma3 atau model visual serupa."
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "Tampilkan asli",
-      "translate_page_into": "Terjemahkan halaman ini ke {language}"
+      "translate_page_into": "Terjemahkan halaman ini ke {language}",
+      "translate_selected_text": "Terjemahkan teks yang dipilih"
+    },
+    "add_image": {
+      "title": "Tambahkan Gambar ke Chat"
+    },
+    "settings": {
+      "title": "Pengaturan"
     }
   },
   "errors": {

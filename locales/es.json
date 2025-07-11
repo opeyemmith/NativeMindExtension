@@ -5,8 +5,13 @@
         "ask_anything": "Pregunta lo que quieras...",
         "ask_follow_up": "Haz una pregunta de seguimiento..."
       },
-      "tab_selector": {
-        "all_tabs": "Todas las pestañas abiertas"
+      "attachment_selector": {
+        "all_tabs": "Todas las pestañas abiertas",
+        "upload_from_computer": "Subir desde mi computadora",
+        "image_oversize": "El tamaño de la imagen debe ser menor que {size}",
+        "too_many_images": "Máximo {max} archivos de imagen permitidos",
+        "unsupported_image_type": "Formato de imagen no compatible. Por favor, sube archivos JPEG o PNG.",
+        "unsupported_model": "La carga de imágenes requiere un modelo con capacidad de visión. Por favor, cambie a Gemma3 o un modelo de visión similar."
       }
     },
     "messages": {
@@ -36,7 +41,14 @@
     },
     "translation": {
       "show_original": "Mostrar original",
-      "translate_page_into": "Traducir esta página a {language}"
+      "translate_page_into": "Traducir esta página a {language}",
+      "translate_selected_text": "Traducir texto seleccionado"
+    },
+    "add_image": {
+      "title": "Agregar Imagen al Chat"
+    },
+    "settings": {
+      "title": "Configuración"
     }
   },
   "errors": {

@@ -14,8 +14,13 @@
         "ask_anything": "Hỏi bất cứ điều gì...",
         "ask_follow_up": "Hỏi tiếp theo..."
       },
-      "tab_selector": {
-        "all_tabs": "Tất cả các tab mở"
+      "attachment_selector": {
+        "all_tabs": "Tất cả các tab mở",
+        "upload_from_computer": "Tải lên từ máy tính của tôi",
+        "image_oversize": "Kích thước hình ảnh phải nhỏ hơn {size}",
+        "too_many_images": "Tối đa {max} tệp hình ảnh được phép",
+        "unsupported_image_type": "Định dạng hình ảnh không được hỗ trợ. Vui lòng tải lên tệp JPEG hoặc PNG.",
+        "unsupported_model": "Tải lên hình ảnh yêu cầu mô hình có khả năng thị giác. Vui lòng chuyển sang Gemma3 hoặc mô hình thị giác tương tự."
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "Hiển thị bản gốc",
-      "translate_page_into": "Dịch trang này thành {language}"
+      "translate_page_into": "Dịch trang này thành {language}",
+      "translate_selected_text": "Dịch văn bản đã chọn"
+    },
+    "add_image": {
+      "title": "Thêm Hình Ảnh vào Cuộc Trò Chuyện"
+    },
+    "settings": {
+      "title": "Cài đặt"
     }
   },
   "errors": {

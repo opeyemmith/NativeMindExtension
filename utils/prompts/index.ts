@@ -1,4 +1,5 @@
-import { Base64ImageData } from '../image'
+import { Base64ImageData } from '@/types/image'
+
 import { getUserConfig } from '../user-config'
 import { definePrompt, UserPrompt } from './helpers'
 

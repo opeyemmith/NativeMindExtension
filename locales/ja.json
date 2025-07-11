@@ -14,8 +14,13 @@
         "ask_anything": "何でも質問してください...",
         "ask_follow_up": "続けて質問してください..."
       },
-      "tab_selector": {
-        "all_tabs": "すべての開いているタブ"
+      "attachment_selector": {
+        "all_tabs": "すべての開いているタブ",
+        "upload_from_computer": "コンピューターからアップロード",
+        "image_oversize": "画像サイズは{size}未満である必要があります",
+        "too_many_images": "最大{max}個の画像ファイルが許可されています",
+        "unsupported_image_type": "サポートされていない画像形式です。JPEGまたはPNGファイルをアップロードしてください。",
+        "unsupported_model": "画像のアップロードには視覚対応モデルが必要です。Gemma3または同様の視覚モデルに切り替えてください。"
       }
     },
     "prompt": {
@@ -152,7 +157,14 @@
     },
     "translation": {
       "show_original": "原文を表示",
-      "translate_page_into": "このページを{language}に翻訳"
+      "translate_page_into": "このページを{language}に翻訳",
+      "translate_selected_text": "選択されたテキストを翻訳する"
+    },
+    "add_image": {
+      "title": "チャットに画像を追加"
+    },
+    "settings": {
+      "title": "設定"
     }
   },
   "errors": {

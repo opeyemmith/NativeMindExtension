@@ -3,43 +3,51 @@ import { storage } from 'wxt/utils/storage'
 
 import { nonNullable } from './array'
 import { CONTEXT_MENU_STORAGE_KEY } from './constants'
+import { TranslationKey } from './i18n'
 import logger from './logger'
 import { Entrypoint, only } from './runtime'
 import { ArrayNonEmpty } from './type-utils'
 
 const log = logger.child('context-menu')
 
-export type ContextMenuId = 'native-mind-page-translate' | 'native-mind-selection-translate' | 'native-mind-settings' | 'native-mind-quick-actions' | `native-mind-quick-actions-${number}` | 'native-mind-root-menu'
+export type ContextMenuId = 'native-mind-page-translate' | 'native-mind-selection-translate' | 'native-mind-settings' | 'native-mind-quick-actions' | `native-mind-quick-actions-${number}` | 'native-mind-root-menu' | 'native-mind-add-image-to-chat'
 export type ContextTypeList = ArrayNonEmpty<Browser.contextMenus.ContextType>
 
 export type ContextMenuItem = {
   id: ContextMenuId
-  title: string
+  titleKey: TranslationKey
   contexts: ContextTypeList
 }
 
 const ContextType = only([Entrypoint.background], () => browser.contextMenus.ContextType)
 export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = only([Entrypoint.background], () => ({
   id: 'native-mind-selection-translate',
-  title: 'Translate selected text',
+  titleKey: 'context_menu.translation.translate_selected_text',
   contexts: [ContextType.SELECTION],
 }))
 
 export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = only([Entrypoint.background], () => ({
   id: 'native-mind-page-translate',
-  title: 'Translate this page',
-  contexts: [ContextType.PAGE],
+  titleKey: 'context_menu.translation.translate_page_into',
+  contexts: [ContextType.PAGE, ContextType.SELECTION, ContextType.LINK, ContextType.IMAGE, ContextType.AUDIO, ContextType.VIDEO, ContextType.FRAME],
 }))
 
 export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = only([Entrypoint.background], () => ({
   id: 'native-mind-settings',
-  title: 'Settings',
+  titleKey: 'context_menu.settings.title',
   contexts: [ContextType?.ACTION],
+}))
+
+export const CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT: ContextMenuItem = only([Entrypoint.background], () => ({
+  id: 'native-mind-add-image-to-chat',
+  titleKey: 'context_menu.add_image.title',
+  contexts: [ContextType?.IMAGE],
 }))
 
 export const CONTEXT_MENU: ContextMenuItem[] = [
   CONTEXT_MENU_ITEM_TRANSLATE_PAGE,
   CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT,
+  CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT,
   CONTEXT_MENU_ITEM_SETTINGS,
 ]
 
@@ -127,48 +135,14 @@ export class ContextMenuManager {
         }
       }
 
-      // context menu belongs to the same group can not display in the same level at the same time
-      const contextTypeGroup: Record<ContextTypeList[0], number> = {
-        [ContextType.ALL]: 0,
-        [ContextType.PAGE]: 1,
-        [ContextType.SELECTION]: 1,
-        [ContextType.LINK]: 1,
-        [ContextType.IMAGE]: 1,
-        [ContextType.AUDIO]: 1,
-        [ContextType.VIDEO]: 1,
-        [ContextType.FRAME]: 1,
-        [ContextType.BROWSER_ACTION]: 1,
-        [ContextType.PAGE_ACTION]: 1,
-        [ContextType.EDITABLE]: 1,
-        [ContextType.ACTION]: 2,
-        [ContextType.LAUNCHER]: 3,
-      }
-      const groups = new Set()
-      for (const m of firstLevelMenus) {
-        if (!m.visible) continue
-        if (!m.contexts) {
-          groups.add(contextTypeGroup[ContextType.SELECTION])
-        }
-        else {
-          m.contexts.forEach((context) => {
-            groups.add(contextTypeGroup[context])
-          })
-        }
-      }
-      groups.delete(contextTypeGroup[ContextType.ACTION])
-      if (groups.size > 1) {
-        await this.createMenuItem({
-          id: 'native-mind-root-menu',
-          title: 'NativeMind',
-          contexts: ['all'],
-        }).catch((error) => {
-          log.error('Failed to create root context menu:', error)
-        })
-        await reconstructMenuItem('native-mind-root-menu', firstLevelMenus)
-      }
-      else {
-        await reconstructMenuItem(undefined, firstLevelMenus, 'NativeMind: ')
-      }
+      await this.createMenuItem({
+        id: 'native-mind-root-menu',
+        title: 'NativeMind',
+        contexts: [ContextType.ALL],
+      }).catch((error) => {
+        log.error('Failed to create root context menu:', error)
+      })
+      await reconstructMenuItem('native-mind-root-menu', firstLevelMenus)
 
       if (import.meta.env.FIREFOX) {
         await browser.menus.refresh()

@@ -5,6 +5,7 @@ import config from './wxt.config'
 
 const BETA = 'BETA'
 const BETA_DESC = 'THIS EXTENSION IS FOR BETA TESTING'
+const IS_FIREFOX = process.argv.includes('firefox')
 
 // See https://wxt.dev/api/config.html
 export default defineConfig(
@@ -12,8 +13,8 @@ export default defineConfig(
     {
       mode: 'beta',
       manifest: {
-        name: `__MSG_extName__ ${BETA}`,
-        description: `__MSG_extDesc__ ${BETA_DESC}`,
+        name: `${IS_FIREFOX ? '__MSG_extNameFirefox__' : '__MSG_extName__'} ${BETA}`,
+        description: `${IS_FIREFOX ? '__MSG_extDescFirefox__' : '__MSG_extDesc__'} ${BETA_DESC}`,
       },
       autoIcons: {
         baseIconPath: 'assets/icon.png',

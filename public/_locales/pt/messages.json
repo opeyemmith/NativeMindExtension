@@ -4,5 +4,11 @@
   },
   "extDesc": {
     "message": "NativeMind connects to local LLMs via Ollama to bring powerful AI into your browser — with zero data sent to the cloud."
+  },
+  "extNameFirefox": {
+    "message": "NativeMind"
+  },
+  "extDescFirefox": {
+    "message": "Your fully private, open-source, on-device AI assistant"
   }
 }

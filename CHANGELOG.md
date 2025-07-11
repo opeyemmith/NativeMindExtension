@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.1...v1.4.2)
+
+### 🩹 Fixes
+
+- **firefox:** Implement BackgroundAliveKeeper for managing background ping intervals ([41d73de](https://github.com/NativeMindBrowser/NativeMindExtension/commit/41d73de))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.0...v1.4.1)

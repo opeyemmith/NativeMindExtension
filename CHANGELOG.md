@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.4.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.3...v1.4.4)
+
+### 🩹 Fixes
+
+- **manifest:** Update Firefox extension ID ([03e48ff](https://github.com/NativeMindBrowser/NativeMindExtension/commit/03e48ff))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.2...v1.4.3)

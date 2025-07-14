@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.0...v1.5.0-beta.1)
+
+### 🩹 Fixes
+
+- **chat:** Improve attachment rendering and order handling ([13a982d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/13a982d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.4...v1.5.0-beta.0)

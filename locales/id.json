@@ -20,7 +20,11 @@
         "image_oversize": "Ukuran gambar harus kurang dari {size}",
         "too_many_images": "Maksimal {max} file gambar diizinkan",
         "unsupported_image_type": "Format gambar tidak didukung. Silakan unggah file JPEG atau PNG.",
-        "unsupported_model": "Unggah gambar memerlukan model yang mampu memproses visual. Silakan beralih ke Gemma3 atau model visual serupa."
+        "unsupported_model": "Unggah gambar memerlukan model yang mampu memproses visual. Silakan beralih ke Gemma3 atau model visual serupa.",
+        "pdf_oversize": "Ukuran file PDF harus kurang dari {size}",
+        "pdf_text_extract_error": "Ekstraksi teks gagal - PDF ini mungkin hasil scan atau berbasis gambar. Kami sangat merekomendasikan untuk beralih ke Gemma3 untuk hasil yang lebih baik.",
+        "too_many_pdfs": "Maksimal {max} file PDF diizinkan",
+        "pdf_page_count_exceeded": "PDF harus kurang dari {max} halaman"
       }
     },
     "prompt": {

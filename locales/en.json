@@ -102,7 +102,11 @@
         "too_many_images": "Maximum {max} Image files allowed",
         "unsupported_image_type": "Unsupported image format. Please upload JPEG or PNG files.",
         "image_oversize": "Image size must be less than {size}",
-        "unsupported_model": "Image upload requires a vision-capable model. Please switch to Gemma3 or similar vision model."
+        "unsupported_model": "Image upload requires a vision-capable model. Please switch to Gemma3 or similar vision model.",
+        "pdf_page_count_exceeded": "PDF must be less than {max} pages",
+        "pdf_oversize": "PDF file size must be less than {size}",
+        "too_many_pdfs": "Maximum {max} PDF file allowed",
+        "pdf_text_extract_error": "Text extraction failed - this PDF may be scanned or image-based. We strongly recommend switching to Gemma3 for better results."
       }
     },
     "prompt": {

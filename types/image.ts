@@ -1,4 +1,4 @@
-export type Base64String = string
+import { Base64String } from './common'
 
 export type Base64ImageData = {
   data: Base64String // Base64 encoded string

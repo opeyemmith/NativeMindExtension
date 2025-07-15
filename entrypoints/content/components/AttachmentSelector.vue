@@ -89,12 +89,12 @@
       <div
         v-for="(message, index) in errorMessages"
         :key="index"
-        class="p-2 rounded-lg bg-[#27272A] flex items-center gap-2"
+        class="p-2 rounded-lg bg-[#27272A] flex items-center gap-2 max-w-11/12"
       >
         <IconWarningSolid class="w-5 h-5 shrink-0" />
         <Text
           size="small"
-          class="font-medium text-white min-w-0"
+          class="font-medium text-white min-w-0 wrap-anywhere"
         >
           {{ message }}
         </Text>
@@ -143,6 +143,12 @@
               >
                 <IconAttachmentImage class="w-3 h-3 text-[#52525B]" />
               </div>
+              <div
+                v-else-if="attachment.type === 'pdf'"
+                class="flex items-center justify-center w-3 h-4 shrink-0 grow-0 ml-[2px]"
+              >
+                <IconAttachmentPDF class="w-3 h-3 text-[#52525B]" />
+              </div>
               <ExhaustiveError v-else />
             </template>
             <template #text>
@@ -170,10 +176,11 @@
 
 <script setup lang="ts">
 import { useEventListener, useFileDialog, useVModel } from '@vueuse/core'
-import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue'
+import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
 
 import IconAdd from '@/assets/icons/add.svg?component'
 import IconAttachmentImage from '@/assets/icons/attachment-image.svg?component'
+import IconAttachmentPDF from '@/assets/icons/attachment-pdf.svg?component'
 import IconAttachmentUpload from '@/assets/icons/attachment-upload.svg?component'
 import IconTab from '@/assets/icons/tab.svg?component'
 import IconClose from '@/assets/icons/tag-close.svg?component'
@@ -186,13 +193,16 @@ import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
 import { useTimeoutValue } from '@/composables/useTimeoutValue'
-import { ContextAttachment } from '@/types/chat'
+import { AttachmentItem, ContextAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
-import { formatSize } from '@/utils/formatter'
+import { fileToBase64 } from '@/utils/base64'
 import { useI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
 import { convertImageFileToJpegBase64 } from '@/utils/image'
+import { isModelSupportPDFToImages } from '@/utils/llm/models'
+import { checkReadablePdf, getDocumentProxy, getPdfPageCount } from '@/utils/pdf'
 import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
+import { ByteSize } from '@/utils/sizes'
 import { getUserConfig } from '@/utils/user-config'
 
 import { getValidTabs } from '../utils/tabs'
@@ -216,12 +226,7 @@ const emit = defineEmits<{
   (e: 'update:attachments', images: ContextAttachment[]): void
 }>()
 
-const SUPPORTED_IMAGE_TYPES = ['image/jpeg', 'image/png']
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024 // 5 MB
-const MAX_IMAGES = 5 // Maximum number of images that can be selected
-
 const isShowSelector = ref(false)
-const isCurrentModelSupportAttachment = ref(false)
 const { value: errorMessages, setValue: setErrorMessages } = useTimeoutValue<string[] | undefined>(undefined, undefined, 2000)
 
 const showErrorMessage = (message: string) => {
@@ -239,101 +244,151 @@ const allTabs = ref<TabInfo[]>([])
 
 const selectedTabs = computed(() => attachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value))
 
-const selectFile = () => {
-  if (isCurrentModelSupportAttachment.value) {
-    open()
-  }
-  else {
-    showErrorMessage(t('chat.input.attachment_selector.unsupported_model'))
-    isShowSelector.value = false
-  }
+const selectFile = async () => {
+  open()
 }
 
-const { files, open } = useFileDialog({
-  accept: 'image/jpeg,image/png', // Set to accept only JPEG and PNG images
-  multiple: true, // Allow multiple file selection
-})
-
-const appendAttachmentsFromFiles = async (files: File[]) => {
-  if (!isCurrentModelSupportAttachment.value) {
-    showErrorMessage(t('chat.input.attachment_selector.unsupported_model'))
-    return
-  }
-  const fileData: ContextAttachment[] = []
-  for (const file of files) {
-    if (SUPPORTED_IMAGE_TYPES.includes(file.type) && file.size <= MAX_IMAGE_SIZE) {
-      fileData.push({
+const MAX_IMAGE_SIZE = ByteSize.fromMB(5).toBytes() // 5 MB
+const MAX_IMAGE_COUNT = 5 // Maximum number of images allowed
+const MAX_PDF_COUNT = 1 // Maximum number of PDFs allowed
+const MAX_PDF_SIZE = ByteSize.fromMB(15).toBytes() // 15 MB
+const MAX_PDF_PAGE_COUNT = 50 // Maximum number of pages allowed in a PDF
+const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
+  {
+    selectorMimeTypes: ['image/jpeg', 'image/png'] as const, // Supported MIME types for the file selector
+    type: 'image',
+    matchMimeType: (mimeType) => /image\/*/.test(mimeType),
+    validateFile: async ({ count }, file: File) => {
+      if (!await checkCurrentModelSupportVision()) {
+        showErrorMessage(t('chat.input.attachment_selector.unsupported_model'))
+        return false
+      }
+      if (!/image\/(jpeg|png)/.test(file.type)) {
+        showErrorMessage(t('chat.input.attachment_selector.unsupported_image_type'))
+        return false
+      }
+      else if (count >= MAX_IMAGE_COUNT) {
+        showErrorMessage(t('chat.input.attachment_selector.too_many_images', { max: MAX_IMAGE_COUNT }))
+        return false
+      }
+      else if (file.size > MAX_IMAGE_SIZE) {
+        showErrorMessage(t('chat.input.attachment_selector.image_oversize', { size: ByteSize.fromBytes(MAX_IMAGE_SIZE).format(0) }))
+        return false
+      }
+      return true
+    },
+    convertFileToAttachment: async (file: File): Promise<ContextAttachment> => {
+      const base64Data = await convertImageFileToJpegBase64(file)
+      return {
         type: 'image',
         value: {
-          data: await convertImageFileToJpegBase64(file),
+          data: base64Data,
           id: generateRandomId(),
           size: file.size,
           name: file.name,
           type: 'image/jpeg', // All images are converted to JPEG
         },
-      })
-    }
-    else if (!SUPPORTED_IMAGE_TYPES.includes(file.type)) {
-      showErrorMessage(t('chat.input.attachment_selector.unsupported_image_type'))
-    }
-    else if (file.size > MAX_IMAGE_SIZE) {
-      showErrorMessage(t('chat.input.attachment_selector.image_oversize', { size: formatSize(MAX_IMAGE_SIZE, 0) }))
-    }
-    if (fileData.length >= MAX_IMAGES) {
-      showErrorMessage(t('chat.input.attachment_selector.too_many_images', { max: MAX_IMAGES }))
+      }
+    },
+  },
+  {
+    selectorMimeTypes: ['application/pdf'] as const, // Supported MIME types for the file selector
+    type: 'pdf',
+    matchMimeType: (mimeType) => mimeType === 'application/pdf',
+    validateFile: async ({ count }, file: File) => {
+      const docProxy = await getDocumentProxy(file)
+      if (!currentModel.value || !isModelSupportPDFToImages(currentModel.value)) {
+        const readable = await checkReadablePdf(docProxy)
+        if (!readable) {
+          showErrorMessage(t('chat.input.attachment_selector.pdf_text_extract_error'))
+          return false
+        }
+      }
+      if (count >= MAX_PDF_COUNT) {
+        showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
+        return false
+      }
+      else if (file.size > MAX_PDF_SIZE) {
+        showErrorMessage(t('chat.input.attachment_selector.pdf_oversize', { size: ByteSize.fromBytes(MAX_PDF_SIZE).format(0) }))
+        return false
+      }
+      const pageCount = await getPdfPageCount(docProxy)
+      if (pageCount > MAX_PDF_PAGE_COUNT) {
+        showErrorMessage(t('chat.input.attachment_selector.pdf_page_count_exceeded', { max: MAX_PDF_PAGE_COUNT }))
+        return false
+      }
+      return true
+    },
+    convertFileToAttachment: async (file: File): Promise<ContextAttachment> => {
+      const base64Data = await fileToBase64(file)
+      return {
+        type: 'pdf',
+        value: {
+          data: base64Data,
+          id: generateRandomId(),
+          size: file.size,
+          name: file.name,
+        },
+      }
+    },
+  },
+]
+
+const { open, onChange, reset } = useFileDialog({
+  accept: SUPPORTED_ATTACHMENT_TYPES.flatMap((type) => type.selectorMimeTypes).join(','),
+  multiple: true,
+})
+
+async function addAttachmentsFromFiles(files: File[]) {
+  for (const file of files) {
+    const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(file.type))
+    if (matchedType) {
+      const existingAttachments = attachments.value.filter((attachment) => attachment.type === matchedType.type)
+      if (!await matchedType.validateFile({ count: existingAttachments.length }, file)) {
+        continue // Skip this file if it doesn't pass validation
+      }
+      const attachment = await matchedType.convertFileToAttachment(file)
+      attachments.value.unshift(attachment) // Add the attachment to the beginning of the list
     }
   }
-  appendAttachments(fileData)
 }
 
-const appendAttachments = (appendedAttachments: ContextAttachment[]) => {
-  const newAttachmentsMaybeOverflow = [...appendedAttachments.toReversed(), ...attachments.value]
-  const newAttachments: ContextAttachment[] = []
-  let imageCount = 0
-  for (let i = 0; i < newAttachmentsMaybeOverflow.length; i++) {
-    const cur = newAttachmentsMaybeOverflow[i]
-    if (cur.type === 'image') {
-      imageCount++
-      if (imageCount > MAX_IMAGES) {
-        showErrorMessage(t('chat.input.attachment_selector.too_many_images', { max: MAX_IMAGES }))
-        continue // Skip this image if we have reached the maximum number of images
-      }
-      newAttachments.push(cur)
-    }
-    else {
-      newAttachments.push(cur)
-    }
-  }
-  attachments.value = newAttachments
+const appendAttachmentsFromFiles = async (files: File[]) => {
+  addAttachmentsFromFiles(files)
 }
 
 defineExpose({
   appendAttachmentsFromFiles,
 })
 
+const addTabsToAttachments = (tabs: (ContextAttachment & { type: 'tab' })[]) => {
+  attachments.value = [...tabs.toReversed(), ...attachments.value]
+}
+
 const userConfig = await getUserConfig()
 const currentModel = userConfig.llm.model.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
 
-watch(files, async (newFiles) => {
-  if (newFiles) {
-    const fileList = Array.from(newFiles)
-    if (fileList.length) {
-      appendAttachmentsFromFiles(fileList)
-    }
+onChange(async (files) => {
+  if (files && files.length) {
+    const fileList = Array.from(files)
+    await appendAttachmentsFromFiles(fileList)
   }
+  reset()
 })
 
-watch(currentModel, async (newModel) => {
-  if (endpointType.value !== 'ollama') isCurrentModelSupportAttachment.value = false
-  if (newModel) {
-    const modelDetails = await c2bRpc.showOllamaModelDetails(newModel)
-    isCurrentModelSupportAttachment.value = !!modelDetails.capabilities?.includes('vision')
+const modelsSupportVision = new Map()
+const checkCurrentModelSupportVision = async () => {
+  if (endpointType.value !== 'ollama') return false
+  if (!currentModel.value) return false
+  if (modelsSupportVision.has(currentModel.value)) {
+    return modelsSupportVision.get(currentModel.value)
   }
-  else {
-    isCurrentModelSupportAttachment.value = false
-  }
-}, { immediate: true })
+  const modelDetails = await c2bRpc.showOllamaModelDetails(currentModel.value)
+  const supported = !!modelDetails.capabilities?.includes('vision')
+  modelsSupportVision.set(currentModel.value, supported)
+  return supported
+}
 
 const unselectedTabs = computed(() => {
   return allTabs.value.filter((tab) => !selectedTabs.value.some((selectedTab) => selectedTab.tabId === tab.tabId))
@@ -362,11 +417,11 @@ const selectAllTabs = () => {
     attachments.value = attachments.value.filter((attachment) => attachment.type !== 'tab')
   }
   else {
-    const newTabs: ContextAttachment[] = unselectedTabs.value.map((tab) => ({
-      type: 'tab',
+    const newTabs = unselectedTabs.value.map((tab) => ({
+      type: 'tab' as const,
       value: tab,
     }))
-    appendAttachments(newTabs)
+    addTabsToAttachments(newTabs)
   }
 }
 

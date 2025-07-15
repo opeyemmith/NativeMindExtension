@@ -54,6 +54,7 @@ export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.
     },
     {
       firstDataTimeout: 60000,
+      onTimeout: () => port.disconnect(), // disconnect to avoid connection leak
     },
   )
   yield* iter

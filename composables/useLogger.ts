@@ -7,7 +7,17 @@ export function useLogger() {
   if (!instance) {
     logger.warn('useLogger called outside of component context')
   }
-  const componentName = instance?.type.name || 'UnknownComponent'
-  const log = logger.child(componentName)
+  const filePath = instance?.type.__file
+  const extractComponentName = (filePath: string | undefined): string => {
+    const parts = filePath?.split('/')
+    if (!parts || parts.length === 0) return 'UnknownComponent'
+    const fileName = parts.pop()
+    if (!fileName) return 'UnknownComponent'
+    if (fileName.startsWith('index.')) {
+      return parts.pop() || 'UnknownComponent'
+    }
+    return fileName.replace(/\.\w+$/, '') // Remove file extension
+  }
+  const log = logger.child(extractComponentName(filePath))
   return log
 }

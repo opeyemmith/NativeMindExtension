@@ -50,3 +50,8 @@ export async function fileToBase64(file: File): Promise<string> {
   }
   return base64
 }
+
+export async function arrayBufferToBase64(arrayBuffer: ArrayBuffer): Promise<string> {
+  const uint8Array = new Uint8Array(arrayBuffer)
+  return uint8ArrayToBase64(uint8Array)
+}

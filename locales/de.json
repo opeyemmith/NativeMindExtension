@@ -20,7 +20,11 @@
         "image_oversize": "Die Bildgröße muss kleiner als {size} sein",
         "too_many_images": "Maximal {max} Bilddateien erlaubt",
         "unsupported_image_type": "Nicht unterstütztes Bildformat. Bitte laden Sie JPEG- oder PNG-Dateien hoch.",
-        "unsupported_model": "Das Hochladen von Bildern erfordert ein sehfähiges Modell. Bitte wechseln Sie zu Gemma3 oder einem ähnlichen Vision-Modell."
+        "unsupported_model": "Das Hochladen von Bildern erfordert ein sehfähiges Modell. Bitte wechseln Sie zu Gemma3 oder einem ähnlichen Vision-Modell.",
+        "pdf_oversize": "PDF-Dateigröße muss kleiner als {size} sein",
+        "pdf_text_extract_error": "Textextraktion fehlgeschlagen - diese PDF könnte gescannt oder bildbasiert sein. Wir empfehlen dringend, zu Gemma3 zu wechseln, um bessere Ergebnisse zu erzielen.",
+        "too_many_pdfs": "Maximal {max} PDF-Datei erlaubt",
+        "pdf_page_count_exceeded": "PDF muss weniger als {max} Seiten haben"
       }
     },
     "prompt": {

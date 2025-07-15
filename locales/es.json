@@ -11,7 +11,11 @@
         "image_oversize": "El tamaño de la imagen debe ser menor que {size}",
         "too_many_images": "Máximo {max} archivos de imagen permitidos",
         "unsupported_image_type": "Formato de imagen no compatible. Por favor, sube archivos JPEG o PNG.",
-        "unsupported_model": "La carga de imágenes requiere un modelo con capacidad de visión. Por favor, cambie a Gemma3 o un modelo de visión similar."
+        "unsupported_model": "La carga de imágenes requiere un modelo con capacidad de visión. Por favor, cambie a Gemma3 o un modelo de visión similar.",
+        "pdf_oversize": "El tamaño del archivo PDF debe ser menor que {size}",
+        "pdf_text_extract_error": "La extracción de texto falló - este PDF puede estar escaneado o basado en imágenes. Recomendamos encarecidamente cambiar a Gemma3 para obtener mejores resultados.",
+        "too_many_pdfs": "Máximo {max} archivo PDF permitido",
+        "pdf_page_count_exceeded": "El PDF debe tener menos de {max} páginas"
       }
     },
     "messages": {

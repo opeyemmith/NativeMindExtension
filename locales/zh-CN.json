@@ -102,7 +102,11 @@
         "image_oversize": "图片大小必须小于 {size}",
         "too_many_images": "最多允许 {max} 个图片文件",
         "unsupported_image_type": "不支持的图片格式。请上传JPEG或PNG文件。",
-        "unsupported_model": "图片上传需要具备视觉能力的模型。请切换到Gemma3或类似的视觉模型。"
+        "unsupported_model": "图片上传需要具备视觉能力的模型。请切换到Gemma3或类似的视觉模型。",
+        "pdf_oversize": "PDF文件大小必须小于{size}",
+        "pdf_text_extract_error": "文本提取失败 - 此PDF可能是扫描版或基于图像的。我们强烈建议切换到Gemma3以获得更好的结果。",
+        "too_many_pdfs": "最多允许 {max} 个 PDF 文件",
+        "pdf_page_count_exceeded": "PDF 页数不能超过 {max} 页"
       }
     },
     "prompt": {

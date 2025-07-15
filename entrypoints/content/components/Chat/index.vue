@@ -108,7 +108,6 @@
 
 <script setup lang="ts">
 import { useElementBounding } from '@vueuse/core'
-import mime from 'mime'
 import { onMounted } from 'vue'
 import { computed, onBeforeUnmount, ref } from 'vue'
 
@@ -117,14 +116,12 @@ import AutoExpandTextArea from '@/components/AutoExpandTextArea.vue'
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
 import Button from '@/components/ui/Button.vue'
-import { useLogger } from '@/composables/useLogger'
 import {
   ActionEvent,
   Chat,
   initChatSideEffects,
 } from '@/entrypoints/content/utils/chat/index'
 import { useI18n } from '@/utils/i18n'
-import { registerContentScriptRpcEvent } from '@/utils/rpc'
 
 import { showSettings } from '../../utils/settings'
 import AttachmentSelector from '../AttachmentSelector.vue'
@@ -142,33 +139,16 @@ const { t } = useI18n()
 const userInput = ref('')
 const isComposing = ref(false)
 const attachmentSelectorRef = ref<InstanceType<typeof AttachmentSelector>>()
-const chat = await Chat.getInstance()
 const scrollContainerRef = ref<InstanceType<typeof ScrollContainer>>()
+
+defineExpose({
+  attachmentSelectorRef,
+})
+
+const chat = await Chat.getInstance()
 const contextAttachments = chat.contextAttachments
-const logger = useLogger()
 
 initChatSideEffects()
-registerContentScriptRpcEvent('contextMenuClicked', async (event) => {
-  if (!attachmentSelectorRef.value) return
-  if (event.menuItemId !== 'native-mind-add-image-to-chat') return
-  if (event.mediaType !== 'image') return
-  if (!event.srcUrl) return
-  const srcUrl = event.srcUrl
-  const resp = await fetch(srcUrl)
-  const blob = await resp.blob()
-  const extension = mime.getExtension(blob.type)
-  if (!extension) {
-    logger.warn(`Unsupported image type: ${blob.type}`)
-    return
-  }
-  let imageFileName = `image.${extension}`
-  if (srcUrl.endsWith(`.${extension}`)) {
-    // If the URL already has the correct extension, use it as is
-    imageFileName = srcUrl.split('/').pop() || imageFileName
-  }
-  const file = new File([blob], imageFileName, { type: blob.type })
-  attachmentSelectorRef.value.appendAttachmentsFromFiles([file])
-})
 
 const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   if (actionEvent.action === 'customInput') {

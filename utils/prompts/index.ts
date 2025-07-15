@@ -1,7 +1,8 @@
 import { Base64ImageData } from '@/types/image'
+import { PDFContentForModel } from '@/types/pdf'
 
 import { getUserConfig } from '../user-config'
-import { definePrompt, UserPrompt } from './helpers'
+import { ConditionBuilder, definePrompt, JSONBuilder, renderPrompt, TagBuilder, TextBuilder, UserPrompt } from './helpers'
 
 export interface Page {
   title: string
@@ -9,67 +10,80 @@ export interface Page {
   textContent?: string | null
 }
 
-export const chatWithPageContent = definePrompt(async (question: string, pages: Page[], onlineInfo: Page[] = [], images: Base64ImageData[]) => {
+const trimText = (text: string | null | undefined) => text?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
+const truncateText = (text: string | null | undefined, maxLength: number) => {
+  if (!text) return ''
+  const trimmed = trimText(text)
+  return trimmed.length > maxLength ? trimmed.slice(0, maxLength) + '...[content truncated]' : trimmed
+}
+
+const MAX_PAGE_CONTENT_LENGTH = 1000
+
+export const chatWithPageContent = definePrompt(async (question: string, pages: Page[], onlineInfo: Page[] = [], images: Base64ImageData[], pdfInfo?: PDFContentForModel) => {
   const userConfig = await getUserConfig()
   const system = userConfig.llm.chatSystemPrompt.get()
 
-  const searchResults = onlineInfo.length
-    ? `<search_results>
-${onlineInfo
-  .map((page, idx) => {
-    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
-    return `<search_result id="${idx + 1}">
-Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${text}
-</search_result>
-`
-  })
-  .join('\n')}
-</search_results>`
-    : ''
+  const searchResultsBuilder = new TagBuilder('search_results')
+  for (let i = 0; i < onlineInfo.length; i++) {
+    const { title = '', url = '', textContent } = onlineInfo[i]
+    const head = `Title: ${title} | URL: ${url}`
+    const body = truncateText(textContent, MAX_PAGE_CONTENT_LENGTH)
+    searchResultsBuilder.insert(new TagBuilder('search_result', { id: i + 1 }).insertContent(head, body))
+  }
 
-  const tabContext = `<tabs_context>
-${pages
-  .map((page, _idx) => {
-    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
-    return `<tab>
-Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${text}
-</tab>
-`
-  })
-  .join('\n')}
-</tabs_context>`
+  const tabContextBuilder = new TagBuilder('tabs_context')
+  for (let i = 0; i < pages.length; i++) {
+    const { title = '', url = '', textContent } = pages[i]
+    const head = `Title: ${title} | URL: ${url}`
+    const body = truncateText(textContent, MAX_PAGE_CONTENT_LENGTH)
+    tabContextBuilder.insert(new TagBuilder('tab', { id: i + 1 }).insertContent(head, body))
+  }
 
-  const imageContext = images.length
-    ? `The following ${images.length} image(s) have been uploaded by the user.`
-    : ''
+  let pdfContextBuilder: TagBuilder | TextBuilder = new TagBuilder('pdf_document')
+  if (pdfInfo?.type === 'text') {
+    const { fileName = '', pageCount, textContent } = pdfInfo
+    pdfContextBuilder.insert(new TagBuilder('title').insertContent(fileName))
+    pdfContextBuilder.insert(new TagBuilder('pages').insertContent(pageCount.toString()))
+    pdfContextBuilder.insert(new TagBuilder('content').insertContent(textContent))
+  }
+  else if (pdfInfo?.type === 'images') {
+    pdfContextBuilder = new TextBuilder('The images provided are pages from a user-uploaded PDF document. ')
+    if (images.length > 0) {
+      pdfContextBuilder.insertContent(` And the following ${images.length} image(s) have been uploaded by the user.`)
+    }
+  }
 
-  const user = `
-${tabContext}
-${searchResults}
-${imageContext}
+  const imageContextBuilder = new ConditionBuilder([new TextBuilder(`The following ${images.length} image(s) have been uploaded by the user.`)], images.length > 0 && pdfInfo?.type !== 'images')
 
-Question: ${question}`
-  return { user: UserPrompt.fromTextAndImages(user, images), system }
+  const user = renderPrompt`
+${tabContextBuilder}
+${searchResultsBuilder}
+${pdfContextBuilder}
+${imageContextBuilder}
+
+Question: ${question}`.trim()
+
+  const pdfImages = pdfInfo?.type === 'images' ? pdfInfo.images : []
+  return { user: UserPrompt.fromTextAndImages(user, [...pdfImages, ...images]), system }
 })
 
 export const summarizeWithPageContent = definePrompt(async (page: Page, question: string) => {
   const userConfig = await getUserConfig()
   const system = userConfig.llm.summarizeSystemPrompt.get()
-  const pageText = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
 
-  const user = `<tab_context>
-Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${pageText}
-</tab_context>
+  const { title = '', url = '', textContent } = page
+  const pageText = trimText(textContent)
 
-Question: ${question}`
+  const tabBuilder = new TagBuilder('tab_context')
+  tabBuilder.insertContent(`Title: ${title} | URL: ${url}`, pageText)
+  const user = renderPrompt`${tabBuilder}
+
+Question: ${question}`.trim()
   return { user: new UserPrompt(user), system }
 })
 
 export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistant' | string, content: string }[], pages: Page[]) => {
-  const system = `You are a helpful assistant. Based on the conversation below and the current web page content, suggest the next step to take. You can suggest one of the following options:
+  const system = renderPrompt`You are a helpful assistant. Based on the conversation below and the current web page content, suggest the next step to take. You can suggest one of the following options:
 
 1. search_online: ONLY if user requests the latest information or news that you don't already know. If you choose this option, you must also provide a list of search keywords.
    - All keywords will be combined into a single search, so follow search best practices
@@ -82,37 +96,33 @@ export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistan
 2. chat: Continue the conversation with the user if you have enough information from the current page content to answer their question.
 
 Example response for search_online:
-{"action":"search_online","queryKeywords":["climate news","paris agreement","emissions data"]}
+${new JSONBuilder({ action: 'search_online', queryKeywords: ['climate news', 'paris agreement', 'emissions data'] })}
 
 Example response for chat:
-{"action":"chat"}
+${new JSONBuilder({ action: 'chat' })}
 `
 
-  const tabContext
-    = pages.length > 0
-      ? `<tabs_context>
-Note: Each tab content shows only the first 1000 characters. Consider whether the visible content suggests the full page would contain sufficient information to answer the user's question.
+  const tabContextBuilder = new TagBuilder('tabs_context')
+  tabContextBuilder.insertContent(`Note: Each tab content shows only the first 1000 characters. Consider whether the visible content suggests the full page would contain sufficient information to answer the user's question.\n`)
 
-${pages
-  .map((page) => {
-    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
-    const length = text?.length ?? 0
-    const truncatedText = length > 1000 ? text.slice(0, 1000) + '...[content truncated]' : text
-    return `<tab>
-Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${truncatedText}
-</tab>`
-  })
-  .join('\n')}
-</tabs_context>`
-      : ''
+  for (let i = 0; i < pages.length; i++) {
+    const { title = '', url = '', textContent } = pages[i]
+    const head = `Title: ${title} | URL: ${url}`
+    const body = truncateText(textContent, MAX_PAGE_CONTENT_LENGTH)
+    tabContextBuilder.insert(new TagBuilder('tab', { id: i + 1 }).insertContent(head, body))
+  }
 
-  const user = `${tabContext}
+  const conversationContextBuilder = new TagBuilder('conversation')
+  for (const message of messages) {
+    conversationContextBuilder.insertContent(`${message.role}: ${message.content}`)
+  }
 
-<conversation>
-  ${messages.map((m) => `${m.role}: ${m.content}`).join('\n')}
-</conversation>
-`
+  const user = renderPrompt`
+${tabContextBuilder}
+
+${conversationContextBuilder}
+`.trim()
+
   return { system, user: new UserPrompt(user) }
 })
 
@@ -129,28 +139,23 @@ Each keyword should:
 All keywords will be combined into a single search, so they should work well together.
 Return only the keywords in a JSON array without any explanations.`
 
-  const tabContext
-    = pages.length > 0
-      ? `<tabs_context>
-${pages
-  .map((page) => {
-    const text = page.textContent?.replace(/(\s|\t)+/g, ' ').replace(/\n+/g, '\n').trim() ?? ''
-    const length = text?.length ?? 0
-    const truncatedText = length > 1000 ? text.slice(0, 1000) + '...[content truncated]' : text
-    return `<tab>
-Title: ${page.title ?? ''} | URL: ${page.url ?? ''}
-${truncatedText}
-</tab>`
-  })
-  .join('\n')}
-</tabs_context>\n`
-      : ''
+  const tabContextBuilder = new TagBuilder('tabs_context')
+  for (let i = 0; i < pages.length; i++) {
+    const { title = '', url = '', textContent } = pages[i]
+    const head = `Title: ${title} | URL: ${url}`
+    const body = truncateText(textContent, MAX_PAGE_CONTENT_LENGTH)
+    tabContextBuilder.insert(new TagBuilder('tab', { id: i + 1 }).insertContent(head, body))
+  }
 
-  const conversationContext = `<conversation>
-${messages.map((m) => `${m.role}: ${m.content}`).join('\n')}
-</conversation>`
+  const conversationContextBuilder = new TagBuilder('conversation')
+  for (const message of messages) {
+    conversationContextBuilder.insertContent(`${message.role}: ${message.content}`)
+  }
 
-  const user = `${tabContext}${conversationContext}`
+  const user = `
+${tabContextBuilder}
+${conversationContextBuilder}
+`.trim()
 
   return { system, user: new UserPrompt(user) }
 })

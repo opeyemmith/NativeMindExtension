@@ -3,13 +3,15 @@ import EventEmitter from 'events'
 import { type Ref, ref } from 'vue'
 
 import { ContextAttachment } from '@/types/chat'
-import { Base64ImageData } from '@/types/image'
-import { TabInfo } from '@/types/tab'
+import { Base64PDFData, PDFContentForModel } from '@/types/pdf'
 import { nonNullable } from '@/utils/array'
+import { arrayBufferToBase64 } from '@/utils/base64'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
+import { isModelSupportPDFToImages } from '@/utils/llm/models'
 import logger from '@/utils/logger'
+import { extractPdfText, renderPdfPagesAsImages } from '@/utils/pdf'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'
 import { UserPrompt } from '@/utils/prompts/helpers'
 import { SearchingMessage } from '@/utils/search'
@@ -269,11 +271,15 @@ export class Chat {
   constructor(public historyManager: ReactiveHistoryManager, public contextAttachments: Ref<ContextAttachment[]>) { }
 
   get contextTabs() {
-    return this.contextAttachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value) as TabInfo[]
+    return this.contextAttachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value)
   }
 
   get contextImages() {
-    return this.contextAttachments.value.filter((attachment) => attachment.type === 'image').map((attachment) => attachment.value) as Base64ImageData[]
+    return this.contextAttachments.value.filter((attachment) => attachment.type === 'image').map((attachment) => attachment.value)
+  }
+
+  get contextPDFs() {
+    return this.contextAttachments.value.filter((attachment) => attachment.type === 'pdf').map((attachment) => attachment.value)
   }
 
   isAnswering() {
@@ -446,9 +452,35 @@ export class Chat {
     return await this.sendMessage(prompt.user, prompt.system, { autoDeleteEmptyResponseMsg: false })
   }
 
+  private async extractPDFContent(model: string | undefined, pdfData: Base64PDFData): Promise<PDFContentForModel> {
+    // use vision model for better performance if available
+    if (model && isModelSupportPDFToImages(model)) {
+      const pdfContent = (await renderPdfPagesAsImages(pdfData.data))
+      return {
+        type: 'images',
+        images: await Promise.all(pdfContent.images.map((img) => arrayBufferToBase64(img.image).then((base64) => {
+          return {
+            data: base64,
+            type: 'image/png',
+          }
+        }))),
+        pageCount: pdfContent.pdfProxy.numPages,
+      } as const
+    }
+    else {
+      const pdfContent = await extractPdfText(pdfData.data)
+      return {
+        type: 'text',
+        textContent: pdfContent.textContent.text,
+        pageCount: pdfContent.pdfProxy.numPages,
+      } as const
+    }
+  }
+
   async ask(question: string) {
     using _s = this.statusScope('pending')
     const userConfig = await getUserConfig()
+    const currentModel = userConfig.llm.model.get()
     const abortController = new AbortController()
     this.abortControllers.push(abortController)
 
@@ -479,8 +511,10 @@ export class Chat {
     }
     const relevantTabIds = this.contextTabs.map((tab) => tab.tabId)
     const relevantImages = this.contextImages
+    const relevantPDF = this.contextPDFs?.[0] ? await this.extractPDFContent(currentModel, this.contextPDFs[0]) : undefined
+    if (this.contextPDFs.length > 1) log.warn('Multiple PDFs are attached, only the first one will be used for the chat context.')
     const pages = await getDocumentContentOfTabs(relevantTabIds)
-    const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults, relevantImages)
+    const prompt = await chatWithPageContent(question, pages.filter(nonNullable), onlineResults, relevantImages, relevantPDF)
     await this.sendMessage(prompt.user, prompt.system, { assistantMsg: loading })
   }
 

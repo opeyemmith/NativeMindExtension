@@ -100,3 +100,8 @@ export function parseErrorMessageFromChunk(error: unknown): string | null {
   }
   return null
 }
+
+export function isModelSupportPDFToImages(model: string): boolean {
+  // Currently only gemma3 models have the ability to understand PDF converted to images
+  return model.startsWith('gemma3:')
+}

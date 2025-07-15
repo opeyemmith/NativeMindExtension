@@ -20,7 +20,11 @@
         "image_oversize": "画像サイズは{size}未満である必要があります",
         "too_many_images": "最大{max}個の画像ファイルが許可されています",
         "unsupported_image_type": "サポートされていない画像形式です。JPEGまたはPNGファイルをアップロードしてください。",
-        "unsupported_model": "画像のアップロードには視覚対応モデルが必要です。Gemma3または同様の視覚モデルに切り替えてください。"
+        "unsupported_model": "画像のアップロードには視覚対応モデルが必要です。Gemma3または同様の視覚モデルに切り替えてください。",
+        "pdf_oversize": "PDFファイルサイズは{size}未満である必要があります",
+        "pdf_text_extract_error": "テキスト抽出に失敗しました - このPDFはスキャンされたものか画像ベースの可能性があります。より良い結果を得るためにGemma3への切り替えを強くお勧めします。",
+        "too_many_pdfs": "最大{max}個のPDFファイルまで許可されています",
+        "pdf_page_count_exceeded": "PDFは{max}ページ以下である必要があります"
       }
     },
     "prompt": {

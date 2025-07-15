@@ -10,7 +10,7 @@
           :style="{ zIndex: onboardingPanelZIndex }"
         />
       </Transition>
-      <Main />
+      <Main ref="mainRef" />
       <Modal
         v-model="tabStore.showSetting.value.show"
         :mountPoint="rootElement"
@@ -30,11 +30,14 @@
 </template>
 
 <script setup lang="tsx">
-import { onMounted } from 'vue'
+import mime from 'mime'
+import { onMounted, useTemplateRef, watch } from 'vue'
 
 import Modal from '@/components/Modal.vue'
 import { useToast } from '@/composables/useToast'
 import { useZIndex } from '@/composables/useZIndex'
+import { sleep } from '@/utils/async'
+import logger from '@/utils/logger'
 import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
 import { registerContentScriptRpcEventFromMainWorld } from '@/utils/rpc/content-main-world-fns'
 import { getTabStore } from '@/utils/tab-store'
@@ -57,13 +60,13 @@ import { getCurrentTabInfo } from './utils/tabs'
 useTranslator()
 useInjectOllamaDownloadButtons()
 initContextMenu()
-const tabStore = await getTabStore()
-const userConfig = await getUserConfig()
-const rootElement = useRootElement()
-
 const toast = useToast()
+const mainRef = useTemplateRef('mainRef')
 const { index: settingsPanelZIndex } = useZIndex('settings')
 const { index: onboardingPanelZIndex } = useZIndex('settings')
+const rootElement = useRootElement()
+const tabStore = await getTabStore()
+const userConfig = await getUserConfig()
 
 registerContentScriptRpcEvent('tabUpdated', async (tabInfo) => {
   if (tabInfo.tabId === tabStore.currentTabId.value) {
@@ -87,6 +90,29 @@ registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
     if (action && !chat.isAnswering()) {
       chat.ask(action.prompt)
     }
+  }
+  else if (e.menuItemId === 'native-mind-add-image-to-chat' && e.srcUrl) {
+    const tabStore = await getTabStore()
+    const srcUrl = e.srcUrl
+    const resp = await fetch(srcUrl)
+    const blob = await resp.blob()
+    const extension = mime.getExtension(blob.type)
+    if (!extension) {
+      logger.warn(`Unsupported image type: ${blob.type}`)
+      return
+    }
+    let imageFileName = `image.${extension}`
+    if (srcUrl.endsWith(`.${extension}`)) {
+    // If the URL already has the correct extension, use it as is
+      imageFileName = srcUrl.split('/').pop() || imageFileName
+    }
+    const file = new File([blob], imageFileName, { type: blob.type })
+    tabStore.showContainer.value = true
+    const stopWatch = watch(() => mainRef.value?.chatRef?.attachmentSelectorRef, (attachmentSelector) => {
+      if (!attachmentSelector) return
+      attachmentSelector.appendAttachmentsFromFiles([file])
+      sleep(0).then(() => stopWatch())
+    }, { immediate: true })
   }
 })
 

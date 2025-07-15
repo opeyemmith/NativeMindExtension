@@ -9,7 +9,7 @@
 *NativeMind is a private, open-source alternative to ChatGPT — a fully local browser extension built on Ollama that brings local AI models into your workflow.*
 
 [![Chrome](https://img.shields.io/badge/Chrome-Supported-4285F4?style=flat&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/nativemind-private-on-dev/mgchaojnijgpemdfhpnbeejnppigfllj)
-[![Firefox](https://img.shields.io/badge/Firefox-Coming%20Soon-FB8500?style=flat&logo=firefox-browser&logoColor=white)]()
+[![Firefox](https://img.shields.io/badge/Firefox-Supported-FF7139?style=flat&logo=firefox-browser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/nativemind?utm_source=github)
 [![Edge](https://img.shields.io/badge/Edge-Coming%20Soon-FF6B6B?style=flat&logo=microsoftedge&logoColor=white)]()
 [![Visit Website](https://img.shields.io/badge/Visit-Website-red?style=flat&logoColor=white)](https://nativemind.app)
 [![Discord](https://img.shields.io/badge/Discord-Join%20Community-5865F2?style=flat&logo=discord&logoColor=white)](https://discord.gg/b8p54DKhha)
@@ -64,11 +64,22 @@ Star this project to get all the latest updates — you'll never miss a new rele
 
 ## 📦 Installation
 
-NativeMind currently supports **Chromium-based browsers** such as **Chrome**, **Brave**, and **Edge**. Firefox support is coming soon.
-  
-<a href="https://chromewebstore.google.com/detail/nativemind-your-fully-pri/mgchaojnijgpemdfhpnbeejnppigfllj" target="_blank">
-  <img src="docs/images/chrome-web-store.png" alt="Available in the Chrome Web Store">
-</a>
+NativeMind supports **Chrome**, **Firefox**, **Brave**, and **Edge** browsers.
+
+
+<div align="center">
+
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/nativemind-your-fully-pri/mgchaojnijgpemdfhpnbeejnppigfllj" target="_blank" style="text-decoration: none;">
+    <img src="https://developer.chrome.com/static/docs/webstore/branding/image/HRs9MPufa1J1h5glNhut.png" alt="Available in the Chrome Web Store" height="58">
+  </a>
+  &nbsp;&nbsp;&nbsp;&nbsp;
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/nativemind?utm_source=github" target="_blank" style="text-decoration: none;">
+    <img src="https://blog.mozilla.org/addons/files/2020/04/get-the-addon-fx-apr-2020.svg" alt="Get the add-on for Firefox" height="58">
+  </a>
+</p>
+
+</div>
 
 
 ## 🚀 Quick Start
@@ -131,17 +142,17 @@ In an era where every keystroke can be monitored and every document potentially 
 Wondering how NativeMind compares to ChatGPT or Ollama?
 Here’s a quick breakdown to help you see where it stands — and when it might be the better choice.
 
-| Feature / Tool            | **NativeMind**                                                  | **ChatGPT**                                 | **Ollama**                                        |
-|---------------------------|------------------------------------------------------------------|----------------------------------------------|--------------------------------------------------|
-| **Run Mode**              | Browser extension using local models                            | Cloud-based service                           | Local CLI for running models                     |
-| **Open Source**           | ✅ Yes                                                           | ❌ No                                          | ✅ Yes                                           |
-| **Offline Capable**       | ✅ Yes (all processing is local)                                 | ❌ No                                          | ✅ Yes                                           |
-| **Model Source**          | Runs local models via Ollama                                     | Cloud-based language models by OpenAI         | Supports any Ollama-compatible open models       |
-| **Use Cases**             | In-Browser AI for Reading, Research, and Productivity            | Chat, Q&A, content generation                | Model serving / backend integration              |
-| **Browser Integration**   | ✅ Strong (in-page UI, sidebar, right-click)                     | 🔶 Limited (official / 3rd-party extensions)                                         | ❌ None                                          |
-| **Privacy**               | ✅ High — no cloud, no data leaves your device                   | 🔶 Cloud processing; Enterprise offers data controls                          | ✅ High                                          |
-| **Installation Complexity** | 🟢 Very low (just install the extension)                         | 🟢 Low (use via website)                     | 🔶 Medium (requires CLI setup)                   
-| **Workflow Convenience** | 🟢 In-page actions—no copy-paste | 🔶 Mostly copy-paste between site & page (no built-in plug-in) | 🔶 CLI output—manual copy or custom integration |
+| Feature / Tool              | **NativeMind**                                        | **ChatGPT**                                                   | **Ollama**                                     |
+| --------------------------- | ----------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------- |
+| **Run Mode**                | Browser extension using local models                  | Cloud-based service                                           | Local CLI for running models                   |
+| **Open Source**             | ✅ Yes                                                 | ❌ No                                                          | ✅ Yes                                          |
+| **Offline Capable**         | ✅ Yes (all processing is local)                       | ❌ No                                                          | ✅ Yes                                          |
+| **Model Source**            | Runs local models via Ollama                          | Cloud-based language models by OpenAI                         | Supports any Ollama-compatible open models     |
+| **Use Cases**               | In-Browser AI for Reading, Research, and Productivity | Chat, Q&A, content generation                                 | Model serving / backend integration            |
+| **Browser Integration**     | ✅ Strong (in-page UI, sidebar, right-click)           | 🔶 Limited (official / 3rd-party extensions)                   | ❌ None                                         |
+| **Privacy**                 | ✅ High — no cloud, no data leaves your device         | 🔶 Cloud processing; Enterprise offers data controls           | ✅ High                                         |
+| **Installation Complexity** | 🟢 Very low (just install the extension)               | 🟢 Low (use via website)                                       | 🔶 Medium (requires CLI setup)                  |
+| **Workflow Convenience**    | 🟢 In-page actions—no copy-paste                       | 🔶 Mostly copy-paste between site & page (no built-in plug-in) | 🔶 CLI output—manual copy or custom integration |
 ## 🛠️ For Developers
 
 ### Technology Stack

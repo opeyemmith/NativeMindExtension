@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.1...v1.5.0-beta.2)
+
+### 🚀 Enhancements
+
+- **pdf:** Enhance PDF handling and chat functionality ([0ae9cc3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0ae9cc3))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.0...v1.5.0-beta.1)

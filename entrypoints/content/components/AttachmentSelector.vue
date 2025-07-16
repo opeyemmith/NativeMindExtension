@@ -196,6 +196,8 @@ import { useLogger } from '@/composables/useLogger'
 import { useTimeoutValue } from '@/composables/useTimeoutValue'
 import { AttachmentItem, ContextAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
+import { nonNullable } from '@/utils/array'
+import { PdfTextFile } from '@/utils/file'
 import { hashFile } from '@/utils/hash'
 import { useI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
@@ -237,13 +239,21 @@ const showErrorMessage = (message: string) => {
   })
 }
 
+const getTabIdOfAttachment = (attachment: ContextAttachment) => {
+  if (attachment.type === 'tab') return attachment.value.tabId
+  if (attachment.type === 'pdf' && attachment.value.source.type === 'tab') return attachment.value.source.tabId
+  return undefined
+}
+
 const selectorListContainer = ref<HTMLDivElement>()
 const tabsContainerRef = ref<HTMLDivElement>()
 
 const attachments = useVModel(props, 'attachments', emit)
 const allTabs = ref<TabInfo[]>([])
 
-const selectedTabs = computed(() => attachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value))
+const selectedTabs = computed(() => attachments.value.map((attachment) => {
+  return getTabIdOfAttachment(attachment)
+}).filter(nonNullable))
 
 const selectFile = async () => {
   open()
@@ -252,7 +262,7 @@ const selectFile = async () => {
 const MAX_IMAGE_SIZE = ByteSize.fromMB(5).toBytes() // 5 MB
 const MAX_IMAGE_COUNT = 5 // Maximum number of images allowed
 const MAX_PDF_COUNT = 1 // Maximum number of PDFs allowed
-const MAX_PDF_SIZE = ByteSize.fromMB(15).toBytes() // 15 MB
+const MAX_PDF_SIZE = Infinity // No limit on PDF size
 const MAX_PDF_PAGE_COUNT = 50 // Maximum number of pages allowed in a PDF
 const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
   {
@@ -295,9 +305,8 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
   {
     selectorMimeTypes: ['application/pdf'] as const, // Supported MIME types for the file selector
     type: 'pdf',
-    matchMimeType: (mimeType) => mimeType === 'application/pdf',
+    matchMimeType: (mimeType) => mimeType === 'application/pdf' || mimeType === 'application/x-pdf-text',
     validateFile: async ({ count }, file: File) => {
-      const docProxy = await getDocumentProxy(file)
       if (count >= MAX_PDF_COUNT) {
         showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
         return false
@@ -306,25 +315,43 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
         showErrorMessage(t('chat.input.attachment_selector.pdf_oversize', { size: ByteSize.fromBytes(MAX_PDF_SIZE).format(0) }))
         return false
       }
-      const pageCount = await getPdfPageCount(docProxy)
+      let pageCount: number
+      if (file instanceof PdfTextFile) {
+        pageCount = file.pageCount
+      }
+      else {
+        const docProxy = await getDocumentProxy(file)
+        pageCount = await getPdfPageCount(docProxy)
+      }
       if (pageCount > MAX_PDF_PAGE_COUNT) {
-        showErrorMessage(t('chat.input.attachment_selector.pdf_page_count_exceeded', { max: MAX_PDF_PAGE_COUNT }))
-        return false
+        // show error but allow this file
+        showErrorMessage(t('chat.input.attachment_selector.only_load_partial_pages', { max: MAX_PDF_PAGE_COUNT }))
       }
       return true
     },
     convertFileToAttachment: async (file: File): Promise<ContextAttachment> => {
-      const pdfText = await extractPdfText(file)
+      let textContent: string
+      let pageCount: number
+      if (file instanceof PdfTextFile) {
+        textContent = (await file.textContent()).join('\n').replace(/\s+/g, ' ')
+        pageCount = file.pageCount
+      }
+      else {
+        const pdfText = await extractPdfText(file, { pageRange: [1, MAX_PDF_PAGE_COUNT] })
+        textContent = pdfText.mergedText
+        pageCount = pdfText.pdfProxy.numPages
+      }
       const info: ContextAttachment = {
         type: 'pdf',
         value: {
           type: 'text',
-          pageCount: pdfText.pdfProxy.numPages,
-          textContent: pdfText.textContent.text,
+          pageCount,
+          textContent,
           id: generateRandomId(),
-          fileSize: file.size,
           fileHash: await hashFile(file),
+          fileSize: file.size,
           name: file.name,
+          source: file instanceof PdfTextFile ? { type: 'tab', tabId: file.source as number } : { type: 'local-file' },
         },
       }
       logger.debug('extracted pdf content', info)
@@ -360,10 +387,6 @@ defineExpose({
   appendAttachmentsFromFiles,
 })
 
-const addTabsToAttachments = (tabs: (ContextAttachment & { type: 'tab' })[]) => {
-  attachments.value = [...tabs.toReversed(), ...attachments.value]
-}
-
 const userConfig = await getUserConfig()
 const currentModel = userConfig.llm.model.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
@@ -390,11 +413,11 @@ const checkCurrentModelSupportVision = async () => {
 }
 
 const unselectedTabs = computed(() => {
-  return allTabs.value.filter((tab) => !selectedTabs.value.some((selectedTab) => selectedTab.tabId === tab.tabId))
+  return allTabs.value.filter((tab) => !selectedTabs.value.some((selectedTab) => selectedTab === tab.tabId))
 })
 
 const isTabSelected = (tab: TabInfo) => {
-  return selectedTabs.value.some((selectedTab) => selectedTab.tabId === tab.tabId)
+  return selectedTabs.value.some((selectedTab) => selectedTab === tab.tabId)
 }
 
 const updateAllTabs = async () => {
@@ -411,16 +434,18 @@ const isAllTabSelected = computed(() => {
   return unselectedTabs.value.length === 0
 })
 
-const selectAllTabs = () => {
+const selectAllTabs = async () => {
   if (isAllTabSelected.value) {
-    attachments.value = attachments.value.filter((attachment) => attachment.type !== 'tab')
+    attachments.value = attachments.value.filter((attachment) => {
+      if (attachment.type === 'tab') return false
+      if (attachment.type === 'pdf' && attachment.value.source.type === 'tab') return false
+      return true
+    })
   }
   else {
-    const newTabs = unselectedTabs.value.map((tab) => ({
-      type: 'tab' as const,
-      value: tab,
-    }))
-    addTabsToAttachments(newTabs)
+    for (const tab of unselectedTabs.value) {
+      await appendTab(tab)
+    }
   }
 }
 
@@ -432,10 +457,13 @@ const showSelector = async () => {
   isShowSelector.value = true
 }
 
-const toggleSelectTab = (tab: TabInfo) => {
-  const index = attachments.value.findIndex((selectedTab) => selectedTab.type === 'tab' && selectedTab.value.tabId === tab.tabId)
-  if (index !== -1) {
-    attachments.value.splice(index, 1) // Remove the tab if it is already selected
+const appendTab = async (tab: TabInfo) => {
+  const pageContentType = await c2bRpc.getPageContentType(tab.tabId)
+  if (pageContentType === 'application/pdf') {
+    const pdfContent = await c2bRpc.getPagePDFContent(tab.tabId)
+    if (pdfContent) {
+      appendAttachmentsFromFiles([new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId)])
+    }
   }
   else {
     attachments.value.push({
@@ -445,12 +473,35 @@ const toggleSelectTab = (tab: TabInfo) => {
   }
 }
 
+const toggleSelectTab = async (tab: TabInfo) => {
+  const index = attachments.value.findIndex((attachment) => {
+    return getTabIdOfAttachment(attachment) === tab.tabId
+  })
+  if (index !== -1) {
+    attachments.value.splice(index, 1) // Remove the tab if it is already selected
+  }
+  else {
+    await appendTab(tab)
+  }
+}
+
 const hideSelector = () => {
   isShowSelector.value = false
 }
 
 const removeAttachment = (attachment: ContextAttachment) => {
   attachments.value = attachments.value.filter((a) => a !== attachment)
+}
+
+const updateCurrentTabIfPDF = async () => {
+  const currentTab = await c2bRpc.getTabInfo()
+  if (attachments.value.length === 1 && attachments.value[0].type === 'tab') {
+    const pagePDFContent = await c2bRpc.getPagePDFContent(currentTab.tabId)
+    if (pagePDFContent) {
+      await addAttachmentsFromFiles([new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId)])
+      attachments.value.pop() // pop the original tab
+    }
+  }
 }
 
 useEventListener(window, 'click', (e: MouseEvent) => {
@@ -474,6 +525,7 @@ useEventListener(tabsContainerRef, 'wheel', (e: WheelEvent) => {
 
 onMounted(() => {
   updateAllTabs()
+  updateCurrentTabIfPDF()
 })
 
 onBeforeUnmount(() => {

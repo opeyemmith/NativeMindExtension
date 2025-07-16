@@ -8,6 +8,16 @@ type PDFDocumentProxy = Awaited<ReturnType<typeof originalGetDocumentProxy>>
 
 type PDFFile = ArrayBuffer | Blob | File | TypedArray | PDFDocumentProxy | number[] | string
 
+type TextItem = {
+  str: string
+  dir: string
+  transform: Array<unknown>
+  width: number
+  height: number
+  fontName: string
+  hasEOL: boolean
+}
+
 export async function getDocumentProxy(doc: PDFFile): Promise<PDFDocumentProxy> {
   if (Array.isArray(doc) || isTypedArray(doc) || doc instanceof ArrayBuffer) {
     return originalGetDocumentProxy(doc)
@@ -29,12 +39,40 @@ export async function getDocumentProxy(doc: PDFFile): Promise<PDFDocumentProxy> 
   }
 }
 
-export async function extractPdfText(pdfFile: PDFFile) {
+/**
+ * extract the text content from specific page of pdf file
+ * @param pdfFile
+ * @param pageNumber page number of pdf, starts from 1
+ * @returns
+ */
+export async function getPageText(pdfFile: PDFFile, pageNumber: number) {
+  const document = await getDocumentProxy(pdfFile)
+  const page = await document.getPage(pageNumber)
+  const content = await page.getTextContent()
+  return content.items.filter((item): item is TextItem => 'str' in item && item.str != null).map((item) => item.str + (item.hasEOL ? '\n' : '')).join('')
+}
+
+/**
+ * @param pdfFile
+ * @param pageRange page ranges, starts from 1, end is exclusive
+ * @returns
+ */
+export async function extractPdfText(pdfFile: PDFFile, options: { pageRange?: [number | undefined, number | undefined] } = {}) {
+  const { pageRange } = options
   const proxy = await getDocumentProxy(pdfFile)
-  const textContent = await extractText(proxy, { mergePages: true })
+  const pageCount = proxy.numPages
+  const [start = 1, end = pageCount] = pageRange ?? [1, pageCount]
+  const pageStart = Math.min(Math.max(start, 1), pageCount)
+  const pageEnd = Math.min(Math.max(end, pageStart), pageCount)
+  const promises = []
+  for (let i = pageStart; i <= pageEnd; i++) {
+    promises.push(getPageText(proxy, i))
+  }
+  const texts = await Promise.all(promises)
   return {
-    textContent,
+    texts,
     pdfProxy: proxy,
+    get mergedText() { return texts.join('\n').replace(/\s+/g, ' ') },
   }
 }
 

@@ -3,7 +3,7 @@ import { TextStreamPart, ToolSet } from 'ai'
 import type { ProgressResponse } from 'ollama/browser'
 import { browser } from 'wxt/browser'
 
-import { toAsyncIter } from '@/utils/async'
+import { readPortMessageIntoIterator, toAsyncIter } from '@/utils/async'
 import { AbortError, fromError, ModelRequestTimeoutError } from '@/utils/error'
 import { SchemaName } from '@/utils/llm/output-schema'
 import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
@@ -14,7 +14,7 @@ import { BackgroundAliveKeeper } from './keepalive'
 
 const log = logger.child('llm')
 
-const DEFAULT_PENDING_TIMEOUT = 60000 // 60 seconds
+const DEFAULT_PENDING_TIMEOUT = 60_000 // 60 seconds
 
 interface ExtraOptions {
   abortSignal?: AbortSignal
@@ -30,33 +30,7 @@ export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.
     aliveKeeper.dispose()
     port.disconnect()
   })
-  const iter = toAsyncIter<TextStreamPart<ToolSet>>(
-    (yieldData, done) => {
-      port.onMessage.addListener((message: TextStreamPart<ToolSet>) => {
-        if (abortSignal?.aborted) {
-          port.disconnect()
-          return done()
-        }
-        if (message.type === 'error') {
-          done(fromError(message.error))
-          return
-        }
-        yieldData(message)
-      })
-      port.onDisconnect.addListener(() => {
-        aliveKeeper.dispose()
-        done()
-      })
-      abortSignal?.addEventListener('abort', () => {
-        logger.debug('stream text request aborted')
-        done()
-      })
-    },
-    {
-      firstDataTimeout: timeout, // 60 seconds
-      onTimeout: () => port.disconnect(), // disconnect to avoid connection leak
-    },
-  )
+  const iter = readPortMessageIntoIterator<TextStreamPart<ToolSet>>(port, { abortSignal, firstDataTimeout: timeout, onTimeout: () => port.disconnect() })
   yield* iter
 }
 
@@ -65,35 +39,12 @@ export async function* streamObjectInBackground(options: Parameters<typeof c2bRp
   const { portName } = await c2bRpc.streamObjectFromSchema(restOptions)
   const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
-  if (abortSignal) {
-    abortSignal.addEventListener('abort', () => {
-      aliveKeeper.dispose()
-      port.disconnect()
-    })
-  }
-  const iter = toAsyncIter<TextStreamPart<ToolSet>>(
-    (yieldData, done) => {
-      port.onMessage.addListener((message: TextStreamPart<ToolSet>) => {
-        if (abortSignal?.aborted) {
-          port.disconnect()
-          return done()
-        }
-        yieldData(message)
-      })
-      abortSignal?.addEventListener('abort', () => {
-        logger.debug('stream object request aborted')
-        done()
-      })
-      port.onDisconnect.addListener(() => {
-        aliveKeeper.dispose()
-        done()
-      })
-    },
-    {
-      firstDataTimeout: timeout,
-      onTimeout: () => port.disconnect(),
-    },
-  )
+  port.onDisconnect.addListener(() => aliveKeeper.dispose())
+  abortSignal?.addEventListener('abort', () => {
+    aliveKeeper.dispose()
+    port.disconnect()
+  })
+  const iter = readPortMessageIntoIterator<TextStreamPart<ToolSet>>(port, { abortSignal, firstDataTimeout: timeout, onTimeout: () => port.disconnect() })
   yield* iter
 }
 
@@ -135,25 +86,11 @@ export async function* pullOllamaModel(modelId: string, abortSignal?: AbortSigna
   const { portName } = await c2bRpc.pullOllamaModel(modelId)
   const aliveKeeper = new BackgroundAliveKeeper()
   const port = browser.runtime.connect({ name: portName })
+  port.onDisconnect.addListener(() => aliveKeeper.dispose())
   abortSignal?.addEventListener('abort', () => {
     port.disconnect()
   })
-  const iter = toAsyncIter<ProgressResponse>((yieldData, done) => {
-    if (abortSignal?.aborted) done()
-    port.onMessage.addListener((message) => {
-      if ('error' in message) {
-        yieldData(message)
-        done(message.error)
-      }
-      else {
-        yieldData(message)
-      }
-    })
-    port.onDisconnect.addListener(() => {
-      aliveKeeper.dispose()
-      done()
-    })
-  })
+  const iter = readPortMessageIntoIterator<ProgressResponse>(port, { abortSignal })
   yield* iter
 }
 
@@ -184,24 +121,7 @@ export async function* initCurrentModel(abortSignal?: AbortSignal) {
   const portName = await c2bRpc.initCurrentModel()
   if (portName) {
     const port = browser.runtime.connect({ name: portName })
-    const iter = toAsyncIter<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>((yieldData, done) => {
-      abortSignal?.addEventListener('abort', () => {
-        port.disconnect()
-        done(new Error('aborted'))
-      })
-      port.onMessage.addListener((message) => {
-        if (message.type === 'progress') {
-          abortSignal?.aborted && done(new Error('aborted'))
-          yieldData(message)
-        }
-        else if (message.type === 'ready') {
-          done()
-        }
-      })
-      port.onDisconnect.addListener(() => {
-        done()
-      })
-    })
+    const iter = readPortMessageIntoIterator<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>(port, { abortSignal })
     yield* iter
   }
 }

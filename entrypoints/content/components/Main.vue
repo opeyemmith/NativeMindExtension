@@ -134,7 +134,6 @@ const pinSidebar = userConfig.ui.pinSidebar.toRef()
 const onNewChat = async () => {
   chat.stop()
   chat.historyManager.clear()
-  await chat.resetContextTabs()
 }
 
 const showCloseButton = computed(() => {

@@ -1,4 +1,9 @@
+import { Browser } from 'wxt/browser'
+
 import { ModelRequestTimeoutError } from './error'
+import logger from './logger'
+
+const log = logger.child('async')
 
 export async function waitForIdle() {
   return new Promise<IdleDeadline>((resolve) => {
@@ -19,6 +24,7 @@ interface ToAsyncIterOptions {
 
 export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?: unknown) => void) => void, options?: ToAsyncIterOptions) {
   let timeoutTimer: number | undefined
+  let isDone = false
   if (options?.firstDataTimeout) {
     timeoutTimer = window.setTimeout(() => {
       options.onTimeout?.(new ModelRequestTimeoutError())
@@ -29,6 +35,10 @@ export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?
   let resolveNext: ((value: IterValue<T>) => void) | null = null
   let rejectNext: ((reason?: unknown) => void) | null = null
   const onData = (value: T) => {
+    if (isDone) {
+      log.debug('toAsyncIter: already done')
+      return
+    }
     clearTimeout(timeoutTimer)
     if (resolveNext) {
       resolveNext({ value, done: false })
@@ -37,6 +47,10 @@ export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?
     else q.push({ value, done: false })
   }
   const done = (err: unknown) => {
+    if (isDone) {
+      log.debug('toAsyncIter: already done')
+      return
+    }
     if (resolveNext) {
       if (err) {
         rejectNext?.(err)
@@ -50,6 +64,7 @@ export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?
     else {
       q.push({ value: undefined, done: true, error: err })
     }
+    isDone = true
   }
   cb(onData, done)
 
@@ -73,4 +88,34 @@ export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?
       return promise
     },
   }
+}
+
+export function readPortMessageIntoIterator<Message>(port: Browser.runtime.Port, options?: ToAsyncIterOptions & { abortSignal?: AbortSignal, shouldYieldError?: (msg: Message) => unknown }) {
+  const shouldYieldError = options?.shouldYieldError ?? ((msg: Message) => (typeof msg === 'object' && msg && 'error' in msg) ? msg.error : undefined)
+  const iter = toAsyncIter<Message>(
+    (yieldData, done) => {
+      port.onMessage.addListener((message: Message) => {
+        if (options?.abortSignal?.aborted) {
+          port.disconnect()
+          done()
+          return
+        }
+        const error = shouldYieldError(message)
+        if (error) {
+          done(error)
+          return
+        }
+        yieldData(message)
+      })
+      port.onDisconnect.addListener(() => {
+        done()
+      })
+      options?.abortSignal?.addEventListener('abort', () => {
+        port.disconnect()
+        done()
+      })
+    },
+    options,
+  )
+  return iter
 }

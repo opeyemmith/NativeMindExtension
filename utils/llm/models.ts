@@ -1,10 +1,10 @@
 import { extractReasoningMiddleware, LanguageModelV1, wrapLanguageModel } from 'ai'
-import { createOllama } from 'ollama-ai-provider'
 
 import { getUserConfig } from '@/utils/user-config'
 
 import { ModelNotFoundError } from '../error'
 import { makeCustomFetch } from '../fetch'
+import { createOllama } from './providers/ollama'
 import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
 import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
 
@@ -20,6 +20,7 @@ export async function getModelUserConfig() {
   const baseUrl = userConfig.llm.baseUrl.get()
   const apiKey = userConfig.llm.apiKey.get()
   const numCtx = userConfig.llm.numCtx.get()
+  const enableNumCtx = userConfig.llm.enableNumCtx.get()
   const reasoning = userConfig.llm.reasoning.get()
   if (!model) {
     throw new ModelNotFoundError()
@@ -29,6 +30,7 @@ export async function getModelUserConfig() {
     model,
     apiKey,
     numCtx,
+    enableNumCtx,
     reasoning,
   }
 }
@@ -40,6 +42,7 @@ export async function getModel(options: {
   model: string
   apiKey: string
   numCtx: number
+  enableNumCtx: boolean
   reasoning: boolean
   onLoadingModel?: (prg: ModelLoadingProgressEvent) => void
 }) {
@@ -63,14 +66,14 @@ export async function getModel(options: {
       fetch: customFetch,
     })
     model = ollama(options.model, {
-      numCtx: options.numCtx,
+      numCtx: options.enableNumCtx ? options.numCtx : undefined,
       structuredOutputs: true,
     })
   }
   else if (endpointType === 'web-llm') {
     const engine = await getWebLLMEngine({
       model: options.model as WebLLMSupportedModel,
-      contextWindowSize: options.numCtx,
+      contextWindowSize: options.enableNumCtx ? options.numCtx : undefined,
       onInitProgress(report) {
         options.onLoadingModel?.({ model: options.model, progress: report.progress, type: 'loading' })
       },

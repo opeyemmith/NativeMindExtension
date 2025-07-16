@@ -120,6 +120,7 @@ registerContentScriptRpcEventFromMainWorld('toast', (toastInfo) => {
   toast(toastInfo.message, {
     type: toastInfo.type,
     duration: toastInfo.duration,
+    isHTML: toastInfo.isHTML,
   })
 })
 

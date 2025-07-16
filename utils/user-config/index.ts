@@ -1,7 +1,10 @@
+import { c2bRpc } from '@/utils/rpc'
+
 import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
 import { lazyInitialize } from '../memo'
+import { ByteSize } from '../sizes'
 import { Config } from './helpers'
 
 export const DEFAULT_TRANSLATOR_SYSTEM_PROMPT = `You are a highly skilled translator, you will be provided an html string array in JSON format, and your task is to translate each string into {{LANGUAGE}}, preserving any html tag. The result should only contain all strings in JSON array format.
@@ -194,6 +197,7 @@ Examples of good emoji usage:
 Return ONLY the enhanced text with emojis. No explanations.`
 
 export const TARGET_ONBOARDING_VERSION = 1
+const MIN_SYSTEM_MEMORY = 8 // GB
 
 export const DEFAULT_QUICK_ACTIONS = [
   { editedTitle: '', defaultTitleKey: 'chat.prompt.summarize_page_content.title' as const, prompt: 'Please summarize the main content of this page in a clear and concise manner.', showInContextMenu: false, edited: false },
@@ -203,7 +207,18 @@ export const DEFAULT_QUICK_ACTIONS = [
 
 type OnlineSearchStatus = 'force' | 'disable' | 'auto'
 
-async function _getUserConfig() {
+export async function _getUserConfig() {
+  let enableNumCtx = true
+
+  // Disable numCtx when baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY
+  // This is only available in chromium-based browsers
+  // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
+  if (!import.meta.env.FIREFOX) {
+    const systemMemoryInfo = await c2bRpc.getSystemMemoryInfo()
+    const systemMemory = ByteSize.fromBytes(systemMemoryInfo.capacity).toGB()
+    enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
+  }
+
   return {
     locale: {
       current: await new Config<SupportedLocaleCode, undefined>('locale.current').build(),
@@ -214,13 +229,17 @@ async function _getUserConfig() {
       model: await new Config<string, undefined>('llm.model').build(),
       apiKey: await new Config('llm.apiKey').default('ollama').build(),
       numCtx: await new Config('llm.numCtx').default(1024 * 8).build(),
+      enableNumCtx: await new Config('llm.enableNumCtx').default(enableNumCtx).build(),
       reasoning: await new Config('llm.reasoning').default(true).build(),
       chatSystemPrompt: await new Config('llm.chatSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
       summarizeSystemPrompt: await new Config('llm.summarizeSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
     },
-    chromeAI: {
+    browserAI: {
       polyfill: {
         enable: await new Config('chromeAI.polyfill.enable_1').default(false).build(),
+      },
+      llmAPI: {
+        enable: await new Config('chromeAI.llmAPI.enable').default(false).build(),
       },
     },
     chat: {

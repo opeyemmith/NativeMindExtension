@@ -1,4 +1,4 @@
-import { tool } from 'ai'
+import { jsonSchema, Tool, tool, ToolSet } from 'ai'
 import { string, z } from 'zod'
 
 const TOOLS = {
@@ -12,6 +12,20 @@ const TOOLS = {
 
 export type ToolName = keyof typeof TOOLS
 
-export function selectTools(...toolNames: (keyof typeof TOOLS)[]) {
-  return Object.fromEntries(toolNames.map((name) => [name, TOOLS[name]]))
+export type ToolWithName = Tool & { name: string }
+
+export function selectTools(...toolNames: (keyof typeof TOOLS | ToolWithName)[]) {
+  const r = Object.fromEntries(toolNames.map((toolOrToolName) => {
+    if (typeof toolOrToolName === 'string') {
+      return [toolOrToolName, TOOLS[toolOrToolName]]
+    }
+    return [
+      toolOrToolName.name,
+      tool({
+        description: toolOrToolName.description,
+        parameters: jsonSchema(toolOrToolName.parameters),
+      }),
+    ]
+  }))
+  return r as ToolSet
 }

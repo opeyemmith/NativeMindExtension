@@ -1,6 +1,8 @@
 import { Browser, browser } from 'wxt/browser'
 import { storage } from 'wxt/utils/storage'
 
+import { ContextType } from '@/types/browser'
+
 import { nonNullable } from './array'
 import { CONTEXT_MENU_STORAGE_KEY } from './constants'
 import { TranslationKey } from './i18n'
@@ -19,7 +21,6 @@ export type ContextMenuItem = {
   contexts: ContextTypeList
 }
 
-const ContextType = only([Entrypoint.background], () => browser.contextMenus.ContextType)
 export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = only([Entrypoint.background], () => ({
   id: 'native-mind-selection-translate',
   titleKey: 'context_menu.translation.translate_selected_text',

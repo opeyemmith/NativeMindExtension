@@ -11,5 +11,5 @@ export const TAB_STORE_STORAGE_KEY_PREFIX = 'tab-store-'
 export const INVALID_URLS = [
   /^https:\/\/chromewebstore\.google\.com/,
   /^https:\/\/chrome\.google\.com\/webstore\//,
-  /^(?!https?:\/\/).+/,
+  /^(?!(https?):\/\/).+/,
 ]

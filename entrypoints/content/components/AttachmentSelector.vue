@@ -192,15 +192,15 @@ import Tag from '@/components/Tag.vue'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
+import { useLogger } from '@/composables/useLogger'
 import { useTimeoutValue } from '@/composables/useTimeoutValue'
 import { AttachmentItem, ContextAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
-import { fileToBase64 } from '@/utils/base64'
+import { hashFile } from '@/utils/hash'
 import { useI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
 import { convertImageFileToJpegBase64 } from '@/utils/image'
-import { isModelSupportPDFToImages } from '@/utils/llm/models'
-import { checkReadablePdf, getDocumentProxy, getPdfPageCount } from '@/utils/pdf'
+import { extractPdfText, getDocumentProxy, getPdfPageCount } from '@/utils/pdf'
 import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
 import { ByteSize } from '@/utils/sizes'
 import { getUserConfig } from '@/utils/user-config'
@@ -208,6 +208,7 @@ import { getUserConfig } from '@/utils/user-config'
 import { getValidTabs } from '../utils/tabs'
 import ExternalImage from './ExternalImage.vue'
 
+const logger = useLogger()
 const { t } = useI18n()
 
 const cleanUpTabUpdatedListener = registerContentScriptRpcEvent('tabUpdated', async () => {
@@ -297,13 +298,6 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
     matchMimeType: (mimeType) => mimeType === 'application/pdf',
     validateFile: async ({ count }, file: File) => {
       const docProxy = await getDocumentProxy(file)
-      if (!currentModel.value || !isModelSupportPDFToImages(currentModel.value)) {
-        const readable = await checkReadablePdf(docProxy)
-        if (!readable) {
-          showErrorMessage(t('chat.input.attachment_selector.pdf_text_extract_error'))
-          return false
-        }
-      }
       if (count >= MAX_PDF_COUNT) {
         showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
         return false
@@ -320,16 +314,21 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
       return true
     },
     convertFileToAttachment: async (file: File): Promise<ContextAttachment> => {
-      const base64Data = await fileToBase64(file)
-      return {
+      const pdfText = await extractPdfText(file)
+      const info: ContextAttachment = {
         type: 'pdf',
         value: {
-          data: base64Data,
+          type: 'text',
+          pageCount: pdfText.pdfProxy.numPages,
+          textContent: pdfText.textContent.text,
           id: generateRandomId(),
-          size: file.size,
+          fileSize: file.size,
+          fileHash: await hashFile(file),
           name: file.name,
         },
       }
+      logger.debug('extracted pdf content', info)
+      return info
     },
   },
 ]

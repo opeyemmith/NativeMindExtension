@@ -1,6 +1,5 @@
 import { PromiseOr } from './common'
 import { Base64ImageData } from './image'
-import { Base64PDFData } from './pdf'
 import { TabInfo } from './tab'
 
 export type ImageAttachment = {
@@ -14,10 +13,14 @@ export type ImageAttachment = {
 
 export type PDFAttachment = {
   type: 'pdf'
-  value: Base64PDFData & {
+  value: {
     id: string
     name: string
-    size?: number
+    textContent: string
+    pageCount: number
+    fileSize: number
+    fileHash: string
+    type: 'text'
   }
 }
 

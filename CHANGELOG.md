@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.2...v1.5.0-beta.3)
+
+### 🚀 Enhancements
+
+- **pdf:** Refactor PDF handling to extract text content and improve attachment structure ([3f2a643](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3f2a643))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.1...v1.5.0-beta.2)

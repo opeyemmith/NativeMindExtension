@@ -464,12 +464,17 @@ watch(translationSystemPrompt, (newValue) => {
 })
 
 watch(baseUrl, (newValue) => {
+  try {
   // if using server, reset numCtx to 8k and enableNumCtx to true
-  const url = new URL(newValue)
-  const isLocalhost = url.hostname === 'localhost' || url.hostname === '127.0.0.1'
-  if (!isLocalhost) {
-    userConfig.llm.numCtx.set(8192)
-    userConfig.llm.enableNumCtx.set(true)
+    const url = new URL(newValue)
+    const isLocalhost = url.hostname === 'localhost' || url.hostname === '127.0.0.1'
+    if (!isLocalhost) {
+      userConfig.llm.numCtx.set(8192)
+      userConfig.llm.enableNumCtx.set(true)
+    }
+  }
+  catch {
+    // avoid error when baseUrl is not a valid url
   }
 })
 

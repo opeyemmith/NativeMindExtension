@@ -1,3 +1,5 @@
+import { c2bRpc } from '@/utils/rpc'
+
 import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
@@ -194,6 +196,7 @@ Examples of good emoji usage:
 Return ONLY the enhanced text with emojis. No explanations.`
 
 export const TARGET_ONBOARDING_VERSION = 1
+const MIN_SYSTEM_MEMORY = 8 // GB
 
 export const DEFAULT_QUICK_ACTIONS = [
   { editedTitle: '', defaultTitleKey: 'chat.prompt.summarize_page_content.title' as const, prompt: 'Please summarize the main content of this page in a clear and concise manner.', showInContextMenu: false, edited: false },
@@ -204,6 +207,20 @@ export const DEFAULT_QUICK_ACTIONS = [
 type OnlineSearchStatus = 'force' | 'disable' | 'auto'
 
 async function _getUserConfig() {
+  let enableNumCtx = true
+
+  try {
+    // if baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY, disable numCtx
+    // system memory check is only available in chrome
+    // baseUrl logic run when user change baseUrl in settings, so we only need to check system memory here
+    const systemMemoryInfo = await c2bRpc.getSystemMemoryInfo()
+    const systemMemory = systemMemoryInfo.capacity / 1024 / 1024 / 1024 // convert to GB
+    enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
+  }
+  catch {
+    // ignore error
+  }
+
   return {
     locale: {
       current: await new Config<SupportedLocaleCode, undefined>('locale.current').build(),
@@ -214,6 +231,7 @@ async function _getUserConfig() {
       model: await new Config<string, undefined>('llm.model').build(),
       apiKey: await new Config('llm.apiKey').default('ollama').build(),
       numCtx: await new Config('llm.numCtx').default(1024 * 8).build(),
+      enableNumCtx: await new Config('llm.enableNumCtx').default(enableNumCtx).build(),
       reasoning: await new Config('llm.reasoning').default(true).build(),
       chatSystemPrompt: await new Config('llm.chatSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
       summarizeSystemPrompt: await new Config('llm.summarizeSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),

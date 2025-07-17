@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.5.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.3...v1.5.0-beta.4)
+
+### 🚀 Enhancements
+
+- **prompt:** Update prompt logic to enhance chat capabilities ([aa8d009](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa8d009))
+- **pdf:** Enhance PDF handling with new text extraction and attachment features ([0c8706e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0c8706e))
+
+### ✅ Tests
+
+- **prompt:** Update prompt unit test ([bef742b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bef742b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.2...v1.5.0-beta.3)

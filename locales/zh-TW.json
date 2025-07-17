@@ -24,7 +24,8 @@
         "pdf_oversize": "PDF 檔案大小必須小於 {size}",
         "pdf_text_extract_error": "文字提取失敗 - 此 PDF 可能是掃描檔或基於圖像的檔案。我們強烈建議切換到 Gemma3 以獲得更好的結果。",
         "too_many_pdfs": "最多允許 {max} 個 PDF 檔案",
-        "pdf_page_count_exceeded": "PDF 必須少於 {max} 頁"
+        "pdf_page_count_exceeded": "PDF 必須少於 {max} 頁",
+        "only_load_partial_pages": "由於檔案大小限制，僅載入前 {max} 頁"
       }
     },
     "prompt": {

@@ -24,7 +24,8 @@
         "pdf_oversize": "Ukuran file PDF harus kurang dari {size}",
         "pdf_text_extract_error": "Ekstraksi teks gagal - PDF ini mungkin hasil scan atau berbasis gambar. Kami sangat merekomendasikan untuk beralih ke Gemma3 untuk hasil yang lebih baik.",
         "too_many_pdfs": "Maksimal {max} file PDF diizinkan",
-        "pdf_page_count_exceeded": "PDF harus kurang dari {max} halaman"
+        "pdf_page_count_exceeded": "PDF harus kurang dari {max} halaman",
+        "only_load_partial_pages": "Hanya {max} halaman pertama yang dimuat karena ukuran file"
       }
     },
     "prompt": {

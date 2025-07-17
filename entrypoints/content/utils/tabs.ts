@@ -26,7 +26,7 @@ export async function getDocumentContentOfTabs(tabIds: number[]) {
     log.error(`Failed to get content for tab ${tabId}, it might not be a valid HTML page or the tab is closed.`)
     return undefined
   })))
-  return contents
+  return contents.filter((tabContent) => tabContent?.type === 'html')
 }
 
 export async function getCurrentTabInfo(): Promise<TabInfo> {

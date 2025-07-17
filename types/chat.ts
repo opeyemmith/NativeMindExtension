@@ -11,6 +11,13 @@ export type ImageAttachment = {
   }
 }
 
+type PDFAttachmentSource = {
+  type: 'local-file'
+} | {
+  type: 'tab'
+  tabId: number
+}
+
 export type PDFAttachment = {
   type: 'pdf'
   value: {
@@ -21,6 +28,7 @@ export type PDFAttachment = {
     fileSize: number
     fileHash: string
     type: 'text'
+    source: PDFAttachmentSource
   }
 }
 

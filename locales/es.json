@@ -15,7 +15,8 @@
         "pdf_oversize": "El tamaño del archivo PDF debe ser menor que {size}",
         "pdf_text_extract_error": "La extracción de texto falló - este PDF puede estar escaneado o basado en imágenes. Recomendamos encarecidamente cambiar a Gemma3 para obtener mejores resultados.",
         "too_many_pdfs": "Máximo {max} archivo PDF permitido",
-        "pdf_page_count_exceeded": "El PDF debe tener menos de {max} páginas"
+        "pdf_page_count_exceeded": "El PDF debe tener menos de {max} páginas",
+        "only_load_partial_pages": "Solo se cargan las primeras {max} páginas debido al tamaño del archivo"
       }
     },
     "messages": {

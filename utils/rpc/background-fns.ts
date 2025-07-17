@@ -222,6 +222,16 @@ const getDocumentContentOfTab = async (tabId: number) => {
   return article
 }
 
+const getPagePDFContent = async (tabId: number) => {
+  const pdfInfo = await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
+  return pdfInfo
+}
+
+const getPageContentType = async (tabId: number) => {
+  const contentType = await bgBroadcastRpc.getPageContentType({ _toTab: tabId })
+  return contentType
+}
+
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
   const response = await fetch(url, initOptions)
   if (!response.ok) {
@@ -512,6 +522,8 @@ export const backgroundFunctions = {
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
+  getPageContentType,
+  getPagePDFContent,
   fetchAsDataUrl,
   fetchAsText,
   streamObjectFromSchema,

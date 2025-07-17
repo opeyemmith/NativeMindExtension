@@ -82,7 +82,7 @@ Question: ${question}`.trim()
   return { user: new UserPrompt(user), system }
 })
 
-export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistant' | string, content: string }[], pages: Page[], pdfInfo?: PDFContentForModel) => {
+export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistant' | string, content: string }[], pages: Page[], _pdfInfo?: PDFContentForModel) => {
   const system = renderPrompt`You are a helpful assistant. Based on the conversation below and the current web page content, suggest the next step to take. You can suggest one of the following options:
 
 1. search_online: ONLY if user requests the latest information or news that you don't already know. If you choose this option, you must also provide a list of search keywords.
@@ -93,7 +93,12 @@ export const nextStep = definePrompt(async (messages: { role: 'user' | 'assistan
    - Consider the current page content to find complementary information
    - Do not include explanations, just the keywords
 
-2. chat: Continue the conversation with the user if you have enough information from the current page content to answer their question.
+2. chat: Continue the conversation with the user in ALL other cases, including:
+   - Analyzing, summarizing, or discussing content from PDFs, web pages, or images
+   - Answering questions based on available content
+   - Providing explanations or insights about existing materials
+   - Creative tasks, coding, problem-solving
+   - General conversation that doesn't require new external information
 
 Example response for search_online:
 ${new JSONBuilder({ action: 'search_online', queryKeywords: ['climate news', 'paris agreement', 'emissions data'] })}
@@ -112,16 +117,6 @@ ${new JSONBuilder({ action: 'chat' })}
     tabContextBuilder.insert(new TagBuilder('tab', { id: i + 1 }).insertContent(head, body))
   }
 
-  const pdfContextBuilder: TagBuilder = new TagBuilder('pdf_document')
-  if (pdfInfo?.type === 'text') {
-    const { fileName = '', pageCount } = pdfInfo
-    pdfContextBuilder.insert(new TagBuilder('title').insertContent(fileName))
-    pdfContextBuilder.insert(new TagBuilder('pages').insertContent(pageCount.toString()))
-  }
-  else {
-    // ignore pdf images for now
-  }
-
   const conversationContextBuilder = new TagBuilder('conversation')
   for (const message of messages) {
     conversationContextBuilder.insertContent(`${message.role}: ${message.content}`)
@@ -129,7 +124,6 @@ ${new JSONBuilder({ action: 'chat' })}
 
   const user = renderPrompt`
 ${tabContextBuilder}
-${pdfContextBuilder}
 
 ${conversationContextBuilder}
 `.trim()

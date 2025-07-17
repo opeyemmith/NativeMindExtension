@@ -4,6 +4,7 @@ import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
 import { lazyInitialize } from '../memo'
+import { ByteSize } from '../sizes'
 import { Config } from './helpers'
 
 export const DEFAULT_TRANSLATOR_SYSTEM_PROMPT = `You are a highly skilled translator, you will be provided an html string array in JSON format, and your task is to translate each string into {{LANGUAGE}}, preserving any html tag. The result should only contain all strings in JSON array format.
@@ -214,7 +215,7 @@ async function _getUserConfig() {
   // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
   if (!import.meta.env.FIREFOX) {
     const systemMemoryInfo = await c2bRpc.getSystemMemoryInfo()
-    const systemMemory = systemMemoryInfo.capacity / 1024 / 1024 / 1024 // convert to GB
+    const systemMemory = ByteSize.fromBytes(systemMemoryInfo.capacity).toGB()
     enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
   }
 

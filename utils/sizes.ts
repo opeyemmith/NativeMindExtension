@@ -14,6 +14,10 @@ export class ByteSize {
     return new ByteSize(bytes)
   }
 
+  toGB(): number {
+    return this.bytes / (1024 * 1024 * 1024)
+  }
+
   toMB(): number {
     return this.bytes / (1024 * 1024)
   }

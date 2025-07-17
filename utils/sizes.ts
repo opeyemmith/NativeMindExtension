@@ -2,6 +2,11 @@ import { formatSize } from './formatter'
 
 export class ByteSize {
   private constructor(private bytes: number) {}
+
+  static fromGB(gb: number): ByteSize {
+    return new ByteSize(gb * 1024 * 1024 * 1024)
+  }
+
   static fromMB(mb: number): ByteSize {
     return new ByteSize(mb * 1024 * 1024)
   }

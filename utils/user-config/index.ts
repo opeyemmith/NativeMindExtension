@@ -207,7 +207,7 @@ export const DEFAULT_QUICK_ACTIONS = [
 
 type OnlineSearchStatus = 'force' | 'disable' | 'auto'
 
-async function _getUserConfig() {
+export async function _getUserConfig() {
   let enableNumCtx = true
 
   // Disable numCtx when baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY

@@ -3,6 +3,7 @@ import { EventEmitter } from 'events'
 import { Browser, browser } from 'wxt/browser'
 import { z } from 'zod'
 
+import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
 
 import { ContextMenuManager } from '../context-menu'
@@ -219,6 +220,16 @@ const getAllTabs = async () => {
 const getDocumentContentOfTab = async (tabId: number) => {
   const article = await bgBroadcastRpc.getDocumentContent({ _toTab: tabId })
   return article
+}
+
+const getPagePDFContent = async (tabId: number) => {
+  const pdfInfo = await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
+  return pdfInfo
+}
+
+const getPageContentType = async (tabId: number) => {
+  const contentType = await bgBroadcastRpc.getPageContentType({ _toTab: tabId })
+  return contentType
 }
 
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
@@ -499,7 +510,7 @@ export const backgroundFunctions = {
     eventEmitter.emit(ev, ...args)
   },
   ping,
-  getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as { tabId: number, title: string, faviconUrl?: string, url: string }, // a trick to get tabId
+  getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as TabInfo, // a trick to get tabId
   generateText,
   generateTextAsync,
   streamText,
@@ -511,6 +522,8 @@ export const backgroundFunctions = {
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
+  getPageContentType,
+  getPagePDFContent,
   fetchAsDataUrl,
   fetchAsText,
   streamObjectFromSchema,

@@ -14,8 +14,18 @@
         "ask_anything": "Pergunte qualquer coisa...",
         "ask_follow_up": "Faça uma pergunta complementar..."
       },
-      "tab_selector": {
-        "all_tabs": "Todas as abas abertas"
+      "attachment_selector": {
+        "all_tabs": "Todas as abas abertas",
+        "upload_from_computer": "Carregar do meu computador",
+        "image_oversize": "O tamanho da imagem deve ser menor que {size}",
+        "too_many_images": "Máximo de {max} arquivos de imagem permitidos",
+        "unsupported_image_type": "Formato de imagem não suportado. Por favor, carregue arquivos JPEG ou PNG.",
+        "unsupported_model": "O upload de imagem requer um modelo com capacidade de visão. Por favor, mude para Gemma3 ou modelo de visão similar.",
+        "pdf_oversize": "O tamanho do arquivo PDF deve ser menor que {size}",
+        "pdf_text_extract_error": "A extração de texto falhou - este PDF pode estar digitalizado ou ser baseado em imagem. Recomendamos vivamente mudar para o Gemma3 para melhores resultados.",
+        "too_many_pdfs": "Máximo de {max} arquivo PDF permitido",
+        "pdf_page_count_exceeded": "O PDF deve ter menos de {max} páginas",
+        "only_load_partial_pages": "Apenas as primeiras {max} páginas são carregadas devido ao tamanho do arquivo"
       }
     },
     "prompt": {
@@ -152,7 +162,14 @@
     },
     "translation": {
       "show_original": "Mostrar original",
-      "translate_page_into": "Traduzir esta página para {idioma}"
+      "translate_page_into": "Traduzir esta página para {idioma}",
+      "translate_selected_text": "Traduzir texto selecionado"
+    },
+    "add_image": {
+      "title": "Adicionar Imagem ao Chat"
+    },
+    "settings": {
+      "title": "Configurações"
     }
   },
   "errors": {

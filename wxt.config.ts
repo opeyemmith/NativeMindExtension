@@ -9,7 +9,7 @@ import { version } from './package.json'
 export const VERSION = version.split('-')[0]
 
 const IS_FIREFOX = process.argv.includes('firefox')
-const FIREFOX_EXTENSION_ID = '{93170c64-eed9-4108-bb64-ade943a68ad9}'
+const FIREFOX_EXTENSION_ID = '{48e0818d-6c94-43d4-9465-61ceb28080e3}'
 const ENABLE_BUNDLE_ANALYZER = process.argv.includes('--analyze') || process.env.ANALYZE === 'true'
 
 const permissionsForChrome = ['system.memory']

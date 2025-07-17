@@ -105,12 +105,16 @@ import Loading from '@/components/Loading.vue'
 import Button from '@/components/ui/Button.vue'
 import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
+import { useToast } from '@/composables/useToast'
 import { useI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { writingToolList, writingToolProofread, writingToolRewrite, writingToolSparkle } from '@/utils/prompts'
 import { Prompt } from '@/utils/prompts/helpers'
+import { getUserConfig } from '@/utils/user-config'
 
+import { useOllamaStatusStore } from '../../store'
 import { streamTextInBackground } from '../../utils/llm'
+import { showSettings } from '../../utils/settings'
 import MarkdownViewer from '../MarkdownViewer.vue'
 import { WritingToolType } from './types'
 
@@ -131,6 +135,9 @@ const { t } = useI18n()
 const output = ref<string>(``)
 const abortControllers: AbortController[] = []
 const runningStatus = ref<'pending' | 'streaming' | 'idle'>('idle')
+const toast = useToast()
+const ollamaStatusStore = useOllamaStatusStore()
+const userConfig = await getUserConfig()
 const abortExistingStreams = () => {
   abortControllers.forEach((controller) => controller.abort())
   abortControllers.length = 0
@@ -144,8 +151,26 @@ const prompts: Record<WritingToolType, (text: string) => PromiseLike<Prompt> | P
   sparkle: writingToolSparkle,
 }
 
+async function checkOllamaStatus() {
+  if (userConfig.llm.endpointType.get() !== 'ollama') return true
+  if (!(await ollamaStatusStore.updateConnectionStatus())) {
+    toast(t('errors.model_request_error'), { duration: 2000 })
+    showSettings(true, { scrollTarget: 'server-address-section' })
+    emit('close')
+    return false
+  }
+  else if ((await ollamaStatusStore.updateModelList()).length === 0) {
+    toast(t('errors.model_not_found'), { duration: 2000 })
+    showSettings(true, { scrollTarget: 'model-download-section' })
+    emit('close')
+    return false
+  }
+  return true
+}
+
 const start = async () => {
   abortExistingStreams()
+  if (!(await checkOllamaStatus())) return
   const abortController = new AbortController()
   abortControllers.push(abortController)
   try {

@@ -11,7 +11,7 @@ import RootProvider from './components/RootProvider.vue'
 import { createShadowRootOverlay } from './ui'
 
 export default defineContentScript({
-  matches: ['*://*/*'],
+  matches: ['<all_urls>'],
   cssInjectionMode: 'manual',
   runAt: 'document_start',
   async main(ctx) {

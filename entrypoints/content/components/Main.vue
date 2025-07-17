@@ -87,7 +87,10 @@
         class="absolute bottom-0 left-0 right-0"
         :style="{ top: `${topBounding.height.value}px` }"
       >
-        <Chat class="h-full" />
+        <Chat
+          ref="chatRef"
+          class="h-full"
+        />
       </div>
     </div>
   </div>
@@ -113,18 +116,24 @@ import { Chat as ChatManager } from '../utils/chat/index'
 import { showSettings } from '../utils/settings'
 import Chat from './Chat/index.vue'
 
+const chatRef = ref<InstanceType<typeof Chat>>()
 const topRef = ref<HTMLDivElement>()
 const topBounding = useElementBounding(topRef)
+const { t } = useI18n()
+
+defineExpose({
+  chatRef: chatRef,
+})
+
+// -- await start --
 const tabStore = await getTabStore()
 const userConfig = await getUserConfig()
 const chat = await ChatManager.getInstance()
 const pinSidebar = userConfig.ui.pinSidebar.toRef()
-const { t } = useI18n()
 
 const onNewChat = async () => {
   chat.stop()
   chat.historyManager.clear()
-  await chat.resetContextTabs()
 }
 
 const showCloseButton = computed(() => {

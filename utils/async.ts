@@ -14,12 +14,14 @@ type IterValue<T> = { value: T, done: false, error?: unknown } | { value: undefi
 
 interface ToAsyncIterOptions {
   firstDataTimeout?: number
+  onTimeout?: (error: ModelRequestTimeoutError) => void
 }
 
 export function toAsyncIter<T>(cb: (yieldData: (value: T) => void, doneCb: (err?: unknown) => void) => void, options?: ToAsyncIterOptions) {
   let timeoutTimer: number | undefined
   if (options?.firstDataTimeout) {
     timeoutTimer = window.setTimeout(() => {
+      options.onTimeout?.(new ModelRequestTimeoutError())
       rejectNext?.(new ModelRequestTimeoutError())
     }, options.firstDataTimeout)
   }

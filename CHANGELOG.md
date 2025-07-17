@@ -1,6 +1,83 @@
 # Changelog
 
 
+## v1.5.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.3...v1.5.0-beta.4)
+
+### 🚀 Enhancements
+
+- **prompt:** Update prompt logic to enhance chat capabilities ([aa8d009](https://github.com/NativeMindBrowser/NativeMindExtension/commit/aa8d009))
+- **pdf:** Enhance PDF handling with new text extraction and attachment features ([0c8706e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0c8706e))
+
+### ✅ Tests
+
+- **prompt:** Update prompt unit test ([bef742b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bef742b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.5.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.2...v1.5.0-beta.3)
+
+### 🚀 Enhancements
+
+- **pdf:** Refactor PDF handling to extract text content and improve attachment structure ([3f2a643](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3f2a643))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.5.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.1...v1.5.0-beta.2)
+
+### 🚀 Enhancements
+
+- **pdf:** Enhance PDF handling and chat functionality ([0ae9cc3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0ae9cc3))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.5.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.0...v1.5.0-beta.1)
+
+### 🩹 Fixes
+
+- **chat:** Improve attachment rendering and order handling ([13a982d](https://github.com/NativeMindBrowser/NativeMindExtension/commit/13a982d))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.5.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.4...v1.5.0-beta.0)
+
+### 🚀 Enhancements
+
+- **chat:** Support chat with image ([c895f32](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c895f32))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.4.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.3...v1.4.4)
+
+### 🩹 Fixes
+
+- **manifest:** Update Firefox extension ID ([03e48ff](https://github.com/NativeMindBrowser/NativeMindExtension/commit/03e48ff))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.4.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.4.2...v1.4.3)

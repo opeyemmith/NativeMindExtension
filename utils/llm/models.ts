@@ -20,6 +20,7 @@ export async function getModelUserConfig() {
   const baseUrl = userConfig.llm.baseUrl.get()
   const apiKey = userConfig.llm.apiKey.get()
   const numCtx = userConfig.llm.numCtx.get()
+  const enableNumCtx = userConfig.llm.enableNumCtx.get()
   const reasoning = userConfig.llm.reasoning.get()
   if (!model) {
     throw new ModelNotFoundError()
@@ -29,6 +30,7 @@ export async function getModelUserConfig() {
     model,
     apiKey,
     numCtx,
+    enableNumCtx,
     reasoning,
   }
 }
@@ -40,6 +42,7 @@ export async function getModel(options: {
   model: string
   apiKey: string
   numCtx: number
+  enableNumCtx: boolean
   reasoning: boolean
   onLoadingModel?: (prg: ModelLoadingProgressEvent) => void
 }) {
@@ -63,14 +66,14 @@ export async function getModel(options: {
       fetch: customFetch,
     })
     model = ollama(options.model, {
-      numCtx: options.numCtx,
+      numCtx: options.enableNumCtx ? options.numCtx : undefined,
       structuredOutputs: true,
     })
   }
   else if (endpointType === 'web-llm') {
     const engine = await getWebLLMEngine({
       model: options.model as WebLLMSupportedModel,
-      contextWindowSize: options.numCtx,
+      contextWindowSize: options.enableNumCtx ? options.numCtx : undefined,
       onInitProgress(report) {
         options.onLoadingModel?.({ model: options.model, progress: report.progress, type: 'loading' })
       },
@@ -99,4 +102,10 @@ export function parseErrorMessageFromChunk(error: unknown): string | null {
     return (error as { message: string }).message
   }
   return null
+}
+
+export function isModelSupportPDFToImages(_model: string): boolean {
+  // Currently only gemma3 models have the ability to understand PDF converted to images
+  // but it's too slow to process large number of image so we disable this feature temporarily by returning false here
+  return false
 }

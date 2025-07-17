@@ -7,6 +7,7 @@ import { storage } from 'wxt/utils/storage'
 
 import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuManager } from '@/utils/context-menu'
+import { useGlobalI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
 import { isTabValid } from '@/utils/tab'
@@ -51,10 +52,11 @@ export default defineBackground(() => {
   }
 
   browser.tabs.onActivated.addListener(async ({ tabId }) => {
+    const { t } = await useGlobalI18n()
     // reset the translate context menu to default
     const contextMenuManager = await ContextMenuManager.getInstance()
     contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
-      title: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.title,
+      title: t(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.titleKey),
       contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
     })
     const tab = await browser.tabs.get(tabId)
@@ -111,10 +113,11 @@ export default defineBackground(() => {
   }
 
   browser.runtime.onInstalled.addListener(async () => {
-    ContextMenuManager.getInstance().then((instance) => {
+    ContextMenuManager.getInstance().then(async (instance) => {
+      const { t } = await useGlobalI18n()
       for (const menu of CONTEXT_MENU) {
         instance.createContextMenu(menu.id, {
-          title: menu.title,
+          title: t(menu.titleKey),
           contexts: menu.contexts,
         })
       }

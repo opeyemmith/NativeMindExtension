@@ -57,7 +57,7 @@
           </div>
         </div>
         <div
-          v-if="message.reasoning"
+          v-if="message.reasoning && (!message.content || expanded)"
           class="wrap-anywhere border-l-2 pl-3 border-[#AEB5BD]"
           :class="expanded ? '' : 'line-clamp-3'"
         >

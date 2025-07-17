@@ -96,8 +96,18 @@
         "ask_anything": "有什么想问的...",
         "ask_follow_up": "继续提问..."
       },
-      "tab_selector": {
-        "all_tabs": "所有已打开标签页"
+      "attachment_selector": {
+        "all_tabs": "所有已打开标签页",
+        "upload_from_computer": "从我的电脑上传",
+        "image_oversize": "图片大小必须小于 {size}",
+        "too_many_images": "最多允许 {max} 个图片文件",
+        "unsupported_image_type": "不支持的图片格式。请上传JPEG或PNG文件。",
+        "unsupported_model": "图片上传需要具备视觉能力的模型。请切换到Gemma3或类似的视觉模型。",
+        "pdf_oversize": "PDF文件大小必须小于{size}",
+        "pdf_text_extract_error": "文本提取失败 - 此PDF可能是扫描版或基于图像的。我们强烈建议切换到Gemma3以获得更好的结果。",
+        "too_many_pdfs": "最多允许 {max} 个 PDF 文件",
+        "pdf_page_count_exceeded": "PDF 页数不能超过 {max} 页",
+        "only_load_partial_pages": "由于文件大小限制，仅加载前 {max} 页"
       }
     },
     "prompt": {
@@ -152,7 +162,14 @@
     },
     "translation": {
       "show_original": "显示原始页面",
-      "translate_page_into": "将此页面翻译成{language}"
+      "translate_page_into": "将此页面翻译成{language}",
+      "translate_selected_text": "翻译选中的文本"
+    },
+    "add_image": {
+      "title": "添加图片到聊天"
+    },
+    "settings": {
+      "title": "设置"
     }
   },
   "errors": {

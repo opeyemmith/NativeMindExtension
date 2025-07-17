@@ -50,10 +50,10 @@
       class="p-4 pt-2 absolute bottom-0 left-0 right-0 flex flex-col gap-3 z-50"
     >
       <div>
-        <TabSelector v-model:selectedTabs="contextTabs" />
-      </div>
-      <div v-if="enableChatWithImage">
-        <ImageSelector v-model:selectedImages="contextImages" />
+        <AttachmentSelector
+          ref="attachmentSelectorRef"
+          v-model:attachments="contextAttachments"
+        />
       </div>
       <div class="flex gap-1 relative">
         <ScrollContainer
@@ -72,6 +72,7 @@
                 : t('chat.input.placeholder.ask_follow_up')
               "
               class="w-full block outline-none border-none resize-none field-sizing-content leading-5 text-sm wrap-anywhere"
+              @paste="onPaste"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
@@ -121,12 +122,10 @@ import {
   initChatSideEffects,
 } from '@/entrypoints/content/utils/chat/index'
 import { useI18n } from '@/utils/i18n'
-import { getUserConfig } from '@/utils/user-config'
 
 import { showSettings } from '../../utils/settings'
-import ImageSelector from '../ImageSelector.vue'
+import AttachmentSelector from '../AttachmentSelector.vue'
 import MarkdownViewer from '../MarkdownViewer.vue'
-import TabSelector from '../TabSelector.vue'
 import MessageAction from './Messages/Action.vue'
 import MessageAssistant from './Messages/Assistant.vue'
 import MessageTask from './Messages/Task.vue'
@@ -139,15 +138,17 @@ const { width: sendButtonContainerWidth } = useElementBounding(sendButtonContain
 const { t } = useI18n()
 const userInput = ref('')
 const isComposing = ref(false)
-const chat = await Chat.getInstance()
+const attachmentSelectorRef = ref<InstanceType<typeof AttachmentSelector>>()
 const scrollContainerRef = ref<InstanceType<typeof ScrollContainer>>()
-const contextTabs = chat.contextTabs
-const contextImages = chat.contextImages
+
+defineExpose({
+  attachmentSelectorRef,
+})
+
+const chat = await Chat.getInstance()
+const contextAttachments = chat.contextAttachments
 
 initChatSideEffects()
-
-const userConfig = await getUserConfig()
-const enableChatWithImage = userConfig.chat.chatWithImage.enable.toRef()
 
 const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   if (actionEvent.action === 'customInput') {
@@ -180,6 +181,14 @@ const onKeydown = (e: KeyboardEvent) => {
 
 const onSubmit = () => {
   ask()
+}
+
+const onPaste = (event: ClipboardEvent) => {
+  const files = [...(event.clipboardData?.files ?? [])]
+  if (files.length > 0 && attachmentSelectorRef.value) {
+    event.preventDefault()
+    attachmentSelectorRef.value.appendAttachmentsFromFiles(files)
+  }
 }
 
 const onStop = () => {

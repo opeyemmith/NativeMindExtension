@@ -5,6 +5,7 @@
     rows="1"
     class="field-sizing-content scrollbar-hide"
     @input="onInput"
+    @paste="emit('paste', $event)"
   />
 </template>
 
@@ -14,6 +15,7 @@ import { nextTick, ref, watch } from 'vue'
 
 const emit = defineEmits<{
   (e: 'input', ev: Event): void
+  (e: 'paste', ev: ClipboardEvent): void
   (e: 'update:modelValue', value: string): void
 }>()
 

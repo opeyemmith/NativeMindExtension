@@ -209,16 +209,13 @@ type OnlineSearchStatus = 'force' | 'disable' | 'auto'
 async function _getUserConfig() {
   let enableNumCtx = true
 
-  try {
-    // if baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY, disable numCtx
-    // system memory check is only available in chrome
-    // baseUrl logic run when user change baseUrl in settings, so we only need to check system memory here
+  // Disable numCtx when baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY
+  // This is only available in chromium-based browsers
+  // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
+  if (!import.meta.env.FIREFOX) {
     const systemMemoryInfo = await c2bRpc.getSystemMemoryInfo()
     const systemMemory = systemMemoryInfo.capacity / 1024 / 1024 / 1024 // convert to GB
     enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
-  }
-  catch {
-    // ignore error
   }
 
   return {

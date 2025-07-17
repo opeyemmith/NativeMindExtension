@@ -167,7 +167,12 @@ this is inner2 content
    - Consider the current page content to find complementary information
    - Do not include explanations, just the keywords
 
-2. chat: Continue the conversation with the user if you have enough information from the current page content to answer their question.
+2. chat: Continue the conversation with the user in ALL other cases, including:
+   - Analyzing, summarizing, or discussing content from PDFs, web pages, or images
+   - Answering questions based on available content
+   - Providing explanations or insights about existing materials
+   - Creative tasks, coding, problem-solving
+   - General conversation that doesn't require new external information
 
 Example response for search_online:
 {"action":"search_online","queryKeywords":["climate news","paris agreement","emissions data"]}

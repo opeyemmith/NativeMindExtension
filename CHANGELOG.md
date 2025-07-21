@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.8...v1.5.0-beta.9)
+
+### 🩹 Fixes
+
+- **attachment-selector:** Change append logic to unshift for adding new tabs ([981aa52](https://github.com/NativeMindBrowser/NativeMindExtension/commit/981aa52))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.8
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.7...v1.5.0-beta.8)

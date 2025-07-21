@@ -207,7 +207,7 @@ import { useTimeoutValue } from '@/composables/useTimeoutValue'
 import { AttachmentItem, ContextAttachment, LoadingAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
 import { nonNullable } from '@/utils/array'
-import { PdfTextFile } from '@/utils/file'
+import { FileGetter, PdfTextFile } from '@/utils/file'
 import { hashFile } from '@/utils/hash'
 import { useI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
@@ -240,7 +240,7 @@ const emit = defineEmits<{
 }>()
 
 const isShowSelector = ref(false)
-const { value: errorMessages, setValue: setErrorMessages } = useTimeoutValue<string[] | undefined>(undefined, undefined, 2000)
+const { value: errorMessages, setValue: setErrorMessages } = useTimeoutValue<string[] | undefined>(undefined, undefined, 5000)
 
 const showErrorMessage = (message: string) => {
   setErrorMessages((oldMessages) => {
@@ -378,41 +378,53 @@ const { open, onChange, reset } = useFileDialog({
 
 function addLoadingPlaceholder(name: string, type: LoadingAttachment['value']['type']) {
   const id = generateRandomId()
-  attachments.value.push({
+  attachments.value.unshift({
     type: 'loading',
     value: { id, name, type },
   })
   return id
 }
 
-async function addAttachmentsFromFiles(files: File[]) {
+function addAttachmentsFromFiles(files: FileGetter[]) {
   for (const file of files) {
-    await addAttachmentFromFile(file)
+    addAttachmentFromFile(file)
   }
 }
 
-async function addAttachmentFromFile(file: File, replaceAttachmentId?: string) {
-  const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(file.type))
-  if (matchedType) {
-    if (!await matchedType.validateFile({ attachments: attachments.value, replaceAttachmentId }, file)) {
-      if (replaceAttachmentId) {
-        const idx = attachments.value.findIndex((attachment) => attachment.value.id === replaceAttachmentId)
-        if (idx !== -1) attachments.value.splice(idx, 1)
-      }
-      return false
+function replaceAttachmentWithId(id: string, attachment?: ContextAttachment) {
+  const idx = attachments.value.findIndex((attachment) => attachment.value.id === id)
+  if (idx !== -1) {
+    if (attachment) {
+      attachments.value.splice(idx, 1, attachment)
     }
-    const attachment = await matchedType.convertFileToAttachment(file)
-    if (replaceAttachmentId) {
-      const idx = attachments.value.findIndex((attachment) => attachment.value.id === replaceAttachmentId)
-      if (idx !== -1) {
-        attachments.value.splice(idx, 1, attachment)
-        return true
-      }
+    else {
+      attachments.value.splice(idx, 1)
     }
-    attachments.value.unshift(attachment) // Add the attachment to the beginning of the list
-    return true
   }
-  return false
+}
+
+function addAttachmentFromFile(fileGetter: FileGetter) {
+  const fileType = fileGetter.mimeType
+  const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(fileType))
+  if (matchedType) {
+    const loadingId = addLoadingPlaceholder(fileGetter.name, matchedType.type)
+    ;(async () => {
+      try {
+        const file = await fileGetter.file()
+        if (!await matchedType.validateFile({ attachments: attachments.value, replaceAttachmentId: loadingId }, file)) {
+          replaceAttachmentWithId(loadingId)
+          return
+        }
+        const attachment = await matchedType.convertFileToAttachment(file)
+        replaceAttachmentWithId(loadingId, attachment)
+      }
+      catch (err) {
+        logger.error('Failed to add attachment', err)
+        replaceAttachmentWithId(loadingId)
+      }
+    })()
+  }
+  return
 }
 
 defineExpose({
@@ -426,7 +438,7 @@ const endpointType = userConfig.llm.endpointType.toRef()
 onChange(async (files) => {
   if (files && files.length) {
     const fileList = Array.from(files)
-    await addAttachmentsFromFiles(fileList)
+    addAttachmentsFromFiles(fileList.map((f) => FileGetter.fromFile(f)))
   }
   reset()
 })
@@ -497,14 +509,14 @@ const appendTab = async (tab: TabInfo) => {
       showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
       return
     }
-    const loadingId = addLoadingPlaceholder(tab.title ?? '', 'pdf')
     // make this process async to not block processing
-    ;(async () => {
+    addAttachmentFromFile(new FileGetter(async () => {
       const pdfContent = await c2bRpc.getPagePDFContent(tab.tabId)
       if (pdfContent) {
-        await addAttachmentFromFile(new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId), loadingId)
+        return new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId)
       }
-    })()
+      throw new Error('Failed to get PDF content')
+    }, tab.title ?? '', 'application/x-pdf-text'))
   }
   else {
     attachments.value.push({
@@ -540,10 +552,10 @@ const updateCurrentTabIfPDF = async () => {
     const pageContentType = await c2bRpc.getPageContentType(currentTab.tabId)
     if (pageContentType !== 'application/pdf') return
     attachments.value.pop() // pop the original tab
-    const loadingId = addLoadingPlaceholder(currentTab.title ?? '', 'pdf')
     const pagePDFContent = await c2bRpc.getPagePDFContent(currentTab.tabId)
     if (pagePDFContent) {
-      await addAttachmentFromFile(new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId), loadingId)
+      const file = new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId)
+      addAttachmentFromFile(FileGetter.fromFile(file))
     }
   }
 }

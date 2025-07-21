@@ -43,7 +43,7 @@ export type LoadingAttachment = {
   value: {
     id: string
     name: string
-    type: 'pdf'
+    type: ContextAttachment['type']
   }
 }
 

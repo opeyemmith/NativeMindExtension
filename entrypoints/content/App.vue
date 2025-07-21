@@ -37,10 +37,11 @@ import Modal from '@/components/Modal.vue'
 import { useToast } from '@/composables/useToast'
 import { useZIndex } from '@/composables/useZIndex'
 import { sleep } from '@/utils/async'
-import logger from '@/utils/logger'
+import { FileGetter } from '@/utils/file'
 import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
 import { registerContentScriptRpcEventFromMainWorld } from '@/utils/rpc/content-main-world-fns'
 import { getTabStore } from '@/utils/tab-store'
+import { extractFileNameFromUrl } from '@/utils/url'
 import { getUserConfig } from '@/utils/user-config'
 
 import Main from './components/Main.vue'
@@ -94,25 +95,31 @@ registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
   else if (e.menuItemId === 'native-mind-add-image-to-chat' && e.srcUrl) {
     const tabStore = await getTabStore()
     const srcUrl = e.srcUrl
-    const resp = await fetch(srcUrl)
-    const blob = await resp.blob()
-    const extension = mime.getExtension(blob.type)
-    if (!extension) {
-      logger.warn(`Unsupported image type: ${blob.type}`)
-      return
-    }
-    let imageFileName = `image.${extension}`
-    if (srcUrl.endsWith(`.${extension}`)) {
-    // If the URL already has the correct extension, use it as is
-      imageFileName = srcUrl.split('/').pop() || imageFileName
-    }
-    const file = new File([blob], imageFileName, { type: blob.type })
-    tabStore.showContainer.value = true
-    const stopWatch = watch(() => mainRef.value?.chatRef?.attachmentSelectorRef, (attachmentSelector) => {
+    const stopWatch = watch(() => mainRef.value?.chatRef?.attachmentSelectorRef, async (attachmentSelector) => {
       if (!attachmentSelector) return
-      attachmentSelector.addAttachmentsFromFiles([file])
+      // wait for container mounted
+      await sleep(50)
+      const tempFileName = extractFileNameFromUrl(srcUrl, 'image')
+      attachmentSelector.addAttachmentsFromFiles([
+        new FileGetter(async () => {
+          const resp = await fetch(srcUrl)
+          const blob = await resp.blob()
+          const extension = mime.getExtension(blob.type)
+          if (!extension) {
+            throw new Error('Unsupported image type')
+          }
+          let imageFileName = `image.${extension}`
+          if (srcUrl.endsWith(`.${extension}`)) {
+            // If the URL already has the correct extension, use it as is
+            imageFileName = srcUrl.split('/').pop() || imageFileName
+          }
+          const file = new File([blob], imageFileName, { type: blob.type })
+          return file
+        }, tempFileName, 'image/png'), // actually we don't know the type of image here, so image/png is a fake value
+      ])
       sleep(0).then(() => stopWatch())
     }, { immediate: true })
+    tabStore.showContainer.value = true
   }
 })
 

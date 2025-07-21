@@ -1,11 +1,17 @@
+import { browser } from 'wxt/browser'
+
 import { c2bRpc } from '@/utils/rpc'
 
 import { SupportedLocaleCode } from '../i18n/constants'
 import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
+import logger from '../logger'
 import { lazyInitialize } from '../memo'
+import { Entrypoint, forRuntimes } from '../runtime'
 import { ByteSize } from '../sizes'
 import { Config } from './helpers'
+
+const log = logger.child('user-config')
 
 export const DEFAULT_TRANSLATOR_SYSTEM_PROMPT = `You are a highly skilled translator, you will be provided an html string array in JSON format, and your task is to translate each string into {{LANGUAGE}}, preserving any html tag. The result should only contain all strings in JSON array format.
 Please follow these steps:
@@ -214,9 +220,16 @@ export async function _getUserConfig() {
   // This is only available in chromium-based browsers
   // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
   if (!import.meta.env.FIREFOX) {
-    const systemMemoryInfo = await c2bRpc.getSystemMemoryInfo()
-    const systemMemory = ByteSize.fromBytes(systemMemoryInfo.capacity).toGB()
-    enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
+    const systemMemoryInfo = await forRuntimes({
+      [Entrypoint.background]: () => browser.system.memory.getInfo(),
+      [Entrypoint.content]: () => c2bRpc.getSystemMemoryInfo(),
+      [Entrypoint.popup]: () => browser.system.memory.getInfo(),
+    })
+    if (!systemMemoryInfo) log.error('getUserConfig is used in an unknown runtime')
+    else {
+      const systemMemory = ByteSize.fromBytes(systemMemoryInfo.capacity).toGB()
+      enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
+    }
   }
 
   return {

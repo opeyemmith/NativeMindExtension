@@ -190,7 +190,8 @@
   },
   "popup": {
     "reload_page": "Vui lòng tải lại trang để sử dụng NativeMind.",
-    "page_not_supported": "Trang này không được hỗ trợ bởi NativeMind."
+    "page_not_supported": "Trang này không được hỗ trợ bởi NativeMind.",
+    "local_pdf_file_not_supported": "Do hạn chế quyền của trình duyệt, chúng tôi không thể truy cập trực tiếp các tệp cục bộ trên máy tính của bạn. Vui lòng mở plugin trong tab trình duyệt khác và tải lên tệp PDF cục bộ theo cách thủ công."
   },
   "writing_tools": {
     "processing": "Đang xử lý...",

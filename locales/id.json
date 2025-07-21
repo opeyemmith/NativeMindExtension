@@ -190,7 +190,8 @@
   },
   "popup": {
     "reload_page": "Silakan muat ulang halaman untuk menggunakan NativeMind.",
-    "page_not_supported": "Halaman ini tidak didukung oleh NativeMind."
+    "page_not_supported": "Halaman ini tidak didukung oleh NativeMind.",
+    "local_pdf_file_not_supported": "Karena keterbatasan izin browser, kami tidak dapat mengakses file lokal di komputer Anda secara langsung. Silakan buka plugin di tab browser lain dan unggah file PDF lokal secara manual."
   },
   "writing_tools": {
     "processing": "Memproses...",

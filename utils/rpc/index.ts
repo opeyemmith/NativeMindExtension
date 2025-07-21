@@ -36,7 +36,7 @@ export const c2bRpc = only([Entrypoint.content], () =>
     serialize: (v) => v,
     deserialize: (v) => v,
   }),
-) ?? only([Entrypoint.background], () => backgroundFunctions)
+)
 
 export const c2pRpc = only([Entrypoint.content], () =>
   createBirpc<PopupFunctions, ContentFunctions>(contentFunctions, {

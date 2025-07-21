@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v1.5.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.5...v1.5.0-beta.6)
+
+### 🩹 Fixes
+
+- **attachment-selector:** Adjust dropdown position for website with custom rem base size ([3040b49](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3040b49))
+
+### ✅ Tests
+
+- **ollama-download-buttons:** Increase timeout and change button state to 'attached' ([d01f0fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d01f0fc))
+- **e2e:** Enhance click action button tests with increased timeouts and add Ollama mock responses ([d35533b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/d35533b))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.5
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.4...v1.5.0-beta.5)

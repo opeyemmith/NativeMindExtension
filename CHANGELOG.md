@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.6...v1.5.0-beta.7)
+
+### 🩹 Fixes
+
+- **attachment-selector:** Add loading state for attachments and improve validation logic ([e11aae2](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e11aae2))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0-beta.6
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.5...v1.5.0-beta.6)

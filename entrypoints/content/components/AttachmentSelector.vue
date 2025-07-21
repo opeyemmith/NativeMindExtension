@@ -519,7 +519,7 @@ const appendTab = async (tab: TabInfo) => {
     }, tab.title ?? '', 'application/x-pdf-text'))
   }
   else {
-    attachments.value.push({
+    attachments.value.unshift({
       type: 'tab',
       value: { ...tab, id: generateRandomId() },
     }) // Add the tab if it is not selected

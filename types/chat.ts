@@ -34,15 +34,25 @@ export type PDFAttachment = {
 
 export type TabAttachment = {
   type: 'tab'
-  value: TabInfo
+  value: TabInfo & { id: string }
 }
 
-export type ContextAttachment = ImageAttachment | PDFAttachment | TabAttachment
+// this is a placeholder for attachment that is still loading
+export type LoadingAttachment = {
+  type: 'loading'
+  value: {
+    id: string
+    name: string
+    type: 'pdf'
+  }
+}
+
+export type ContextAttachment = ImageAttachment | PDFAttachment | TabAttachment | LoadingAttachment
 
 export type AttachmentItem = {
   selectorMimeTypes: (`${string}/${string}` | '*')[]
   type: ContextAttachment['type']
   matchMimeType: (mimeType: string) => boolean
-  validateFile: (context: { count: number }, file: File) => PromiseOr<boolean>
+  validateFile: (context: { attachments: ContextAttachment[], replaceAttachmentId?: string }, file: File) => PromiseOr<boolean>
   convertFileToAttachment: (file: File) => PromiseOr<ContextAttachment>
 }

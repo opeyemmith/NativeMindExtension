@@ -187,7 +187,7 @@ const onPaste = (event: ClipboardEvent) => {
   const files = [...(event.clipboardData?.files ?? [])]
   if (files.length > 0 && attachmentSelectorRef.value) {
     event.preventDefault()
-    attachmentSelectorRef.value.appendAttachmentsFromFiles(files)
+    attachmentSelectorRef.value.addAttachmentsFromFiles(files)
   }
 }
 

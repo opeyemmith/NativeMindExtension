@@ -149,6 +149,15 @@
               >
                 <IconAttachmentPDF class="w-3 h-3 text-[#52525B]" />
               </div>
+              <div
+                v-else-if="attachment.type === 'loading'"
+                class="flex items-center justify-center w-3 h-4 shrink-0 grow-0 ml-[2px]"
+              >
+                <Loading
+                  :size="12"
+                  strokeColor="#52525B]"
+                />
+              </div>
               <ExhaustiveError v-else />
             </template>
             <template #text>
@@ -187,6 +196,7 @@ import IconClose from '@/assets/icons/tag-close.svg?component'
 import IconWarningSolid from '@/assets/icons/warning-solid.svg?component'
 import IconWeb from '@/assets/icons/web.svg?component'
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
+import Loading from '@/components/Loading.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
 import Tag from '@/components/Tag.vue'
 import Button from '@/components/ui/Button.vue'
@@ -194,7 +204,7 @@ import Divider from '@/components/ui/Divider.vue'
 import Text from '@/components/ui/Text.vue'
 import { useLogger } from '@/composables/useLogger'
 import { useTimeoutValue } from '@/composables/useTimeoutValue'
-import { AttachmentItem, ContextAttachment } from '@/types/chat'
+import { AttachmentItem, ContextAttachment, LoadingAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
 import { nonNullable } from '@/utils/array'
 import { PdfTextFile } from '@/utils/file'
@@ -269,7 +279,7 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
     selectorMimeTypes: ['image/jpeg', 'image/png'] as const, // Supported MIME types for the file selector
     type: 'image',
     matchMimeType: (mimeType) => /image\/*/.test(mimeType),
-    validateFile: async ({ count }, file: File) => {
+    validateFile: async ({ attachments }, file: File) => {
       if (!await checkCurrentModelSupportVision()) {
         showErrorMessage(t('chat.input.attachment_selector.unsupported_model'))
         return false
@@ -278,7 +288,7 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
         showErrorMessage(t('chat.input.attachment_selector.unsupported_image_type'))
         return false
       }
-      else if (count >= MAX_IMAGE_COUNT) {
+      else if (attachments.filter((attachment) => attachment.type === 'image').length >= MAX_IMAGE_COUNT) {
         showErrorMessage(t('chat.input.attachment_selector.too_many_images', { max: MAX_IMAGE_COUNT }))
         return false
       }
@@ -306,8 +316,9 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
     selectorMimeTypes: ['application/pdf'] as const, // Supported MIME types for the file selector
     type: 'pdf',
     matchMimeType: (mimeType) => mimeType === 'application/pdf' || mimeType === 'application/x-pdf-text',
-    validateFile: async ({ count }, file: File) => {
-      if (count >= MAX_PDF_COUNT) {
+    validateFile: async ({ attachments, replaceAttachmentId }, file: File) => {
+      logger.debug('validate pdf file', attachments)
+      if (attachments.filter((attachment) => attachment.type === 'pdf' || (attachment.type === 'loading' && attachment.value.type === 'pdf' && attachment.value.id !== replaceAttachmentId)).length >= MAX_PDF_COUNT) {
         showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
         return false
       }
@@ -365,26 +376,47 @@ const { open, onChange, reset } = useFileDialog({
   multiple: true,
 })
 
+function addLoadingPlaceholder(name: string, type: LoadingAttachment['value']['type']) {
+  const id = generateRandomId()
+  attachments.value.push({
+    type: 'loading',
+    value: { id, name, type },
+  })
+  return id
+}
+
 async function addAttachmentsFromFiles(files: File[]) {
   for (const file of files) {
-    const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(file.type))
-    if (matchedType) {
-      const existingAttachments = attachments.value.filter((attachment) => attachment.type === matchedType.type)
-      if (!await matchedType.validateFile({ count: existingAttachments.length }, file)) {
-        continue // Skip this file if it doesn't pass validation
-      }
-      const attachment = await matchedType.convertFileToAttachment(file)
-      attachments.value.unshift(attachment) // Add the attachment to the beginning of the list
-    }
+    await addAttachmentFromFile(file)
   }
 }
 
-const appendAttachmentsFromFiles = async (files: File[]) => {
-  addAttachmentsFromFiles(files)
+async function addAttachmentFromFile(file: File, replaceAttachmentId?: string) {
+  const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(file.type))
+  if (matchedType) {
+    if (!await matchedType.validateFile({ attachments: attachments.value, replaceAttachmentId }, file)) {
+      if (replaceAttachmentId) {
+        const idx = attachments.value.findIndex((attachment) => attachment.value.id === replaceAttachmentId)
+        if (idx !== -1) attachments.value.splice(idx, 1)
+      }
+      return false
+    }
+    const attachment = await matchedType.convertFileToAttachment(file)
+    if (replaceAttachmentId) {
+      const idx = attachments.value.findIndex((attachment) => attachment.value.id === replaceAttachmentId)
+      if (idx !== -1) {
+        attachments.value.splice(idx, 1, attachment)
+        return true
+      }
+    }
+    attachments.value.unshift(attachment) // Add the attachment to the beginning of the list
+    return true
+  }
+  return false
 }
 
 defineExpose({
-  appendAttachmentsFromFiles,
+  addAttachmentsFromFiles,
 })
 
 const userConfig = await getUserConfig()
@@ -394,7 +426,7 @@ const endpointType = userConfig.llm.endpointType.toRef()
 onChange(async (files) => {
   if (files && files.length) {
     const fileList = Array.from(files)
-    await appendAttachmentsFromFiles(fileList)
+    await addAttachmentsFromFiles(fileList)
   }
   reset()
 })
@@ -460,15 +492,24 @@ const showSelector = async () => {
 const appendTab = async (tab: TabInfo) => {
   const pageContentType = await c2bRpc.getPageContentType(tab.tabId)
   if (pageContentType === 'application/pdf') {
-    const pdfContent = await c2bRpc.getPagePDFContent(tab.tabId)
-    if (pdfContent) {
-      appendAttachmentsFromFiles([new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId)])
+    // TODO: move this check into validateFile()
+    if (attachments.value.filter((attachment) => attachment.type === 'pdf' || (attachment.type === 'loading' && attachment.value.type === 'pdf')).length >= MAX_PDF_COUNT) {
+      showErrorMessage(t('chat.input.attachment_selector.too_many_pdfs', { max: MAX_PDF_COUNT }))
+      return
     }
+    const loadingId = addLoadingPlaceholder(tab.title ?? '', 'pdf')
+    // make this process async to not block processing
+    ;(async () => {
+      const pdfContent = await c2bRpc.getPagePDFContent(tab.tabId)
+      if (pdfContent) {
+        await addAttachmentFromFile(new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId), loadingId)
+      }
+    })()
   }
   else {
     attachments.value.push({
       type: 'tab',
-      value: tab,
+      value: { ...tab, id: generateRandomId() },
     }) // Add the tab if it is not selected
   }
 }
@@ -496,10 +537,13 @@ const removeAttachment = (attachment: ContextAttachment) => {
 const updateCurrentTabIfPDF = async () => {
   const currentTab = await c2bRpc.getTabInfo()
   if (attachments.value.length === 1 && attachments.value[0].type === 'tab') {
+    const pageContentType = await c2bRpc.getPageContentType(currentTab.tabId)
+    if (pageContentType !== 'application/pdf') return
+    attachments.value.pop() // pop the original tab
+    const loadingId = addLoadingPlaceholder(currentTab.title ?? '', 'pdf')
     const pagePDFContent = await c2bRpc.getPagePDFContent(currentTab.tabId)
     if (pagePDFContent) {
-      await addAttachmentsFromFiles([new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId)])
-      attachments.value.pop() // pop the original tab
+      await addAttachmentFromFile(new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId), loadingId)
     }
   }
 }

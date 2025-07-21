@@ -110,7 +110,7 @@ registerContentScriptRpcEvent('contextMenuClicked', async (e) => {
     tabStore.showContainer.value = true
     const stopWatch = watch(() => mainRef.value?.chatRef?.attachmentSelectorRef, (attachmentSelector) => {
       if (!attachmentSelector) return
-      attachmentSelector.appendAttachmentsFromFiles([file])
+      attachmentSelector.addAttachmentsFromFiles([file])
       sleep(0).then(() => stopWatch())
     }, { immediate: true })
   }

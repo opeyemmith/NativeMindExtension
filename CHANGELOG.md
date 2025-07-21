@@ -1,6 +1,33 @@
 # Changelog
 
 
+## v1.5.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.4...v1.5.0-beta.5)
+
+### 🚀 Enhancements
+
+- **ctx-size:** Improve ctx config under small RAM(8GB) machine ([cb0134e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/cb0134e))
+- **tests:** Add fake browser utilities and context type definitions ([1741186](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1741186))
+- **llm-api:** Support browser llm api ([c6e38b9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c6e38b9))
+- **popup:** Update message for local PDF file URLs in popup ([b622b36](https://github.com/NativeMindBrowser/NativeMindExtension/commit/b622b36))
+
+### 🩹 Fixes
+
+- **settings:** Handle invalid baseUrl gracefully ([0e126a6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0e126a6))
+- **chat:** Refine message reasoning display logic in Assistant component ([1ccfe74](https://github.com/NativeMindBrowser/NativeMindExtension/commit/1ccfe74))
+- **user-config:** Handle enableNumCtx logic under firefox gracefully ([e371011](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e371011))
+- **user-config:** Get system memory in background ([9588b86](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9588b86))
+
+### 🏡 Chore
+
+- **husky:** Add unit tests to pre-commit hook ([524d2e7](https://github.com/NativeMindBrowser/NativeMindExtension/commit/524d2e7))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+- NekoWings ([@NekoWings](http://github.com/NekoWings))
+
 ## v1.5.0-beta.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.3...v1.5.0-beta.4)

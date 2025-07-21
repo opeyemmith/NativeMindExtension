@@ -1,6 +1,9 @@
-import { type BrowserContext, chromium, test as base } from '@playwright/test'
+import { type BrowserContext, chromium, Page, test as base } from '@playwright/test'
 import fs from 'fs'
 import path from 'path'
+
+import { ollamaPsResponse } from './mock-responses/ollama/ps'
+import { ollamaTagsResponse } from './mock-responses/ollama/tags'
 
 type Extended = {
   context: BrowserContext
@@ -63,3 +66,31 @@ export const test = base.extend<Extended>({
   },
 })
 export const expect = test.expect
+
+interface OllamaMockOptions {
+  chatResponse?: string
+}
+
+// TODO: support api mocking in background.js
+export const mockOllamaAPI = (page: Page, options: OllamaMockOptions) => {
+  page.route('http://localhost:11434/api/tags', (route) => {
+    route.fulfill({
+      status: 200,
+      body: JSON.stringify(ollamaTagsResponse),
+    })
+  })
+  page.route('http://localhost:11434/api/ps', (route) => {
+    route.fulfill({
+      status: 200,
+      body: JSON.stringify(ollamaPsResponse),
+    })
+  })
+  if (options.chatResponse) {
+    page.route('http://localhost:11434/api/chat', (route) => {
+      route.fulfill({
+        status: 200,
+        body: options.chatResponse,
+      })
+    })
+  }
+}

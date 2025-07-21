@@ -16,7 +16,11 @@
             class="w-4 h-4 text-red-500"
           />
         </div>
-        <span>{{ toast.message }}</span>
+        <span v-if="!toast.options.isHTML">{{ toast.message }}</span>
+        <div
+          v-if="toast.options.isHTML"
+          v-html="toast.message"
+        />
       </div>
       <button
         class="cursor-pointer"
@@ -36,6 +40,7 @@ import IconWarning from '@/assets/icons/warning.svg?component'
 
 export type ToastOptions = {
   duration?: number
+  isHTML?: boolean
   type?: 'success' | 'error' | 'info'
 }
 export type ToastFunction = (message: string, options?: ToastOptions) => void

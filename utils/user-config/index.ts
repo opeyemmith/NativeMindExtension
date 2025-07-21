@@ -234,9 +234,12 @@ export async function _getUserConfig() {
       chatSystemPrompt: await new Config('llm.chatSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
       summarizeSystemPrompt: await new Config('llm.summarizeSystemPrompt').default(DEFAULT_CHAT_SYSTEM_PROMPT).build(),
     },
-    chromeAI: {
+    browserAI: {
       polyfill: {
         enable: await new Config('chromeAI.polyfill.enable_1').default(false).build(),
+      },
+      llmAPI: {
+        enable: await new Config('chromeAI.llmAPI.enable').default(false).build(),
       },
     },
     chat: {

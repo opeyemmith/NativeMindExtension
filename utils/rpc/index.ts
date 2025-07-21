@@ -11,47 +11,12 @@ import { browser } from 'wxt/browser'
 import logger from '@/utils/logger'
 
 import { contentFnsForMainWorld } from './content-main-world-fns'
+import { isMsgFromTo, makeMessage, MessageSource, RpcResponse } from './utils'
 
 type BackgroundFunctions = typeof backgroundFunctions
 type ContentFunctions = typeof contentFunctions
 type PopupFunctions = typeof popupFunctions
 type ContentFunctionsForMainWorld = typeof contentFnsForMainWorld
-
-enum MessageSource {
-  background = 'background',
-  contentScript = 'content-script',
-  popup = 'popup',
-  mainWorld = 'main-world',
-}
-
-interface RpcResponse {
-  t: 's' | 'q'
-  i: string
-  m: string
-  a: unknown[]
-  r?: unknown
-}
-
-function isMsgFromTo<T, Source extends MessageSource, Target extends MessageSource>(
-  msg: unknown,
-  source: Source,
-  target: Target,
-): msg is { source: Source, data: T & RpcResponse } {
-  if (msg && typeof msg === 'object' && 'source' in msg && msg.source === source) {
-    if ('targets' in msg && Array.isArray(msg.targets) && msg.targets.some((t) => t === target)) {
-      return true
-    }
-  }
-  return false
-}
-
-function makeMessage<D>(data: D, source: MessageSource, targets: MessageSource[]) {
-  return {
-    source,
-    data,
-    targets,
-  }
-}
 
 // content script to background rpc
 export const c2bRpc = only([Entrypoint.content], () =>

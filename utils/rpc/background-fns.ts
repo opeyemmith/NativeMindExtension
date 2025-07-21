@@ -2,6 +2,7 @@ import { generateObject as originalGenerateObject, GenerateObjectResult, generat
 import { EventEmitter } from 'events'
 import { Browser, browser } from 'wxt/browser'
 import { z } from 'zod'
+import { convertJsonSchemaToZod, JSONSchema } from 'zod-from-json-schema'
 
 import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
@@ -11,30 +12,35 @@ import { AppError, CreateTabStreamCaptureError, ModelRequestError, UnknownError 
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
 import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
-import { selectTools, ToolName } from '../llm/tools'
+import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
 import { searchOnline } from '../search'
 import { getUserConfig } from '../user-config'
 import { bgBroadcastRpc } from '.'
+import { preparePortConnection } from './utils'
 
-type StreamTextOptions = Parameters<typeof originalStreamText>[0]
-type GenerateTextOptions = Parameters<typeof originalGenerateText>[0]
-type GenerateObjectOptions = Parameters<typeof originalGenerateObject>[0]
+type StreamTextOptions = Omit<Parameters<typeof originalStreamText>[0], 'tools'>
+type GenerateTextOptions = Omit<Parameters<typeof originalGenerateText>[0], 'tools'>
+type GenerateObjectOptions = Omit<Parameters<typeof originalGenerateObject>[0], 'tools'>
+type ExtraGenerateOptions = { modelId?: string, reasoning?: boolean }
+type ExtraGenerateOptionsWithTools = ExtraGenerateOptions & { tools?: (ToolName | ToolWithName)[] }
+type SchemaOptions<S extends SchemaName> = { schema: S } | { jsonSchema: JSONSchema }
 
-const preparePortConnection = (portName: string) => {
-  return new Promise<Browser.runtime.Port>((resolve, reject) => {
-    const onConnected = async (port: Browser.runtime.Port) => {
-      if (port.name === portName) {
-        browser.runtime.onConnect.removeListener(onConnected)
-        resolve(port)
-      }
-    }
-    browser.runtime.onConnect.addListener(onConnected)
-    setTimeout(() => {
-      browser.runtime.onConnect.removeListener(onConnected)
-      reject(new Error('Timeout waiting for port connection'))
-    }, 20000)
-  })
+const parseSchema = <S extends SchemaName>(options: SchemaOptions<S>) => {
+  if ('schema' in options) {
+    return selectSchema(options.schema)
+  }
+  else if (options.jsonSchema) {
+    return convertJsonSchemaToZod(options.jsonSchema)
+  }
+  throw new Error('Schema not provided')
+}
+
+const generateExtraModelOptions = (options: ExtraGenerateOptions) => {
+  return {
+    ...(options.modelId !== undefined ? { model: options.modelId } : {}),
+    ...(options.reasoning !== undefined ? { reasoningEffort: options.reasoning } : {}),
+  }
 }
 
 const makeLoadingModelListener = (port: Browser.runtime.Port) => (ev: ModelLoadingProgressEvent) => {
@@ -58,7 +64,7 @@ const normalizeError = (_error: unknown) => {
   return error
 }
 
-const streamText = async (options: Pick<StreamTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens'> & { tools?: ToolName[] }) => {
+const streamText = async (options: Pick<StreamTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens' | 'topK' | 'topP'> & ExtraGenerateOptionsWithTools) => {
   const abortController = new AbortController()
   const portName = `streamText-${Date.now().toString(32)}`
   const onStart = async (port: Browser.runtime.Port) => {
@@ -71,7 +77,7 @@ const streamText = async (options: Pick<StreamTextOptions, 'messages' | 'prompt'
       abortController.abort()
     })
     const response = originalStreamText({
-      model: await getModel({ ...(await getModelUserConfig()), onLoadingModel: makeLoadingModelListener(port) }),
+      model: await getModel({ ...(await getModelUserConfig()), onLoadingModel: makeLoadingModelListener(port), ...generateExtraModelOptions(options) }),
       messages: options.messages,
       prompt: options.prompt,
       system: options.system,
@@ -95,9 +101,9 @@ const streamText = async (options: Pick<StreamTextOptions, 'messages' | 'prompt'
   return { portName }
 }
 
-const generateTextAsync = async (options: Pick<GenerateTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens'> & { tools?: ToolName[] }) => {
+const generateTextAsync = async (options: Pick<GenerateTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens'> & ExtraGenerateOptionsWithTools) => {
   const response = originalGenerateText({
-    model: await getModel({ ...(await getModelUserConfig()) }),
+    model: await getModel({ ...(await getModelUserConfig()), ...generateExtraModelOptions(options) }),
     messages: options.messages,
     prompt: options.prompt,
     system: options.system,
@@ -108,7 +114,7 @@ const generateTextAsync = async (options: Pick<GenerateTextOptions, 'messages' |
   return response
 }
 
-const generateText = async (options: Pick<GenerateTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens' | 'temperature' | 'topK' | 'topP'> & { tools?: ToolName[] }) => {
+const generateText = async (options: Pick<GenerateTextOptions, 'messages' | 'prompt' | 'system' | 'toolChoice' | 'maxTokens' | 'temperature' | 'topK' | 'topP'> & ExtraGenerateOptionsWithTools) => {
   const abortController = new AbortController()
   const portName = `streamText-${Date.now().toString(32)}`
   const onStart = async (port: Browser.runtime.Port) => {
@@ -121,7 +127,7 @@ const generateText = async (options: Pick<GenerateTextOptions, 'messages' | 'pro
       abortController.abort()
     })
     const response = await originalGenerateText({
-      model: await getModel({ ...(await getModelUserConfig()) }),
+      model: await getModel({ ...(await getModelUserConfig()), ...generateExtraModelOptions(options) }),
       messages: options.messages,
       prompt: options.prompt,
       system: options.system,
@@ -141,7 +147,7 @@ const generateText = async (options: Pick<GenerateTextOptions, 'messages' | 'pro
   return { portName }
 }
 
-const streamObjectFromSchema = async <S extends SchemaName>(options: Pick<GenerateObjectOptions, 'prompt' | 'system' | 'messages'> & { schema: S }) => {
+const streamObjectFromSchema = async <S extends SchemaName>(options: Pick<GenerateObjectOptions, 'prompt' | 'system' | 'messages'> & SchemaOptions<S> & ExtraGenerateOptions) => {
   const abortController = new AbortController()
   const portName = `streamText-${Date.now().toString(32)}`
   const onStart = async (port: Browser.runtime.Port) => {
@@ -154,9 +160,9 @@ const streamObjectFromSchema = async <S extends SchemaName>(options: Pick<Genera
       abortController.abort()
     })
     const response = originalStreamObject({
-      model: await getModel({ ...(await getModelUserConfig()), onLoadingModel: makeLoadingModelListener(port) }),
+      model: await getModel({ ...(await getModelUserConfig()), onLoadingModel: makeLoadingModelListener(port), ...generateExtraModelOptions(options) }),
       output: 'object',
-      schema: selectSchema(options.schema as SchemaName) as z.ZodSchema,
+      schema: parseSchema(options),
       prompt: options.prompt,
       system: options.system,
       messages: options.messages,
@@ -174,14 +180,14 @@ const streamObjectFromSchema = async <S extends SchemaName>(options: Pick<Genera
   return { portName }
 }
 
-const generateObjectFromSchema = async <S extends SchemaName>(options: Pick<GenerateObjectOptions, 'prompt' | 'system' | 'messages'> & { schema: S }) => {
-  const s = selectSchema(options.schema)
+const generateObjectFromSchema = async <S extends SchemaName>(options: Pick<GenerateObjectOptions, 'prompt' | 'system' | 'messages'> & SchemaOptions<S> & ExtraGenerateOptions) => {
+  const s = parseSchema(options)
   const isEnum = s instanceof z.ZodEnum
   let ret
   try {
     if (isEnum) {
       ret = await originalGenerateObject({
-        model: await getModel({ ...(await getModelUserConfig()) }),
+        model: await getModel({ ...(await getModelUserConfig()), ...generateExtraModelOptions(options) }),
         output: 'enum',
         enum: (s as z.ZodEnum<[string, ...string[]]>)._def.values,
         prompt: options.prompt,

@@ -13,7 +13,7 @@
         ref="selectorListContainer"
         class="absolute top-0 h-0 w-full z-50"
       >
-        <div class="translate-y-[calc(-100%-1rem)] bg-bg-component rounded-lg shadow-01 p-1 w-full">
+        <div class="translate-y-[calc(-100%-16px)] bg-bg-component rounded-lg shadow-01 p-1 w-full">
           <div class="flex flex-col">
             <div class="w-full mb-px">
               <div

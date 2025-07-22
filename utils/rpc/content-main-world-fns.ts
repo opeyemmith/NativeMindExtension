@@ -2,18 +2,20 @@ import { TextStreamPart, ToolSet } from 'ai'
 import EventEmitter from 'events'
 import { browser } from 'wxt/browser'
 
-import { toAsyncIter } from '../async'
+import { readPortMessageIntoIterator } from '../async'
+import { UnsupportedEndpointType } from '../error'
 import { logger } from '../logger'
 import { SettingsScrollTarget } from '../scroll-targets'
 import { getTabStore } from '../tab-store'
 import { getUserConfig } from '../user-config'
 import { c2bRpc } from '.'
+import { makeMessage, MessageSource } from './utils'
 
 const log = logger.child('main-world-fns')
 const eventEmitter = new EventEmitter()
 
 export type Events = {
-  toast: (opts: { message: string, type?: 'info' | 'success' | 'error', duration?: number }) => void
+  toast: (opts: { message: string, type?: 'info' | 'success' | 'error', duration?: number, isHTML?: boolean }) => void
 }
 
 export type EventKey = keyof Events
@@ -36,49 +38,68 @@ async function generateTextInBackground(options: Parameters<typeof c2bRpc.genera
   })
 }
 
-export async function* streamTextInBackground(options: Parameters<typeof c2bRpc.streamText>[0]) {
+export async function streamTextInBackground(options: Parameters<typeof c2bRpc.streamText>[0]) {
   const { portName } = await c2bRpc.streamText(options)
   const port = browser.runtime.connect({ name: portName })
-  const iter = toAsyncIter<TextStreamPart<ToolSet>>(
-    (yieldData, done) => {
-      port.onMessage.addListener((message: TextStreamPart<ToolSet>) => {
-        if (message.type === 'error') {
-          done(message.error)
-          return
-        }
-        yieldData(message)
-      })
-      port.onDisconnect.addListener(() => {
-        done()
-      })
-    },
-    {
-      firstDataTimeout: 60000,
-      onTimeout: () => port.disconnect(), // disconnect to avoid connection leak
-    },
-  )
-  yield* iter
+  const iter = readPortMessageIntoIterator<TextStreamPart<ToolSet>>(port, { firstDataTimeout: 60000, onTimeout: () => port.disconnect(), shouldYieldError: (msg) => msg.type === 'error' ? msg.error : undefined })
+  const connectionId = `streamText-${Date.now().toString(32)}`
+  ;(async () => {
+    for await (const chunk of iter) {
+      window.postMessage(makeMessage(chunk, MessageSource.contentScript, [MessageSource.mainWorld], connectionId), '*')
+    }
+    window.postMessage(makeMessage({ type: 'done' }, MessageSource.contentScript, [MessageSource.mainWorld], connectionId), '*')
+  })()
+  return connectionId
 }
 
-export async function checkChromeAIPolyfillEnabled() {
+export async function streamObjectInBackground(options: Parameters<typeof c2bRpc.streamObjectFromSchema>[0]) {
+  const { portName } = await c2bRpc.streamObjectFromSchema(options)
+  const port = browser.runtime.connect({ name: portName })
+  const iter = readPortMessageIntoIterator<TextStreamPart<ToolSet>>(port, { firstDataTimeout: 60000, onTimeout: () => port.disconnect(), shouldYieldError: (msg) => msg.type === 'error' ? msg.error : undefined })
+  const connectionId = `streamText-${Date.now().toString(32)}`
+  ;(async () => {
+    for await (const chunk of iter) {
+      window.postMessage(makeMessage(chunk, MessageSource.contentScript, [MessageSource.mainWorld], connectionId), '*')
+    }
+    window.postMessage(makeMessage({ type: 'done' }, MessageSource.contentScript, [MessageSource.mainWorld], connectionId), '*')
+  })()
+  return connectionId
+}
+
+export async function generateObjectInBackground(options: Parameters<typeof c2bRpc.generateObjectFromSchema>[0]) {
+  return await c2bRpc.generateObjectFromSchema(options)
+}
+
+export async function getBrowserAIConfig() {
   const userConfig = await getUserConfig()
-  return userConfig.chromeAI.polyfill.enable.get()
+  return { chromeAIPolyfill: userConfig.browserAI.polyfill.enable.get(), llmAPI: userConfig.browserAI.llmAPI.enable.get() }
 }
 
-export async function checkBackendModelReady() {
+export async function checkBackendModelReady(model?: string): Promise<{ backend: boolean, model: boolean }> {
   const userConfig = await getUserConfig()
   try {
     if (userConfig.llm.endpointType.get() === 'ollama') {
       const modelList = await c2bRpc.getLocalModelList()
-      return modelList.models.length > 0
+      if (model === undefined) {
+        return { backend: true, model: modelList.models.length > 0 }
+      }
+      else {
+        return { backend: true, model: modelList.models.some((m) => m.model === model) }
+      }
     }
     else if (userConfig.llm.endpointType.get() === 'web-llm') {
-      return c2bRpc.hasWebLLMModelInCache('Qwen3-0.6B-q4f16_1-MLC')
+      return { backend: true, model: await c2bRpc.hasWebLLMModelInCache('Qwen3-0.6B-q4f16_1-MLC') }
+    }
+    else {
+      throw new UnsupportedEndpointType(userConfig.llm.endpointType.get())
     }
   }
   catch (error) {
     log.debug('Error checking backend model', error)
-    return false
+    return {
+      backend: false,
+      model: false,
+    }
   }
 }
 
@@ -114,8 +135,11 @@ export const contentFnsForMainWorld = {
   },
   ping,
   generateTextInBackground,
+  streamTextInBackground,
+  streamObjectInBackground,
+  generateObjectInBackground,
   checkBackendModelReady,
-  checkChromeAIPolyfillEnabled,
+  getBrowserAIConfig,
   toggleContainer,
   toggleSetting,
 }

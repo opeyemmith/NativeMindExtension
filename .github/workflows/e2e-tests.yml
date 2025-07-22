@@ -40,12 +40,12 @@ jobs:
           node-version-file: ".nvmrc"
           cache: "pnpm"
 
-      - name: Install Playwright Browsers
-        run: pnpm dlx playwright install --with-deps
-
       - name: Install dependencies
         run: |
           pnpm install --frozen-lockfile
+
+      - name: Install Playwright Browsers
+        run: pnpm exec playwright install --with-deps
 
       - name: Build production assets
         run: |

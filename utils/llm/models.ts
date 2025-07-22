@@ -1,10 +1,10 @@
 import { extractReasoningMiddleware, LanguageModelV1, wrapLanguageModel } from 'ai'
-import { createOllama } from 'ollama-ai-provider'
 
 import { getUserConfig } from '@/utils/user-config'
 
 import { ModelNotFoundError } from '../error'
 import { makeCustomFetch } from '../fetch'
+import { createOllama } from './providers/ollama'
 import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
 import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
 

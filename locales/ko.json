@@ -190,7 +190,8 @@
   },
   "popup": {
     "reload_page": "페이지를 새로고침하여 NativeMind를 사용하세요.",
-    "page_not_supported": "이 페이지는 NativeMind에서 지원되지 않습니다."
+    "page_not_supported": "이 페이지는 NativeMind에서 지원되지 않습니다.",
+    "local_pdf_file_not_supported": "브라우저 권한 제한으로 인해 컴퓨터의 로컬 파일에 직접 액세스할 수 없습니다. 다른 브라우저 탭에서 플러그인을 열고 로컬 PDF 파일을 수동으로 업로드해 주세요."
   },
   "writing_tools": {
     "processing": "처리 중...",

@@ -8,6 +8,7 @@ import { nonNullable } from '@/utils/array'
 import { parseDocument } from '@/utils/document-parser'
 import { AbortError, AppError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
+import { generateRandomId } from '@/utils/id'
 import logger from '@/utils/logger'
 import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeWithPageContent } from '@/utils/prompts'
 import { UserPrompt } from '@/utils/prompts/helpers'
@@ -310,7 +311,7 @@ export class Chat {
   async resetContextTabs() {
     const currentTabInfo = await getCurrentTabInfo()
     this.contextAttachments.value = this.contextAttachments.value.filter((attachment) => attachment.type !== 'tab')
-    this.contextAttachments.value.unshift({ type: 'tab', value: currentTabInfo })
+    this.contextAttachments.value.unshift({ type: 'tab', value: { ...currentTabInfo, id: generateRandomId() } })
   }
 
   async checkNextStep(contextMsgs: { role: 'user' | 'assistant', content: string }[]) {

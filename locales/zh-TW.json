@@ -190,7 +190,8 @@
   },
   "popup": {
     "reload_page": "請重新載入頁面以使用 NativeMind。",
-    "page_not_supported": "此頁面不受 NativeMind 支援。"
+    "page_not_supported": "此頁面不受 NativeMind 支援。",
+    "local_pdf_file_not_supported": "由於瀏覽器權限限制，我們無法直接存取您電腦上的本地檔案。請在另一個瀏覽器分頁中開啟外掛程式，並手動上傳本地 PDF 檔案。"
   },
   "writing_tools": {
     "processing": "處理中...",

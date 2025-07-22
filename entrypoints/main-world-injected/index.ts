@@ -2,7 +2,8 @@ import { defineContentScript } from 'wxt/utils/define-content-script'
 
 import { logger } from '@/utils/logger'
 
-import { exposeToGlobal, generateText, ping, polyfillForBuiltInAI } from './utils'
+import { injectNavigatorLLM } from './llm-api'
+import { exposeToGlobal, generateText, ping } from './utils'
 
 export default defineContentScript({
   matches: ['*://*/*'],
@@ -11,7 +12,7 @@ export default defineContentScript({
   registration: 'manifest',
   main() {
     logger.debug('main world script loaded')
-    polyfillForBuiltInAI()
+    injectNavigatorLLM()
     exposeToGlobal({
       __NATIVEMIND__: {
         ping,

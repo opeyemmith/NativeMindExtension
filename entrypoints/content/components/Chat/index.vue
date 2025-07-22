@@ -121,6 +121,7 @@ import {
   Chat,
   initChatSideEffects,
 } from '@/entrypoints/content/utils/chat/index'
+import { FileGetter } from '@/utils/file'
 import { useI18n } from '@/utils/i18n'
 
 import { showSettings } from '../../utils/settings'
@@ -187,7 +188,7 @@ const onPaste = (event: ClipboardEvent) => {
   const files = [...(event.clipboardData?.files ?? [])]
   if (files.length > 0 && attachmentSelectorRef.value) {
     event.preventDefault()
-    attachmentSelectorRef.value.appendAttachmentsFromFiles(files)
+    attachmentSelectorRef.value.addAttachmentsFromFiles(files.map((f) => FileGetter.fromFile(f)))
   }
 }
 

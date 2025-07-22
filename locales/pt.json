@@ -190,7 +190,8 @@
   },
   "popup": {
     "reload_page": "Por favor, recarregue a página para usar o NativeMind.",
-    "page_not_supported": "Esta página não é suportada pelo NativeMind."
+    "page_not_supported": "Esta página não é suportada pelo NativeMind.",
+    "local_pdf_file_not_supported": "Devido às limitações de permissões do navegador, não podemos acessar diretamente arquivos locais no seu computador. Por favor, abra o plugin em outra aba do navegador e faça o upload manual do arquivo PDF local."
   },
   "writing_tools": {
     "processing": "Processando...",

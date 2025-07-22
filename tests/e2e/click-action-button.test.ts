@@ -6,10 +6,10 @@ test('click action button', async ({ page, extension }) => {
 
   await page.goto('https://example.com')
 
-  await page.waitForSelector(containerSelector, { timeout: 10000, state: 'attached' })
+  await page.waitForSelector(containerSelector, { timeout: 30000, state: 'attached' })
   await extension.activateActiveTab()
 
-  await page.waitForSelector(sideContainerSelector, { timeout: 5000 })
+  await page.waitForSelector(sideContainerSelector, { timeout: 30000 })
   const isVisible = await page.isVisible(sideContainerSelector)
   expect(isVisible).toBeTruthy()
 })

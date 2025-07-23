@@ -17,7 +17,7 @@ import zhCN from '@/locales/zh-CN.json'
 import zhTW from '@/locales/zh-TW.json'
 
 import { lazyInitialize } from '../memo'
-import { Entrypoint, only } from '../runtime'
+import { only } from '../runtime'
 import { JsonPaths } from '../type-utils'
 import { getUserConfig } from '../user-config'
 import { getAcceptLanguages } from './browser-locale'
@@ -64,7 +64,7 @@ export const createI18nInstance = lazyInitialize(async () => {
   return i18n
 })
 
-export const useI18n = only([Entrypoint.content, Entrypoint.popup], () => {
+export const useI18n = only(['content', 'popup', 'sidepanel'], () => {
   return () => {
     return _useI18n<MessageSchema, SupportedLocaleCode>()
   }

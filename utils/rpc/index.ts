@@ -1,9 +1,10 @@
 import { createBirpc } from 'birpc'
 
-import { Entrypoint, only } from '../runtime'
+import { only } from '../runtime'
 import { backgroundFunctions } from './background-fns'
 import { contentFunctions } from './content-fns'
 import { popupFunctions } from './popup-fns'
+import { sidepanelFunctions } from './sidepanel-fns'
 export { registerContentScriptRpcEvent } from './content-fns'
 export { registerPopupRpcEvent } from './popup-fns'
 import { browser } from 'wxt/browser'
@@ -17,9 +18,10 @@ type BackgroundFunctions = typeof backgroundFunctions
 type ContentFunctions = typeof contentFunctions
 type PopupFunctions = typeof popupFunctions
 type ContentFunctionsForMainWorld = typeof contentFnsForMainWorld
+type SidepanelFunctions = typeof sidepanelFunctions
 
 // content script to background rpc
-export const c2bRpc = only([Entrypoint.content], () =>
+export const c2bRpc = only(['content'], () =>
   createBirpc<BackgroundFunctions, ContentFunctions>(contentFunctions, {
     on(fn) {
       browser.runtime.onMessage.addListener((msg) => {
@@ -38,7 +40,7 @@ export const c2bRpc = only([Entrypoint.content], () =>
   }),
 )
 
-export const c2pRpc = only([Entrypoint.content], () =>
+export const c2pRpc = only(['content'], () =>
   createBirpc<PopupFunctions, ContentFunctions>(contentFunctions, {
     on(fn) {
       browser.runtime.onMessage.addListener((msg, sender) => {
@@ -57,7 +59,7 @@ export const c2pRpc = only([Entrypoint.content], () =>
   }),
 )
 
-export const p2cRpc = only([Entrypoint.popup], () => {
+export const p2cRpc = only(['popup'], () => {
   const msgTabIdMap = new Map<string, number>()
   return createBirpc<ContentFunctions, PopupFunctions>(popupFunctions, {
     on(fn) {
@@ -98,7 +100,7 @@ export const p2cRpc = only([Entrypoint.popup], () => {
   })
 })
 
-export const bgBroadcastRpc = only([Entrypoint.background], () => {
+export const bgBroadcastRpc = only(['background'], () => {
   const msgTabIdMap = new Map<string, { tabId: number, timer: number }>()
   return createBirpc<ContentFunctions, BackgroundFunctions>(backgroundFunctions, {
     on(fn) {
@@ -172,7 +174,7 @@ export const bgBroadcastRpc = only([Entrypoint.background], () => {
   })
 })
 
-export const b2pRpc = only([Entrypoint.background], () => {
+export const b2pRpc = only(['background'], () => {
   return createBirpc<PopupFunctions, BackgroundFunctions>(backgroundFunctions, {
     on(fn) {
       browser.runtime.onMessage.addListener((msg, sender) => {
@@ -194,7 +196,7 @@ export const b2pRpc = only([Entrypoint.background], () => {
   })
 })
 
-export const p2bRpc = only([Entrypoint.popup], () => {
+export const p2bRpc = only(['popup'], () => {
   return createBirpc<BackgroundFunctions, PopupFunctions>(popupFunctions, {
     on(fn) {
       browser.runtime.onMessage.addListener((msg, sender) => {
@@ -217,7 +219,7 @@ export const p2bRpc = only([Entrypoint.popup], () => {
 })
 
 // main-world script to content script rpc
-export const m2cRpc = only([Entrypoint.mainWorld], () => {
+export const m2cRpc = only(['mainWorldInjected'], () => {
   return createBirpc<ContentFunctionsForMainWorld>({}, {
     on(fn) {
       window.addEventListener('message', (event) => {
@@ -237,7 +239,7 @@ export const m2cRpc = only([Entrypoint.mainWorld], () => {
   })
 })
 
-export const c2mRpc = only([Entrypoint.content], () => {
+export const c2mRpc = only(['content'], () => {
   return createBirpc<unknown, ContentFunctionsForMainWorld>(contentFnsForMainWorld, {
     on(fn) {
       window.addEventListener('message', (ev) => {
@@ -252,6 +254,49 @@ export const c2mRpc = only([Entrypoint.content], () => {
       const msg = makeMessage(data, MessageSource.contentScript, [MessageSource.mainWorld])
       logger.debug('[content -> main-world] message post', msg)
       window.postMessage(msg, '*')
+    },
+    serialize: (v) => v,
+    deserialize: (v) => v,
+  })
+})
+
+// sidepanel to background rpc
+export const s2bRpc = only(['sidepanel'], () =>
+  createBirpc<BackgroundFunctions, SidepanelFunctions>(sidepanelFunctions, {
+    on(fn) {
+      browser.runtime.onMessage.addListener((msg) => {
+        if (isMsgFromTo(msg, MessageSource.background, MessageSource.sidepanel)) {
+          logger.debug('[background -> sidepanel] message received', msg)
+          fn(msg.data)
+        }
+      })
+    },
+    post(data) {
+      logger.debug('[sidepanel -> background] message post', data)
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background]))
+    },
+    serialize: (v) => v,
+    deserialize: (v) => v,
+  }),
+)
+
+// background to sidepanel rpc
+export const b2sRpc = only(['background'], () => {
+  return createBirpc<SidepanelFunctions, BackgroundFunctions>(backgroundFunctions, {
+    on(fn) {
+      browser.runtime.onMessage.addListener((msg, sender) => {
+        if (isMsgFromTo(msg, MessageSource.sidepanel, MessageSource.background)) {
+          logger.debug('[sidepanel -> background] message received', msg, sender)
+          fn(msg.data)
+        }
+      })
+    },
+    async post(data: RpcResponse) {
+      logger.debug('[background -> sidepanel] message post', data)
+      const msg = makeMessage(data, MessageSource.background, [MessageSource.sidepanel])
+      await browser.runtime.sendMessage(msg).catch((e) => {
+        logger.warn('failed to send message to popup', e)
+      })
     },
     serialize: (v) => v,
     deserialize: (v) => v,

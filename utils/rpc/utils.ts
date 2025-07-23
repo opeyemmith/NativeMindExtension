@@ -29,6 +29,7 @@ export enum MessageSource {
   contentScript = 'content-script',
   popup = 'popup',
   mainWorld = 'main-world',
+  sidepanel = 'sidepanel',
 }
 
 export interface RpcResponse {

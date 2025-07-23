@@ -5,12 +5,11 @@ import { browser } from 'wxt/browser'
 
 import { readPortMessageIntoIterator, toAsyncIter } from '@/utils/async'
 import { AbortError, fromError, ModelRequestTimeoutError } from '@/utils/error'
+import { BackgroundAliveKeeper } from '@/utils/keepalive'
 import { SchemaName } from '@/utils/llm/output-schema'
 import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
-
-import { BackgroundAliveKeeper } from './keepalive'
 
 const log = logger.child('llm')
 

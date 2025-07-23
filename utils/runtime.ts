@@ -1,7 +1,10 @@
-type EntrypointName = typeof APP_METADATA['entrypoint']
+import { getAppMetadata } from './app-metadata'
+
+type EntrypointName = AppMetadata['entrypoint']
 
 export function only<T>(entrypoints: EntrypointName[], fn: () => T) {
-  const currentEntrypointName = APP_METADATA.entrypoint
+  const appMetadata = getAppMetadata()
+  const currentEntrypointName = appMetadata.entrypoint
   if (entrypoints.includes(currentEntrypointName)) {
     return fn()
   }
@@ -15,7 +18,8 @@ type EntrypointWithOptionalDefaultFn<T> = EntrypointFn<T> & { default?: () => T 
 export function forRuntimes<T>(runtimesFn: EntrypointFn<T>): T | undefined
 export function forRuntimes<T>(runtimesFn: EntrypointWithDefaultFn<T>): T
 export function forRuntimes<T>(runtimesFn: EntrypointWithOptionalDefaultFn<T>) {
-  const currentEntrypointName = APP_METADATA.entrypoint
+  const appMetadata = getAppMetadata()
+  const currentEntrypointName = appMetadata.entrypoint
   if (currentEntrypointName && runtimesFn[currentEntrypointName]) {
     return runtimesFn[currentEntrypointName]()
   }

@@ -78,7 +78,7 @@ export default defineConfig({
     minimum_chrome_version: '124',
     declarative_net_request: IS_FIREFOX ? { rule_resources: [{ id: 'ruleset_1', enabled: true, path: 'rules.json' }] } : undefined,
     content_security_policy: {
-      extension_pages: 'script-src \'self\' \'wasm-unsafe-eval\'; object-src \'self\';',
+      extension_pages: `script-src 'self' 'wasm-unsafe-eval'; object-src 'self';`,
     },
     browser_specific_settings: IS_FIREFOX ? { gecko: { id: FIREFOX_EXTENSION_ID } } : undefined,
     content_scripts: [

@@ -9,6 +9,7 @@ export const MIN_SELECTION_LENGTH_TO_SHOW_WRITING_TOOLS = 10
 export const TAB_STORE_STORAGE_KEY_PREFIX = 'tab-store-'
 export const SETTINGS_PAGE_WINDOW_WIDTH = 600
 export const SETTINGS_PAGE_WINDOW_HEIGHT = 800
+export const APP_METADATA_META_TAG_NAME = 'nativemind:app-metadata'
 
 export const INVALID_URLS = [
   /^https:\/\/chromewebstore\.google\.com/,

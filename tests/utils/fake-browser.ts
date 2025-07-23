@@ -26,11 +26,8 @@ export function resetFakeBrowser(options: FakeBrowserOptions = {}) {
   }
 }
 
-export function resetFakeEntrypoint(entrypoint?: string) {
-  if (entrypoint === undefined) {
-    vi.stubEnv('ENTRYPOINT', undefined)
-  }
-  else {
-    vi.stubEnv('ENTRYPOINT', entrypoint)
-  }
+export function resetFakeEntrypoint(entrypoint?: AppMetadata['entrypoint']) {
+  vi.stubGlobal('APP_METADATA', {
+    entrypoint: entrypoint ?? 'background',
+  })
 }

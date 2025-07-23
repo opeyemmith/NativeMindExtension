@@ -3,15 +3,13 @@ import '@/utils/rpc'
 
 import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
-import { storage } from 'wxt/utils/storage'
 
 import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuManager } from '@/utils/context-menu'
 import { useGlobalI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
-import { isTabValid } from '@/utils/tab'
-import { getTabKeys } from '@/utils/tab-store'
+import { registerTabStoreCleanupListener } from '@/utils/tab-store'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
 export default defineBackground(() => {
@@ -19,39 +17,13 @@ export default defineBackground(() => {
     browser.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' })
   }
   registerDeclarativeNetRequestRule()
-
-  const tabsWaitingForOpen = new Set<number>()
+  registerTabStoreCleanupListener()
 
   browser.action.setTitle({ title: 'NativeMind' })
 
-  browser.action.onClicked.addListener(async (tab) => {
-    logger.info('onClicked', tab)
-    if (tab.id) {
-      const validTab = await isTabValid(tab.id)
-      if (validTab) {
-        tabsWaitingForOpen.delete(tab.id)
-        await bgBroadcastRpc.emit('toggleContainer', { _toTab: tab.id })
-      }
-      else {
-        tabsWaitingForOpen.add(tab.id)
-      }
-    }
-  })
+  browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 
-  const setPopupStatusBasedOnUrl = async (tabId: number, url: string) => {
-    if (INVALID_URLS.some((regex) => regex.test(url))) {
-      await browser.action.setPopup({ popup: 'popup.html' })
-    }
-    else {
-      if (tabsWaitingForOpen.has(tabId)) {
-        tabsWaitingForOpen.delete(tabId)
-        await bgBroadcastRpc.emit('toggleContainer', { _toTab: tabId, open: true })
-      }
-      await browser.action.setPopup({ popup: '' })
-    }
-  }
-
-  browser.tabs.onActivated.addListener(async ({ tabId }) => {
+  browser.tabs.onActivated.addListener(async () => {
     const { t } = await useGlobalI18n()
     // reset the translate context menu to default
     const contextMenuManager = await ContextMenuManager.getInstance()
@@ -59,31 +31,18 @@ export default defineBackground(() => {
       title: t(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.titleKey),
       contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
     })
-    const tab = await browser.tabs.get(tabId)
-    const url = tab.url
-    url && (await setPopupStatusBasedOnUrl(tabId, url))
   })
 
   browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     logger.info('tab removed', { tabId, removeInfo, isFirefox: import.meta.env.FIREFOX })
-    tabsWaitingForOpen.delete(tabId)
     bgBroadcastRpc.emit('tabRemoved', {
       tabId,
       ...removeInfo,
     })
-    if (import.meta.env.FIREFOX) {
-      // Firefox does not support session storage in content scripts, so we need to clean up the tab store
-      const keys = getTabKeys(tabId)
-      logger.info('Cleaning up tab store for removed tab', { tabId, keys })
-      await storage.removeItems(keys)
-    }
   })
 
   browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
     logger.info('tab updated', { tabId, changeInfo, tab })
-    if (tab.url) {
-      await setPopupStatusBasedOnUrl(tabId, tab.url)
-    }
 
     bgBroadcastRpc.emit('tabUpdated', {
       tabId,

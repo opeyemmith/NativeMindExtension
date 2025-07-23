@@ -8,7 +8,7 @@ import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
 
 import { ContextMenuManager } from '../context-menu'
-import { AppError, CreateTabStreamCaptureError, ModelRequestError, UnknownError } from '../error'
+import { AppError, CreateTabStreamCaptureError, FetchError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
 import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
@@ -259,10 +259,7 @@ const getPageContentType = async (tabId: number) => {
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
   const response = await fetch(url, initOptions)
   if (!response.ok) {
-    return {
-      status: response.status,
-      error: `Failed to fetch ${url}: ${response.statusText}`,
-    }
+    throw new FetchError(`Failed to fetch ${url}: ${response.statusText}`)
   }
 
   const blob = await response.blob()
@@ -502,6 +499,16 @@ export function registerBackgroundRpcEvent<E extends EventKey>(ev: E, fn: (...ar
   }
 }
 
+export async function showSidepanel(onlyCurrentTab?: boolean) {
+  if (onlyCurrentTab) {
+    const currentTab = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0])
+    const tabId = currentTab.id
+    browser.sidePanel.open({ tabId, windowId: currentTab.windowId })
+    return
+  }
+  browser.sidePanel.open({ windowId: browser.windows.WINDOW_ID_CURRENT })
+}
+
 function getTabCaptureMediaStreamId(tabId: number, consumerTabId?: number) {
   return new Promise<string | undefined>((resolve, reject) => {
     browser.tabCapture.getMediaStreamId(
@@ -525,6 +532,10 @@ function captureVisibleTab(windowId?: number, options?: Browser.tabs.CaptureVisi
   return screenCaptureBase64Url
 }
 
+function getTabInfoByTabId(tabId: number) {
+  return browser.tabs.get(tabId)
+}
+
 function ping() {
   return 'pong'
 }
@@ -535,6 +546,7 @@ export const backgroundFunctions = {
   },
   ping,
   getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as TabInfo, // a trick to get tabId
+  getTabInfoByTabId,
   generateText,
   generateTextAsync,
   streamText,

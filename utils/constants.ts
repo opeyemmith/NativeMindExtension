@@ -7,6 +7,8 @@ export const OLLAMA_SITE_DOWNLOAD_BUTTON_CLASS = 'nativemind-ollama-download-but
 export const CONTEXT_MENU_STORAGE_KEY = 'local:context-menu-map_1'
 export const MIN_SELECTION_LENGTH_TO_SHOW_WRITING_TOOLS = 10
 export const TAB_STORE_STORAGE_KEY_PREFIX = 'tab-store-'
+export const SETTINGS_PAGE_WINDOW_WIDTH = 600
+export const SETTINGS_PAGE_WINDOW_HEIGHT = 800
 
 export const INVALID_URLS = [
   /^https:\/\/chromewebstore\.google\.com/,

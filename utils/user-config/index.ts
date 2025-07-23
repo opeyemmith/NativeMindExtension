@@ -7,7 +7,7 @@ import { LanguageCode } from '../language/detect'
 import { LLMEndpointType } from '../llm/models'
 import logger from '../logger'
 import { lazyInitialize } from '../memo'
-import { Entrypoint, forRuntimes } from '../runtime'
+import { forRuntimes } from '../runtime'
 import { ByteSize } from '../sizes'
 import { Config } from './helpers'
 
@@ -221,9 +221,10 @@ export async function _getUserConfig() {
   // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
   if (!import.meta.env.FIREFOX) {
     const systemMemoryInfo = await forRuntimes({
-      [Entrypoint.background]: () => browser.system.memory.getInfo(),
-      [Entrypoint.content]: () => c2bRpc.getSystemMemoryInfo(),
-      [Entrypoint.popup]: () => browser.system.memory.getInfo(),
+      background: () => browser.system.memory.getInfo(),
+      content: () => c2bRpc.getSystemMemoryInfo(),
+      popup: () => browser.system.memory.getInfo(),
+      sidepanel: () => browser.system.memory.getInfo(),
     })
     if (!systemMemoryInfo) log.error('getUserConfig is used in an unknown runtime')
     else {

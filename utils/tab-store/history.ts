@@ -1,6 +1,6 @@
 import * as CSS from 'csstype'
 
-import { IconName } from '@/entrypoints/content/utils/markdown/content'
+import { IconName } from '@/utils/markdown/content'
 
 import { SettingsScrollTarget } from '../scroll-targets'
 

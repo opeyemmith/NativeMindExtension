@@ -124,11 +124,11 @@ import IconRedirect from '@/assets/icons/redirect.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'
 import { useOllamaStatusStore } from '@/entrypoints/content/store'
 import { deleteOllamaModel } from '@/entrypoints/content/utils/llm'
-import { showSettings } from '@/entrypoints/content/utils/settings'
 import { OLLAMA_SEARCH_URL } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
+import { showSettings } from '@/utils/settings'
 import { getUserConfig } from '@/utils/user-config'
 import { classNames } from '@/utils/vue/utils'
 
@@ -193,7 +193,7 @@ const onClickDelete = async (model: string) => {
 
 const onClick = () => {
   if (modelList.value.length === 0) {
-    showSettings(true, { scrollTarget: 'model-download-section' })
+    showSettings({ scrollTarget: 'model-download-section' })
   }
 }
 

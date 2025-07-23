@@ -7,7 +7,7 @@ import { nonNullable } from './array'
 import { CONTEXT_MENU_STORAGE_KEY } from './constants'
 import { TranslationKey } from './i18n'
 import logger from './logger'
-import { Entrypoint, only } from './runtime'
+import { only } from './runtime'
 import { ArrayNonEmpty } from './type-utils'
 
 const log = logger.child('context-menu')
@@ -21,25 +21,25 @@ export type ContextMenuItem = {
   contexts: ContextTypeList
 }
 
-export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = only([Entrypoint.background], () => ({
+export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = only(['background'], () => ({
   id: 'native-mind-selection-translate',
   titleKey: 'context_menu.translation.translate_selected_text',
   contexts: [ContextType.SELECTION],
 }))
 
-export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = only([Entrypoint.background], () => ({
+export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = only(['background'], () => ({
   id: 'native-mind-page-translate',
   titleKey: 'context_menu.translation.translate_page_into',
   contexts: [ContextType.PAGE, ContextType.SELECTION, ContextType.LINK, ContextType.IMAGE, ContextType.AUDIO, ContextType.VIDEO, ContextType.FRAME],
 }))
 
-export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = only([Entrypoint.background], () => ({
+export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = only(['background'], () => ({
   id: 'native-mind-settings',
   titleKey: 'context_menu.settings.title',
   contexts: [ContextType?.ACTION],
 }))
 
-export const CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT: ContextMenuItem = only([Entrypoint.background], () => ({
+export const CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT: ContextMenuItem = only(['background'], () => ({
   id: 'native-mind-add-image-to-chat',
   titleKey: 'context_menu.add_image.title',
   contexts: [ContextType?.IMAGE],
@@ -63,8 +63,8 @@ type ContextMenuMapItem = {
   children: ContextMenuId[]
 }
 
-export class ContextMenuManager {
-  private static instance: ContextMenuManager | null = null
+class PrivateContextMenuManager {
+  private static instance: PrivateContextMenuManager | null = null
   private reconstructing = false
   private pendingReconstruct = false
   private constructor() {}
@@ -246,3 +246,7 @@ export class ContextMenuManager {
     await this.reconstructContextMenu()
   }
 }
+
+// for consistency reason, ContextMenuManager can only be used in background
+export const ContextMenuManager = only(['background'], () => PrivateContextMenuManager)
+export type ContextMenuManager = PrivateContextMenuManager

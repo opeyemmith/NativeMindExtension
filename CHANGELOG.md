@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.6.0-beta.0)
+
+### 🚀 Enhancements
+
+- Side panel refactor ([92536d9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/92536d9))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.9...v1.5.0)

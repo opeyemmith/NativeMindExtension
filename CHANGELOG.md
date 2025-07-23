@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.0...v1.6.0-beta.1)
+
+### 🩹 Fixes
+
+- **runtime:** Update app metadata handling and improve entrypoint management ([9d181fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9d181fc))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.6.0-beta.0)

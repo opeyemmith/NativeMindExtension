@@ -1,10 +1,7 @@
 <template>
   <Modal
-    v-if="mountPoint"
     :modelValue="true"
-    class="p-4 rounded-md w-full flex flex-col gap-2"
-    :class="[props.mountPoint === 'sidebar' ? 'absolute' : 'fixed']"
-    :mountPoint="mountPoint"
+    class="p-4 rounded-md w-full flex flex-col gap-2 fixed"
     noCloseButton
     :fadeInAnimation="false"
   >
@@ -68,27 +65,24 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { onBeforeUnmount, onMounted, ref } from 'vue'
 
 import IconWarning from '@/assets/icons/warning.svg?component'
 import ConfirmPanel from '@/components/ConfirmPanel.vue'
 import Modal from '@/components/Modal.vue'
 import ProgressBar from '@/components/ProgressBar.vue'
-import { useInjectContext } from '@/composables/useInjectContext'
 import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 import logger from '@/utils/logger'
+import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 
-import { useRootElement } from '../composables/useRootElement'
-import { useOllamaStatusStore } from '../store'
 import { pullOllamaModel } from '../utils/llm'
 
 const log = logger.child('OllamaDownloadConfirmModal')
 
 const props = defineProps<{
   model: string
-  mountPoint?: 'sidebar' | 'document'
 }>()
 
 const emit = defineEmits(['cancel', 'finished'])
@@ -100,12 +94,6 @@ const modelInfo = PREDEFINED_OLLAMA_MODELS.find((model) => model.id === props.mo
   size: 0,
 }
 const ollamaStatusStore = useOllamaStatusStore()
-const rootElement = useRootElement()
-const sidebarContainerEl = useInjectContext('sideContainerEl').inject()
-
-const mountPoint = computed(() => {
-  return props.mountPoint === 'sidebar' ? sidebarContainerEl?.value : rootElement
-})
 
 const pulling = ref<{ modelId: string, total: number, completed: number, abort: () => void, status: string, error?: string }>()
 

@@ -5,7 +5,7 @@ import { browser } from 'wxt/browser'
 import { defineBackground } from 'wxt/utils/define-background'
 
 import { INVALID_URLS } from '@/utils/constants'
-import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuManager } from '@/utils/context-menu'
+import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuId, ContextMenuManager } from '@/utils/context-menu'
 import { useGlobalI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
 import { bgBroadcastRpc } from '@/utils/rpc'
@@ -108,6 +108,9 @@ export default defineBackground(() => {
         _toTab: tab?.id,
         ...info,
       })
+      if (await ContextMenuManager.getInstance().then((instance) => instance.isNeedOpenSidepanel(info.menuItemId as ContextMenuId))) {
+        await browser.sidePanel.open({ windowId: tab.windowId })
+      }
     }
   })
 

@@ -138,7 +138,7 @@ import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 
-import DownloadConfirmModal from '../OllamaDownloadModal.vue'
+import DownloadConfirmModal from '../../../settings/components/OllamaDownloadModal.vue'
 
 const emit = defineEmits(['finished'])
 const { t } = useI18n()

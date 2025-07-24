@@ -30,6 +30,7 @@ export enum MessageSource {
   popup = 'popup',
   mainWorld = 'main-world',
   sidepanel = 'sidepanel',
+  settings = 'settings',
 }
 
 export interface RpcResponse {

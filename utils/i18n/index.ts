@@ -64,7 +64,7 @@ export const createI18nInstance = lazyInitialize(async () => {
   return i18n
 })
 
-export const useI18n = only(['content', 'popup', 'sidepanel'], () => {
+export const useI18n = only(['content', 'popup', 'sidepanel', 'settings'], () => {
   return () => {
     return _useI18n<MessageSchema, SupportedLocaleCode>()
   }

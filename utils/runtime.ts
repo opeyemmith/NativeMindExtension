@@ -25,3 +25,7 @@ export function forRuntimes<T>(runtimesFn: EntrypointWithOptionalDefaultFn<T>) {
   }
   return runtimesFn.default?.()
 }
+
+export function isRuntime(entrypointName: EntrypointName) {
+  return getAppMetadata().entrypoint === entrypointName
+}

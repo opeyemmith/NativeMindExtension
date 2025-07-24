@@ -21,29 +21,29 @@ export type ContextMenuItem = {
   contexts: ContextTypeList
 }
 
-export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = only(['background'], () => ({
+export const CONTEXT_MENU_ITEM_TRANSLATE_SELECTED_TEXT: ContextMenuItem = {
   id: 'native-mind-selection-translate',
   titleKey: 'context_menu.translation.translate_selected_text',
   contexts: [ContextType.SELECTION],
-}))
+}
 
-export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = only(['background'], () => ({
+export const CONTEXT_MENU_ITEM_TRANSLATE_PAGE: ContextMenuItem = {
   id: 'native-mind-page-translate',
   titleKey: 'context_menu.translation.translate_page_into',
   contexts: [ContextType.PAGE, ContextType.SELECTION, ContextType.LINK, ContextType.IMAGE, ContextType.AUDIO, ContextType.VIDEO, ContextType.FRAME],
-}))
+}
 
-export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = only(['background'], () => ({
+export const CONTEXT_MENU_ITEM_SETTINGS: ContextMenuItem = {
   id: 'native-mind-settings',
   titleKey: 'context_menu.settings.title',
   contexts: [ContextType?.ACTION],
-}))
+}
 
-export const CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT: ContextMenuItem = only(['background'], () => ({
+export const CONTEXT_MENU_ITEM_ADD_IMAGE_TO_CHAT: ContextMenuItem = {
   id: 'native-mind-add-image-to-chat',
   titleKey: 'context_menu.add_image.title',
   contexts: [ContextType?.IMAGE],
-}))
+}
 
 export const CONTEXT_MENU: ContextMenuItem[] = [
   CONTEXT_MENU_ITEM_TRANSLATE_PAGE,
@@ -54,12 +54,17 @@ export const CONTEXT_MENU: ContextMenuItem[] = [
 
 export type ContextMenu = typeof CONTEXT_MENU
 
+export type ExtraCreateProperties = {
+  needOpenSidepanel?: boolean
+}
+
 type ContextMenuMapItem = {
   id: ContextMenuId | undefined // undefined for root menu
   title?: string
   contexts?: ContextTypeList
   visible: boolean
   parentId?: ContextMenuId
+  needOpenSidepanel?: boolean
   children: ContextMenuId[]
 }
 
@@ -161,7 +166,7 @@ class PrivateContextMenuManager {
     }
   }
 
-  async updateContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) {
+  async updateContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'> & ExtraCreateProperties) {
     if (!this.currentMenuMap.has(id)) {
       log.warn('Context menu with id does not exist, creating instead', id)
       await this.createContextMenu(id, props)
@@ -184,11 +189,12 @@ class PrivateContextMenuManager {
     r.title = props.title ?? r.title
     r.contexts = (props.contexts ?? r.contexts) as ContextTypeList
     r.visible = props.visible ?? true
+    r.needOpenSidepanel = props.needOpenSidepanel ?? r.needOpenSidepanel
     log.debug('Updating context menu', id, props, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()
   }
 
-  async createContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'>) {
+  async createContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'> & ExtraCreateProperties) {
     if (this.currentMenuMap.has(id)) {
       log.warn('Context menu with id already exists, updating instead', id)
       await this.updateContextMenu(id, props)
@@ -200,6 +206,7 @@ class PrivateContextMenuManager {
       id,
       title: props.title,
       contexts: props.contexts as ContextTypeList,
+      needOpenSidepanel: props.needOpenSidepanel,
       visible,
       parentId,
       children: [],
@@ -244,6 +251,11 @@ class PrivateContextMenuManager {
     }
     log.debug('Deleting context menu finished', id, structuredClone(this.currentMenuMap))
     await this.reconstructContextMenu()
+  }
+
+  async isNeedOpenSidepanel(id: ContextMenuId) {
+    const item = this.currentMenuMap.get(id)
+    return item?.needOpenSidepanel
   }
 }
 

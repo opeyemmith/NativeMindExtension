@@ -69,6 +69,7 @@ async function initQuickActionsContextMenu() {
           title: action.edited ? action.editedTitle : i18n.t(action.defaultTitleKey),
           contexts: ['all'],
           parentId,
+          needOpenSidepanel: true,
         })
       }
     }

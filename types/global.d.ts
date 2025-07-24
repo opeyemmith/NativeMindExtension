@@ -1,5 +1,5 @@
 interface AppMetadata {
-  entrypoint: 'content' | 'background' | 'mainWorldInjected' | 'popup' | 'sidepanel'
+  entrypoint: 'content' | 'background' | 'mainWorldInjected' | 'popup' | 'sidepanel' | 'settings'
 }
 
 // eslint-disable-next-line no-var

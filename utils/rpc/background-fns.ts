@@ -16,6 +16,7 @@ import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
 import { extractPdfText, getPdfPageCount, parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
+import { showSettingsForBackground } from '../settings'
 import { getUserConfig } from '../user-config'
 import { bgBroadcastRpc } from '.'
 import { preparePortConnection } from './utils'
@@ -224,7 +225,12 @@ const getAllTabs = async () => {
   }))
 }
 
-const getDocumentContentOfTab = async (tabId: number) => {
+const getDocumentContentOfTab = async (tabId?: number) => {
+  if (!tabId) {
+    const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0]
+    tabId = currentTab.id
+  }
+  if (!tabId) throw new Error('No tab id provided')
   const article = await bgBroadcastRpc.getDocumentContent({ _toTab: tabId })
   return article
 }
@@ -576,6 +582,8 @@ export const backgroundFunctions = {
   getSystemMemoryInfo,
   testOllamaConnection,
   captureVisibleTab,
+  showSidepanel,
+  showSettings: showSettingsForBackground,
 
   // only for firefox and should be removed after side panel refactor
   getPdfPageCount: (...args: Parameters<typeof getPdfPageCount>) => getPdfPageCount(...args).then((ret) => ret),

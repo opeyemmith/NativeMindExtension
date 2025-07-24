@@ -70,7 +70,7 @@ import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { s2bRpc } from '@/utils/rpc'
 
-import { initWebLLMEngine } from '../utils/llm'
+import { initWebLLMEngine } from '../../sidepanel/utils/llm'
 
 const log = logger.child('WebLLMDownloadModal')
 

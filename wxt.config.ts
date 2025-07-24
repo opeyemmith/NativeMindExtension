@@ -73,10 +73,11 @@ export default defineConfig({
   },
   manifest: {
     name: IS_FIREFOX ? '__MSG_extNameFirefox__' : '__MSG_extName__',
+    short_name: 'NativeMind',
     description: IS_FIREFOX ? '__MSG_extDescFirefox__' : '__MSG_extDesc__',
     version: VERSION,
     default_locale: 'en',
-    permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', 'sidePanel', ...extraPermissions],
+    permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', 'sidePanel', 'system.display', ...extraPermissions],
     minimum_chrome_version: '124',
     declarative_net_request: IS_FIREFOX ? { rule_resources: [{ id: 'ruleset_1', enabled: true, path: 'rules.json' }] } : undefined,
     content_security_policy: {

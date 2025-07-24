@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { analyzer } from 'vite-bundle-analyzer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
@@ -73,9 +74,10 @@ export default defineConfig({
       build: {
         target: ['chrome124', 'firefox120', 'safari16'],
         // firefox does't support js file larger than 5MB, so we exclude @mlc-ai/web-llm from the bundle (which firefox does not use)
-        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm'] : undefined },
+        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm', '@huggingface/transformers'] : undefined },
       },
       plugins: [
+        nodePolyfills(),
         analyzer({ enabled: ENABLE_BUNDLE_ANALYZER }),
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),

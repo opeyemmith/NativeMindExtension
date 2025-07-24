@@ -8,19 +8,22 @@ import { getUserConfig } from '@/utils/user-config'
 import { streamObjectInBackground, streamTextInBackground } from '../llm'
 import { getTranslatorEnv } from './utils/helper'
 
-export async function* translateParagraphs(
-  paragraphs: string[],
-  targetLanguage: string,
-  abortSignal: AbortSignal,
-  maxRetry = 3,
-): AsyncGenerator<{
+export async function* translateParagraphs(options: {
+  paragraphs: string[]
+  targetLanguage: string
+  model?: string
+  abortSignal?: AbortSignal
+  maxRetry?: number
+}): AsyncGenerator<{
     idx: number
     text: string
     translated: string
     done: boolean
   }> {
+  const { paragraphs, targetLanguage, model, abortSignal, maxRetry = 3 } = options
   const prompt = await translateTextList(paragraphs, targetLanguage)
   const resp = streamObjectInBackground({
+    modelId: model,
     schema: 'translateParagraphs',
     prompt: prompt.user.extractText(),
     system: prompt.system,
@@ -74,7 +77,13 @@ export async function* translateParagraphs(
   if (translation.length < paragraphs.length && maxRetry > 0) {
     const restStartIdx = translation.length
     const rest = paragraphs.slice(restStartIdx)
-    const iter = translateParagraphs(rest, targetLanguage, abortSignal, maxRetry - 1)
+    const iter = translateParagraphs({
+      paragraphs: rest,
+      targetLanguage,
+      model,
+      abortSignal,
+      maxRetry: maxRetry - 1,
+    })
     for await (const translatedPart of iter) {
       yield {
         ...translatedPart,
@@ -132,7 +141,12 @@ export class Translator {
     else {
       const env = await getTranslatorEnv()
       const languageName = getLanguageName(env.targetLocale)
-      const iter = translateParagraphs(textList, languageName, abortSignal)
+      const iter = translateParagraphs({
+        paragraphs: textList,
+        targetLanguage: languageName,
+        model: env.translationModel,
+        abortSignal,
+      })
       for await (const translatedPart of iter) {
         if (translatedPart.done) {
           this.cache.set(translatedPart.text, translatedPart.translated)

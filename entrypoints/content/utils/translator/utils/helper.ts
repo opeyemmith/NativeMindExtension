@@ -1,6 +1,7 @@
 import md5 from 'md5'
 
 import { SUPPORTED_LANGUAGE_CODES } from '@/utils/language/detect'
+import { getUserConfig } from '@/utils/user-config'
 
 import { TranslationDisplayStyle, TranslatorEnv } from '../types'
 import { TRANSLATOR_ID } from './constant'
@@ -124,7 +125,8 @@ const translateEnv: TranslatorEnv = {
 }
 
 export async function getTranslatorEnv(): Promise<TranslatorEnv> {
-  return translateEnv
+  const userConfig = await getUserConfig()
+  return { ...translateEnv, translationModel: userConfig.translation.model.get() }
 }
 
 export function setTranslatorEnv(newEnv: Partial<TranslatorEnv>) {

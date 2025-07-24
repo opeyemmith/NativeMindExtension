@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
+import { OllamaModelInfo } from '@/types/ollama-models'
 import { logger } from '@/utils/logger'
 import { c2bRpc, s2bRpc, settings2bRpc } from '@/utils/rpc'
 
@@ -16,7 +17,7 @@ const rpc = forRuntimes({
 })
 
 export const useOllamaStatusStore = defineStore('ollama-status', () => {
-  const modelList = ref<{ name: string, model: string, size_vram?: number, size?: number }[]>([])
+  const modelList = ref<OllamaModelInfo[]>([])
   const connectionStatus = ref<'connected' | 'error' | 'unconnected'>('unconnected')
   const updateModelList = async () => {
     const response = await rpc.getLocalModelList()
@@ -34,10 +35,16 @@ export const useOllamaStatusStore = defineStore('ollama-status', () => {
     return success
   }
 
+  const unloadModel = async (model: string) => {
+    await rpc.unloadOllamaModel(model)
+    await updateModelList()
+  }
+
   return {
     connectionStatusLoading,
     connectionStatus,
     modelList,
+    unloadModel,
     updateModelList,
     updateConnectionStatus,
   }

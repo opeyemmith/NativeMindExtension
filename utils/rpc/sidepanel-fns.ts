@@ -3,21 +3,22 @@ import { Browser } from 'wxt/browser'
 
 import type { ContextMenuId } from '../context-menu'
 import { logger } from '../logger'
+import { getSidepanelStatus } from '../sidepanel-status'
 
 const eventEmitter = new EventEmitter()
 
 export type Events = {
-  toggleContainer(opts: { _toTab?: number, open?: boolean }): void
-  summarizePage(): void
-  tabUpdated(opts: { tabId: number, url?: string, faviconUrl?: string, title?: string }): void
-  tabRemoved(opts: { tabId: number } & Browser.tabs.TabRemoveInfo): void
-  contextMenuClicked(opts: { _toTab?: number } & Browser.contextMenus.OnClickData & { menuItemId: ContextMenuId }): void
+  contextMenuClicked(options: Browser.contextMenus.OnClickData & { menuItemId: ContextMenuId }): void
 }
 
 export type EventKey = keyof Events
 
-export function ping(_: { _toTab?: number }) {
+export function ping() {
   return 'pong'
+}
+
+export function getDocumentReadyState() {
+  return document.readyState
 }
 
 export const sidepanelFunctions = {
@@ -25,6 +26,7 @@ export const sidepanelFunctions = {
     eventEmitter.emit(ev, ...args)
   },
   ping,
+  getSidepanelStatus,
 } as const
 
 export function registerSidepanelRpcEvent<E extends EventKey>(ev: E, fn: (...args: Parameters<Events[E]>) => void) {

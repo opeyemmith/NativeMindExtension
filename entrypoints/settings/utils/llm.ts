@@ -42,10 +42,6 @@ export async function* initWebLLMEngine(model: WebLLMSupportedModel) {
   yield* iter
 }
 
-export function isCurrentModelReady() {
-  return settings2bRpc.isCurrentModelReady()
-}
-
 export async function* initCurrentModel(abortSignal?: AbortSignal) {
   const portName = await settings2bRpc.initCurrentModel()
   if (portName) {

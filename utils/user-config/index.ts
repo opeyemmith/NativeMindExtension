@@ -264,6 +264,7 @@ export async function _getUserConfig() {
       },
     },
     translation: {
+      model: await new Config<string, undefined>('translation.model').build(),
       targetLocale: await new Config('translation.targetLocale').default('zh' as LanguageCode).build(),
       systemPrompt: await new Config('translation.systemPrompt').default(DEFAULT_TRANSLATOR_SYSTEM_PROMPT).build(),
     },
@@ -279,15 +280,19 @@ export async function _getUserConfig() {
     writingTools: {
       enable: await new Config('writingTools.enable_1').default(true).build(),
       rewrite: {
+        enable: await new Config('writingTools.rewrite.enable').default(true).build(),
         systemPrompt: await new Config('writingTools.rewrite.systemPrompt').default(DEFAULT_WRITING_TOOLS_REWRITE_SYSTEM_PROMPT).build(),
       },
       proofread: {
+        enable: await new Config('writingTools.proofread.enable').default(true).build(),
         systemPrompt: await new Config('writingTools.proofread.systemPrompt').default(DEFAULT_WRITING_TOOLS_PROOFREAD_SYSTEM_PROMPT).build(),
       },
       list: {
+        enable: await new Config('writingTools.list.enable').default(true).build(),
         systemPrompt: await new Config('writingTools.list.systemPrompt').default(DEFAULT_WRITING_TOOLS_LIST_SYSTEM_PROMPT).build(),
       },
       sparkle: {
+        enable: await new Config('writingTools.sparkle.enable').default(true).build(),
         systemPrompt: await new Config('writingTools.sparkle.systemPrompt').default(DEFAULT_WRITING_TOOLS_SPARKLE_SYSTEM_PROMPT).build(),
       },
     },

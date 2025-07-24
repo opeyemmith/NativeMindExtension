@@ -7,14 +7,15 @@ import { convertJsonSchemaToZod, JSONSchema } from 'zod-from-json-schema'
 import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
 
+import { sleep } from '../async'
 import { ContextMenuManager } from '../context-menu'
 import { AppError, CreateTabStreamCaptureError, FetchError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
+import { deleteModel, getLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
-import { extractPdfText, getPdfPageCount, parsePdfFileOfUrl } from '../pdf'
+import { parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
 import { showSettingsForBackground } from '../settings'
 import { getUserConfig } from '../user-config'
@@ -311,6 +312,18 @@ const deleteOllamaModel = async (modelId: string) => {
   await deleteModel(modelId)
 }
 
+const unloadOllamaModel = async (modelId: string) => {
+  await unloadModel(modelId)
+  const start = Date.now()
+  while (Date.now() - start < 10000) {
+    const modelList = await getRunningModelList()
+    if (!modelList.models.some((m) => m.model === modelId)) {
+      break
+    }
+    await sleep(1000)
+  }
+}
+
 const showOllamaModelDetails = async (modelId: string) => {
   return showModelDetails(modelId)
 }
@@ -456,14 +469,13 @@ async function deleteWebLLMModelInCache(model: WebLLMSupportedModel) {
   }
 }
 
-async function isCurrentModelReady() {
+async function checkModelReady(modelId: string) {
   try {
     const userConfig = await getUserConfig()
     const endpointType = userConfig.llm.endpointType.get()
-    const model = userConfig.llm.model.get()
     if (endpointType === 'ollama') return true
     else if (endpointType === 'web-llm') {
-      return await hasWebLLMModelInCache(model as WebLLMSupportedModel)
+      return await hasWebLLMModelInCache(modelId as WebLLMSupportedModel)
     }
     else throw new Error('Unsupported endpoint type ' + endpointType)
   }
@@ -558,9 +570,11 @@ export const backgroundFunctions = {
   streamText,
   getAllTabs,
   getLocalModelList,
+  getRunningModelList,
   deleteOllamaModel,
   pullOllamaModel,
   showOllamaModelDetails,
+  unloadOllamaModel,
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
@@ -576,7 +590,7 @@ export const backgroundFunctions = {
   initWebLLMEngine,
   hasWebLLMModelInCache,
   deleteWebLLMModelInCache,
-  isCurrentModelReady,
+  checkModelReady,
   initCurrentModel,
   checkSupportWebLLM,
   getSystemMemoryInfo,
@@ -584,9 +598,5 @@ export const backgroundFunctions = {
   captureVisibleTab,
   showSidepanel,
   showSettings: showSettingsForBackground,
-
-  // only for firefox and should be removed after side panel refactor
-  getPdfPageCount: (...args: Parameters<typeof getPdfPageCount>) => getPdfPageCount(...args).then((ret) => ret),
-  extractPdfText: (...args: Parameters<typeof extractPdfText>) => extractPdfText(...args).then((ret) => ({ mergedText: ret.mergedText, texts: ret.texts, pdfProxy: { numPages: ret.pdfProxy.numPages } })),
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

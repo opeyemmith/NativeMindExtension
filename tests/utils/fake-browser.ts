@@ -9,6 +9,7 @@ interface FakeBrowserOptions {
     availableCapacity: number
     usage: number
   }
+  fakeAcceptedLanguages?: string[]
 }
 
 export function resetFakeBrowser(options: FakeBrowserOptions = {}) {
@@ -23,6 +24,10 @@ export function resetFakeBrowser(options: FakeBrowserOptions = {}) {
     memory: {
       getInfo: () => fakeSystemMemory,
     },
+  }
+  // @ts-expect-error - for test env
+  browser.i18n = {
+    getAcceptLanguages: () => options.fakeAcceptedLanguages ?? ['en'],
   }
 }
 

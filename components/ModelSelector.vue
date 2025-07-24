@@ -122,7 +122,6 @@ import IconDelete from '@/assets/icons/delete.svg?component'
 import IconOllamaRedirect from '@/assets/icons/ollama-redirect.svg?component'
 import IconRedirect from '@/assets/icons/redirect.svg?component'
 import ModelLogo from '@/components/ModelLogo.vue'
-import { deleteOllamaModel } from '@/entrypoints/content/utils/llm'
 import { OLLAMA_SEARCH_URL } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
@@ -137,14 +136,18 @@ import Button from './ui/Button.vue'
 import Divider from './ui/Divider.vue'
 import Text from './ui/Text.vue'
 
-defineProps<{
+const props = withDefaults(defineProps<{
+  modelType?: 'chat' | 'translation'
   showDetails?: boolean
   showDiscoverMore?: boolean
   allowDelete?: boolean
   dropdownAlign?: 'left' | 'center' | 'right' | 'stretch' | undefined
   containerClass?: string
   dropdownClass?: string
-}>()
+  onDeleteModel?: (model: string) => Promise<void>
+}>(), {
+  modelType: 'chat',
+})
 
 const { t } = useI18n()
 const { modelList: ollamaModelList } = toRefs(useOllamaStatusStore())
@@ -174,7 +177,18 @@ defineExpose({
 
 const userConfig = await getUserConfig()
 const baseUrl = userConfig.llm.baseUrl.toRef()
-const selectedModel = userConfig.llm.model.toRef()
+const commonModel = userConfig.llm.model.toRef()
+const translationModel = userConfig.translation.model.toRef()
+const selectedModel = computed({
+  get() {
+    if (props.modelType === 'chat' || translationModel.value === undefined) return commonModel.value
+    else return translationModel.value
+  },
+  set(value) {
+    if (props.modelType === 'chat') commonModel.value = value
+    else translationModel.value = value
+  },
+})
 const endpointType = userConfig.llm.endpointType.toRef()
 
 const modelOptions = computed(() => {
@@ -187,7 +201,7 @@ const modelOptions = computed(() => {
 })
 
 const onClickDelete = async (model: string) => {
-  await deleteOllamaModel(model)
+  await props.onDeleteModel?.(model)
   await updateModelList()
 }
 
@@ -199,11 +213,14 @@ const onClick = () => {
 
 watch(modelList, (modelList) => {
   if (modelList.length === 0) {
-    selectedModel.value = undefined
+    commonModel.value = undefined
+    translationModel.value = undefined
     return
   }
-  const newSelectedModel = modelList.find((m) => m.model === selectedModel.value) ?? modelList[0] ?? undefined
-  selectedModel.value = newSelectedModel.model
+  const newTranslationModel = modelList.find((m) => m.model === translationModel.value) ?? modelList[0] ?? undefined
+  const newCommonModel = modelList.find((m) => m.model === commonModel.value) ?? modelList[0] ?? undefined
+  translationModel.value = newTranslationModel.model
+  commonModel.value = newCommonModel.model
 })
 
 watch([baseUrl, endpointType], async () => {

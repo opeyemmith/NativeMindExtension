@@ -13,13 +13,12 @@
 <script setup lang="tsx">
 import mime from 'mime'
 import { useTemplateRef, watch } from 'vue'
-import { browser } from 'wxt/browser'
 
-import { useExtensionEventListener } from '@/composables/useExtensionEventListener'
 import { useZIndex } from '@/composables/useZIndex'
 import { sleep } from '@/utils/async'
 import { ContextMenuId } from '@/utils/context-menu'
 import { FileGetter } from '@/utils/file'
+import { registerSidepanelRpcEvent } from '@/utils/rpc/sidepanel-fns'
 import { extractFileNameFromUrl } from '@/utils/url'
 import { getUserConfig } from '@/utils/user-config'
 
@@ -34,7 +33,7 @@ const mainRef = useTemplateRef('mainRef')
 const { index: onboardingPanelZIndex } = useZIndex('settings')
 const userConfig = await getUserConfig()
 
-useExtensionEventListener(browser.contextMenus.onClicked, async (e) => {
+registerSidepanelRpcEvent('contextMenuClicked', async (e) => {
   const menuItemId = e.menuItemId as ContextMenuId
   if (menuItemId === 'native-mind-settings') {
     showSettings()

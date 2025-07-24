@@ -221,10 +221,8 @@ export async function _getUserConfig() {
   // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
   if (!import.meta.env.FIREFOX) {
     const systemMemoryInfo = await forRuntimes({
-      background: () => browser.system.memory.getInfo(),
       content: () => c2bRpc.getSystemMemoryInfo(),
-      popup: () => browser.system.memory.getInfo(),
-      sidepanel: () => browser.system.memory.getInfo(),
+      default: () => browser.system.memory.getInfo(),
     })
     if (!systemMemoryInfo) log.error('getUserConfig is used in an unknown runtime')
     else {

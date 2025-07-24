@@ -109,12 +109,12 @@ import Text from '@/components/ui/Text.vue'
 import { useToast } from '@/composables/useToast'
 import { useI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
+import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 import { writingToolList, writingToolProofread, writingToolRewrite, writingToolSparkle } from '@/utils/prompts'
 import { Prompt } from '@/utils/prompts/helpers'
 import { showSettings } from '@/utils/settings'
 import { getUserConfig } from '@/utils/user-config'
 
-import { useOllamaStatusStore } from '../../store'
 import { streamTextInBackground } from '../../utils/llm'
 import { WritingToolType } from './types'
 

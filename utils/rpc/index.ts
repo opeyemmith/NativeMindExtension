@@ -12,6 +12,7 @@ import { browser } from 'wxt/browser'
 import logger from '@/utils/logger'
 
 import { contentFnsForMainWorld } from './content-main-world-fns'
+import { settingsPageFunctions } from './settings-page-fns'
 import { isMsgFromTo, makeMessage, MessageSource, RpcResponse } from './utils'
 
 type BackgroundFunctions = typeof backgroundFunctions
@@ -19,6 +20,7 @@ type ContentFunctions = typeof contentFunctions
 type PopupFunctions = typeof popupFunctions
 type ContentFunctionsForMainWorld = typeof contentFnsForMainWorld
 type SidepanelFunctions = typeof sidepanelFunctions
+type SettingsPageFunctions = typeof settingsPageFunctions
 
 // content script to background rpc
 export const c2bRpc = only(['content'], () =>
@@ -295,10 +297,53 @@ export const b2sRpc = only(['background'], () => {
       logger.debug('[background -> sidepanel] message post', data)
       const msg = makeMessage(data, MessageSource.background, [MessageSource.sidepanel])
       await browser.runtime.sendMessage(msg).catch((e) => {
-        logger.warn('failed to send message to popup', e)
+        logger.warn('failed to send message to sidepanel', e)
       })
     },
     serialize: (v) => v,
     deserialize: (v) => v,
   })
 })
+
+// background to sidepanel rpc
+export const b2settingsRpc = only(['background'], () => {
+  return createBirpc<SettingsPageFunctions, BackgroundFunctions>(backgroundFunctions, {
+    on(fn) {
+      browser.runtime.onMessage.addListener((msg, sender) => {
+        if (isMsgFromTo(msg, MessageSource.settings, MessageSource.background)) {
+          logger.debug('[settings -> background] message received', msg, sender)
+          fn(msg.data)
+        }
+      })
+    },
+    async post(data: RpcResponse) {
+      logger.debug('[background -> settings] message post', data)
+      const msg = makeMessage(data, MessageSource.background, [MessageSource.settings])
+      await browser.runtime.sendMessage(msg).catch((e) => {
+        logger.warn('failed to send message to settings', e)
+      })
+    },
+    serialize: (v) => v,
+    deserialize: (v) => v,
+  })
+})
+
+// sidepanel to background rpc
+export const settings2bRpc = only(['settings'], () =>
+  createBirpc<BackgroundFunctions, SettingsPageFunctions>(settingsPageFunctions, {
+    on(fn) {
+      browser.runtime.onMessage.addListener((msg) => {
+        if (isMsgFromTo(msg, MessageSource.background, MessageSource.sidepanel)) {
+          logger.debug('[background -> sidepanel] message received', msg)
+          fn(msg.data)
+        }
+      })
+    },
+    post(data) {
+      logger.debug('[sidepanel -> background] message post', data)
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background]))
+    },
+    serialize: (v) => v,
+    deserialize: (v) => v,
+  }),
+)

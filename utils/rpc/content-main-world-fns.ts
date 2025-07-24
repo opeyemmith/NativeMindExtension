@@ -2,12 +2,10 @@ import { TextStreamPart, ToolSet } from 'ai'
 import EventEmitter from 'events'
 import { browser } from 'wxt/browser'
 
-import { showSettings } from '@/utils/settings'
-
 import { readPortMessageIntoIterator } from '../async'
 import { UnsupportedEndpointType } from '../error'
 import { logger } from '../logger'
-import { SettingsScrollTarget } from '../scroll-targets'
+import { showSettings } from '../settings'
 import { getUserConfig } from '../user-config'
 import { c2bRpc } from '.'
 import { makeMessage, MessageSource } from './utils'
@@ -108,10 +106,6 @@ export async function toggleContainer() {
   c2bRpc.showSidepanel(true)
 }
 
-export async function toggleSetting(scrollTarget?: SettingsScrollTarget) {
-  await showSettings({ scrollTarget })
-}
-
 export const contentFnsForMainWorld = {
   emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
     eventEmitter.emit(ev, ...args)
@@ -124,7 +118,7 @@ export const contentFnsForMainWorld = {
   checkBackendModelReady,
   getBrowserAIConfig,
   toggleContainer,
-  toggleSetting,
+  showSettings,
 }
 
 export function registerContentScriptRpcEventFromMainWorld<E extends EventKey>(ev: E, fn: (...args: Parameters<Events[E]>) => void) {

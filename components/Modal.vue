@@ -62,7 +62,6 @@
 import { useElementBounding } from '@vueuse/core'
 import { computed, reactive, ref, watch } from 'vue'
 
-import { useInjectContext } from '@/composables/useInjectContext'
 import { classNames, ComponentClassAttr } from '@/utils/vue/utils'
 
 const modalStack: { close(): void, canCloseByEsc(): boolean }[] = reactive([])
@@ -125,9 +124,7 @@ const props = withDefaults(
   },
 )
 
-const injectedMountPoint = useInjectContext('sideContainerEl').inject()
-
-const mountPoint = computed(() => props.mountPoint ?? injectedMountPoint?.value)
+const mountPoint = computed(() => props.mountPoint ?? document.body)
 const containerRef = ref<HTMLElement | null>(null)
 const containerBounding = useElementBounding(containerRef)
 const { index: zIndex, floatTop } = useZIndex('common')

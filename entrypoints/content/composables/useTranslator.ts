@@ -6,12 +6,12 @@ import { getTranslatorEnv, handleTranslatorEnvUpdated, init, setTranslatorEnv, t
 import { useI18n } from '@/utils/i18n'
 import { LanguageCode } from '@/utils/language/detect'
 import logger from '@/utils/logger'
+import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 import { registerContentScriptRpcEvent } from '@/utils/rpc'
 import { getCommonAncestorElement } from '@/utils/selection'
 import { showSettings } from '@/utils/settings'
 import { getUserConfig } from '@/utils/user-config'
 
-import { useOllamaStatusStore } from '../store'
 import { setTranslationMenuTargetLanguage } from '../utils/context-menu'
 
 async function _useTranslator() {

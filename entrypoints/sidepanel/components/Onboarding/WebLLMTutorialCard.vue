@@ -54,7 +54,7 @@ import Text from '@/components/ui/Text.vue'
 import { useI18n } from '@/utils/i18n'
 import { s2bRpc } from '@/utils/rpc'
 
-import DownloadWebLLMModel from '../WebLLMDownloadModal.vue'
+import DownloadWebLLMModel from '../../../settings/components/WebLLMDownloadModal.vue'
 
 const emit = defineEmits(['installed'])
 

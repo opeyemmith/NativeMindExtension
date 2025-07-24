@@ -2,15 +2,24 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 import { logger } from '@/utils/logger'
-import { c2bRpc } from '@/utils/rpc'
+import { c2bRpc, s2bRpc, settings2bRpc } from '@/utils/rpc'
+
+import { forRuntimes } from '../runtime'
 
 const log = logger.child('store')
+
+const rpc = forRuntimes({
+  sidepanel: () => s2bRpc,
+  settings: () => settings2bRpc,
+  content: () => c2bRpc,
+  default: () => { throw new Error('Unsupported runtime') },
+})
 
 export const useOllamaStatusStore = defineStore('ollama-status', () => {
   const modelList = ref<{ name: string, model: string, size_vram?: number, size?: number }[]>([])
   const connectionStatus = ref<'connected' | 'error' | 'unconnected'>('unconnected')
   const updateModelList = async () => {
-    const response = await c2bRpc.getLocalModelList()
+    const response = await rpc.getLocalModelList()
     log.debug('Model list fetched:', response)
     modelList.value = response.models
     return modelList.value
@@ -19,7 +28,7 @@ export const useOllamaStatusStore = defineStore('ollama-status', () => {
   const connectionStatusLoading = ref(false)
   const updateConnectionStatus = async () => {
     connectionStatusLoading.value = true
-    const success = await c2bRpc.testOllamaConnection().catch(() => false)
+    const success = await rpc.testOllamaConnection().catch(() => false)
     connectionStatus.value = success ? 'connected' : 'error'
     connectionStatusLoading.value = false
     return success

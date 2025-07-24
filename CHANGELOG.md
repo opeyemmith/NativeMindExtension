@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.1...v1.6.0-beta.2)
+
+### 💅 Refactors
+
+- **settings:** Refactor settings into a standalone web page ([224a151](https://github.com/NativeMindBrowser/NativeMindExtension/commit/224a151))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.0...v1.6.0-beta.1)

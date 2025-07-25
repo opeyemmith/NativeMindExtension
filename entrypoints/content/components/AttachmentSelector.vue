@@ -207,12 +207,13 @@ import { useTimeoutValue } from '@/composables/useTimeoutValue'
 import { AttachmentItem, ContextAttachment, LoadingAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
 import { nonNullable } from '@/utils/array'
+import { fileToBase64 } from '@/utils/base64'
 import { FileGetter, PdfTextFile } from '@/utils/file'
 import { hashFile } from '@/utils/hash'
 import { useI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
 import { convertImageFileToJpegBase64 } from '@/utils/image'
-import { extractPdfText, getDocumentProxy, getPdfPageCount } from '@/utils/pdf'
+import { extractPdfText, getPdfPageCount } from '@/utils/pdf'
 import { c2bRpc, registerContentScriptRpcEvent } from '@/utils/rpc'
 import { ByteSize } from '@/utils/sizes'
 import { getUserConfig } from '@/utils/user-config'
@@ -331,8 +332,13 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
         pageCount = file.pageCount
       }
       else {
-        const docProxy = await getDocumentProxy(file)
-        pageCount = await getPdfPageCount(docProxy)
+        // TODO: remove after side panel refactor
+        if (import.meta.env.FIREFOX) {
+          pageCount = await c2bRpc.getPdfPageCount(await fileToBase64(file))
+        }
+        else {
+          pageCount = await getPdfPageCount(file)
+        }
       }
       if (pageCount > MAX_PDF_PAGE_COUNT) {
         // show error but allow this file
@@ -348,7 +354,14 @@ const SUPPORTED_ATTACHMENT_TYPES: AttachmentItem[] = [
         pageCount = file.pageCount
       }
       else {
-        const pdfText = await extractPdfText(file, { pageRange: [1, MAX_PDF_PAGE_COUNT] })
+        let pdfText
+        // TODO: remove after side panel refactor
+        if (import.meta.env.FIREFOX) {
+          pdfText = await c2bRpc.extractPdfText(await fileToBase64(file), { pageRange: [1, MAX_PDF_PAGE_COUNT] })
+        }
+        else {
+          pdfText = await extractPdfText(file, { pageRange: [1, MAX_PDF_PAGE_COUNT] })
+        }
         textContent = pdfText.mergedText
         pageCount = pdfText.pdfProxy.numPages
       }

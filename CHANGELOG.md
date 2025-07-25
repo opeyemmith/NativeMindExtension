@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.5.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.5.1)
+
+### 🩹 Fixes
+
+- **chat:** Cannot add images in Firefox ([fd98a97](https://github.com/NativeMindBrowser/NativeMindExtension/commit/fd98a97))
+
+### 📖 Documentation
+
+- **browser-llm-api:** Add feature detection section for API availability check ([716657e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/716657e))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0-beta.9...v1.5.0)

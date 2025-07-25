@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.2...v1.5.3)
+
+### 🩹 Fixes
+
+- **pdf:** Implement PDF file parsing from URL and enhance file handling for Firefox ([bc9ebf6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bc9ebf6))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.1...v1.5.2)

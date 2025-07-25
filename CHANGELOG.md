@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.5.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.1...v1.5.2)
+
+### 🩹 Fixes
+
+- **pdf:** Add Firefox support for PDF text extraction and page count ([a621ca8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a621ca8))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.5.1)

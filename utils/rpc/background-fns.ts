@@ -14,7 +14,7 @@ import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
-import { extractPdfText, getPdfPageCount } from '../pdf'
+import { extractPdfText, getPdfPageCount, parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
 import { getUserConfig } from '../user-config'
 import { bgBroadcastRpc } from '.'
@@ -230,13 +230,30 @@ const getDocumentContentOfTab = async (tabId: number) => {
 }
 
 const getPagePDFContent = async (tabId: number) => {
-  const pdfInfo = await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
-  return pdfInfo
+  if (import.meta.env.FIREFOX) {
+    const tabUrl = await browser.tabs.get(tabId).then((tab) => tab.url)
+    if (tabUrl) return parsePdfFileOfUrl(tabUrl)
+  }
+  return await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
 }
 
 const getPageContentType = async (tabId: number) => {
-  const contentType = await bgBroadcastRpc.getPageContentType({ _toTab: tabId })
-  return contentType
+  const contentType = await browser.scripting.executeScript({
+    target: { tabId },
+    func: () => document.contentType,
+  }).then((result) => {
+    return result[0]?.result
+  }).catch(async (error) => {
+    logger.error('Failed to get page content type', error)
+    const tabUrl = await browser.tabs.get(tabId).then((tab) => tab.url)
+    if (tabUrl) {
+      const response = await fetch(tabUrl, { method: 'HEAD' })
+      return response.headers.get('content-type')?.split(';')[0]
+    }
+  }).catch((error) => {
+    logger.error('Failed to get page content type from HEAD request', error)
+  })
+  return contentType ?? 'text/html'
 }
 
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {

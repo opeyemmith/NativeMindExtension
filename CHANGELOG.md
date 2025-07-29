@@ -8,6 +8,13 @@
 ### 🩹 Fixes
 
 - **pdf:** Implement PDF file parsing from URL and enhance file handling for Firefox ([bc9ebf6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bc9ebf6))
+## v1.6.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.1...v1.6.0-beta.2)
+
+### 💅 Refactors
+
+- **settings:** Refactor settings into a standalone web page ([224a151](https://github.com/NativeMindBrowser/NativeMindExtension/commit/224a151))
 
 ### ❤️ Contributors
 
@@ -20,6 +27,13 @@
 ### 🩹 Fixes
 
 - **pdf:** Add Firefox support for PDF text extraction and page count ([a621ca8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a621ca8))
+## v1.6.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.0...v1.6.0-beta.1)
+
+### 🩹 Fixes
+
+- **runtime:** Update app metadata handling and improve entrypoint management ([9d181fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9d181fc))
 
 ### ❤️ Contributors
 
@@ -36,6 +50,13 @@
 ### 📖 Documentation
 
 - **browser-llm-api:** Add feature detection section for API availability check ([716657e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/716657e))
+## v1.6.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.6.0-beta.0)
+
+### 🚀 Enhancements
+
+- Side panel refactor ([92536d9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/92536d9))
 
 ### ❤️ Contributors
 

@@ -1,6 +1,36 @@
 # Changelog
 
 
+## v1.6.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.3...v1.6.0-beta.3)
+
+### 🚀 Enhancements
+
+- Side panel refactor ([92536d9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/92536d9))
+- Side panel refactor ([ff98a55](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ff98a55))
+
+### 🩹 Fixes
+
+- **runtime:** Update app metadata handling and improve entrypoint management ([9d181fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9d181fc))
+- **runtime:** Update app metadata handling and improve entrypoint management ([0b4f9fe](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0b4f9fe))
+
+### 💅 Refactors
+
+- **settings:** Refactor settings into a standalone web page ([224a151](https://github.com/NativeMindBrowser/NativeMindExtension/commit/224a151))
+- **settings:** Refactor settings into a standalone web page ([cbaea08](https://github.com/NativeMindBrowser/NativeMindExtension/commit/cbaea08))
+- **settings:** Refactor settings into a standalone web page ([8698549](https://github.com/NativeMindBrowser/NativeMindExtension/commit/8698549))
+
+### 🏡 Chore
+
+- **release:** V1.6.0-beta.0 ([0936359](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0936359))
+- **release:** V1.6.0-beta.1 ([3a8c4d5](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3a8c4d5))
+- **release:** V1.6.0-beta.2 ([6b41fc2](https://github.com/NativeMindBrowser/NativeMindExtension/commit/6b41fc2))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.2...v1.5.3)

@@ -1,13 +1,13 @@
 <template>
   <div
-    v-if="enabledDebug"
-    class="flex flex-col gap-1 font-bold rounded-lg bg-white mx-4"
+    class="flex flex-col gap-1 font-bold pb-10"
   >
-    <div class="p-4 flex flex-col gap-4">
+    <BlockTitle
+      title="Debug"
+      description="Debug settings"
+    />
+    <div class="p-4 flex flex-col gap-4 bg-white rounded-lg">
       <div class="flex flex-col gap-4">
-        <div class="font-bold">
-          Debug
-        </div>
         <Block title="UI Language">
           <div class="flex gap-2 flex-col justify-start items-start">
             <UILanguageSelector />
@@ -398,6 +398,7 @@ import { SettingsScrollTarget } from '@/utils/scroll-targets'
 import { getUserConfig } from '@/utils/user-config'
 
 import { pullOllamaModel } from '../../utils/llm'
+import BlockTitle from '../BlockTitle.vue'
 import Block from './Block.vue'
 
 defineProps<{
@@ -405,7 +406,6 @@ defineProps<{
 }>()
 
 const userConfig = await getUserConfig()
-const enabledDebug = userConfig.debug.enabled.toRef()
 const numCtx = userConfig.llm.numCtx.toRef()
 const enableNumCtx = userConfig.llm.enableNumCtx.toRef()
 const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()

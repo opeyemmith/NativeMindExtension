@@ -52,7 +52,7 @@
       <div>
         <AttachmentSelector
           ref="attachmentSelectorRef"
-          v-model:attachments="contextAttachments"
+          v-model:attachmentStorage="contextAttachmentStorage"
         />
       </div>
       <div class="flex gap-1 relative">
@@ -118,6 +118,7 @@ import ScrollContainer from '@/components/ScrollContainer.vue'
 import Button from '@/components/ui/Button.vue'
 import { FileGetter } from '@/utils/file'
 import { useI18n } from '@/utils/i18n'
+import { setSidepanelStatus } from '@/utils/sidepanel-status'
 
 import MarkdownViewer from '../../../../components/MarkdownViewer.vue'
 import { showSettings } from '../../../../utils/settings'
@@ -147,7 +148,7 @@ defineExpose({
 })
 
 const chat = await Chat.getInstance()
-const contextAttachments = chat.contextAttachments
+const contextAttachmentStorage = chat.contextAttachmentStorage
 
 initChatSideEffects()
 
@@ -157,7 +158,7 @@ const actionEventHandler = Chat.createActionEventHandler((actionEvent) => {
   }
   else if (actionEvent.action === 'openSettings') {
     const scrollTarget = (actionEvent as ActionEvent<'openSettings'>).data.scrollTarget
-    showSettings({ scrollTarget })
+    showSettings({ scrollTarget, path: 'chat' })
   }
   else {
     throw new Error(`Unknown action: ${actionEvent.action}`)
@@ -204,6 +205,7 @@ const ask = async () => {
 
 onMounted(() => {
   scrollContainerRef.value?.snapToBottom()
+  setSidepanelStatus({ loaded: true })
 })
 
 onBeforeUnmount(() => {

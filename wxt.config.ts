@@ -1,6 +1,7 @@
 import tailwindcss from '@tailwindcss/vite'
 import vueJsx from '@vitejs/plugin-vue-jsx'
 import { analyzer } from 'vite-bundle-analyzer'
+import { nodePolyfills } from 'vite-plugin-node-polyfills'
 import svgLoader from 'vite-svg-loader'
 import { defineConfig } from 'wxt'
 
@@ -59,9 +60,10 @@ export default defineConfig({
       build: {
         target: ['chrome124', 'firefox120', 'safari16'],
         // firefox does't support js file larger than 5MB, so we exclude @mlc-ai/web-llm from the bundle (which firefox does not use)
-        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm'] : undefined },
+        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm', '@huggingface/transformers'] : undefined },
       },
       plugins: [
+        nodePolyfills(),
         analyzer({ enabled: ENABLE_BUNDLE_ANALYZER }),
         vueJsx({ babelPlugins: ['@babel/plugin-proposal-explicit-resource-management'] }),
         tailwindcss(),
@@ -75,7 +77,7 @@ export default defineConfig({
     description: IS_FIREFOX ? '__MSG_extDescFirefox__' : '__MSG_extDesc__',
     version: VERSION,
     default_locale: 'en',
-    permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', 'sidePanel', 'system.display', ...extraPermissions],
+    permissions: ['declarativeNetRequest', 'tabs', 'storage', 'scripting', 'contextMenus', 'sidePanel', 'system.display', 'unlimitedStorage', ...extraPermissions],
     minimum_chrome_version: '124',
     declarative_net_request: IS_FIREFOX ? { rule_resources: [{ id: 'ruleset_1', enabled: true, path: 'rules.json' }] } : undefined,
     content_security_policy: {

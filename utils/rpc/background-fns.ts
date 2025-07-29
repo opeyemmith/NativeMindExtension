@@ -7,13 +7,15 @@ import { convertJsonSchemaToZod, JSONSchema } from 'zod-from-json-schema'
 import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
 
+import { sleep } from '../async'
 import { ContextMenuManager } from '../context-menu'
 import { AppError, CreateTabStreamCaptureError, FetchError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
+import { deleteModel, getLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
+import { parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
 import { showSettingsForBackground } from '../settings'
 import { getUserConfig } from '../user-config'
@@ -235,13 +237,30 @@ const getDocumentContentOfTab = async (tabId?: number) => {
 }
 
 const getPagePDFContent = async (tabId: number) => {
-  const pdfInfo = await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
-  return pdfInfo
+  if (import.meta.env.FIREFOX) {
+    const tabUrl = await browser.tabs.get(tabId).then((tab) => tab.url)
+    if (tabUrl) return parsePdfFileOfUrl(tabUrl)
+  }
+  return await bgBroadcastRpc.getPagePDFContent({ _toTab: tabId })
 }
 
 const getPageContentType = async (tabId: number) => {
-  const contentType = await bgBroadcastRpc.getPageContentType({ _toTab: tabId })
-  return contentType
+  const contentType = await browser.scripting.executeScript({
+    target: { tabId },
+    func: () => document.contentType,
+  }).then((result) => {
+    return result[0]?.result
+  }).catch(async (error) => {
+    logger.error('Failed to get page content type', error)
+    const tabUrl = await browser.tabs.get(tabId).then((tab) => tab.url)
+    if (tabUrl) {
+      const response = await fetch(tabUrl, { method: 'HEAD' })
+      return response.headers.get('content-type')?.split(';')[0]
+    }
+  }).catch((error) => {
+    logger.error('Failed to get page content type from HEAD request', error)
+  })
+  return contentType ?? 'text/html'
 }
 
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
@@ -291,6 +310,18 @@ const fetchAsText = async (url: string, initOptions?: RequestInit) => {
 
 const deleteOllamaModel = async (modelId: string) => {
   await deleteModel(modelId)
+}
+
+const unloadOllamaModel = async (modelId: string) => {
+  await unloadModel(modelId)
+  const start = Date.now()
+  while (Date.now() - start < 10000) {
+    const modelList = await getRunningModelList()
+    if (!modelList.models.some((m) => m.model === modelId)) {
+      break
+    }
+    await sleep(1000)
+  }
 }
 
 const showOllamaModelDetails = async (modelId: string) => {
@@ -438,14 +469,13 @@ async function deleteWebLLMModelInCache(model: WebLLMSupportedModel) {
   }
 }
 
-async function isCurrentModelReady() {
+async function checkModelReady(modelId: string) {
   try {
     const userConfig = await getUserConfig()
     const endpointType = userConfig.llm.endpointType.get()
-    const model = userConfig.llm.model.get()
     if (endpointType === 'ollama') return true
     else if (endpointType === 'web-llm') {
-      return await hasWebLLMModelInCache(model as WebLLMSupportedModel)
+      return await hasWebLLMModelInCache(modelId as WebLLMSupportedModel)
     }
     else throw new Error('Unsupported endpoint type ' + endpointType)
   }
@@ -540,9 +570,11 @@ export const backgroundFunctions = {
   streamText,
   getAllTabs,
   getLocalModelList,
+  getRunningModelList,
   deleteOllamaModel,
   pullOllamaModel,
   showOllamaModelDetails,
+  unloadOllamaModel,
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
@@ -558,7 +590,7 @@ export const backgroundFunctions = {
   initWebLLMEngine,
   hasWebLLMModelInCache,
   deleteWebLLMModelInCache,
-  isCurrentModelReady,
+  checkModelReady,
   initCurrentModel,
   checkSupportWebLLM,
   getSystemMemoryInfo,

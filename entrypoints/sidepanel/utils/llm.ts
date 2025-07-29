@@ -10,6 +10,7 @@ import { SchemaName } from '@/utils/llm/output-schema'
 import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
 import logger from '@/utils/logger'
 import { s2bRpc } from '@/utils/rpc'
+import { getUserConfig } from '@/utils/user-config'
 const log = logger.child('llm')
 
 const DEFAULT_PENDING_TIMEOUT = 60_000 // 60 seconds
@@ -111,8 +112,11 @@ export async function* initWebLLMEngine(model: WebLLMSupportedModel) {
   yield* iter
 }
 
-export function isCurrentModelReady() {
-  return s2bRpc.isCurrentModelReady()
+export async function isCurrentModelReady() {
+  const userConfig = await getUserConfig()
+  const modelId = userConfig.llm.model.get()
+  if (!modelId) return false
+  return s2bRpc.checkModelReady(modelId)
 }
 
 export async function* initCurrentModel(abortSignal?: AbortSignal) {

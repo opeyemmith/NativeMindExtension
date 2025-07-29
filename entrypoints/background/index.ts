@@ -8,9 +8,11 @@ import { INVALID_URLS } from '@/utils/constants'
 import { CONTEXT_MENU, CONTEXT_MENU_ITEM_TRANSLATE_PAGE, ContextMenuId, ContextMenuManager } from '@/utils/context-menu'
 import { useGlobalI18n } from '@/utils/i18n'
 import logger from '@/utils/logger'
-import { bgBroadcastRpc } from '@/utils/rpc'
+import { b2sRpc, bgBroadcastRpc } from '@/utils/rpc'
 import { registerTabStoreCleanupListener } from '@/utils/tab-store'
 import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
+
+import { waitForSidepanelLoaded } from './utils'
 
 export default defineBackground(() => {
   if (import.meta.env.CHROME) {
@@ -23,14 +25,24 @@ export default defineBackground(() => {
 
   browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 
-  browser.tabs.onActivated.addListener(async () => {
+  browser.tabs.onActivated.addListener(async (tabInfo) => {
     const { t } = await useGlobalI18n()
     // reset the translate context menu to default
     const contextMenuManager = await ContextMenuManager.getInstance()
-    contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
-      title: t(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.titleKey),
-      contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
-    })
+    const tab = await browser.tabs.get(tabInfo.tabId)
+    const url = tab.url
+    if (url && !INVALID_URLS.some((regex) => regex.test(url))) {
+      contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
+        title: t(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.titleKey),
+        contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
+        visible: true,
+      })
+    }
+    else {
+      contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
+        visible: false,
+      })
+    }
   })
 
   browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
@@ -104,12 +116,16 @@ export default defineBackground(() => {
   browser.contextMenus.onClicked.addListener(async (info, tab) => {
     logger.debug('context menu clicked', info, tab)
     if (tab?.id) {
-      bgBroadcastRpc.emit('contextMenuClicked', {
-        _toTab: tab?.id,
-        ...info,
-      })
-      if (await ContextMenuManager.getInstance().then((instance) => instance.isNeedOpenSidepanel(info.menuItemId as ContextMenuId))) {
+      if (typeof info.menuItemId === 'string' && (info.menuItemId as ContextMenuId).includes('quick-actions')) {
         await browser.sidePanel.open({ windowId: tab.windowId })
+        await waitForSidepanelLoaded()
+        await b2sRpc.emit('contextMenuClicked', { ...info, menuItemId: info.menuItemId as ContextMenuId })
+      }
+      else {
+        bgBroadcastRpc.emit('contextMenuClicked', {
+          _toTab: tab?.id,
+          ...info,
+        })
       }
     }
   })

@@ -112,8 +112,8 @@ export async function* initWebLLMEngine(model: WebLLMSupportedModel) {
   yield* iter
 }
 
-export function isCurrentModelReady() {
-  return c2bRpc.isCurrentModelReady()
+export function checkModelReady(modeId: string) {
+  return c2bRpc.checkModelReady(modeId)
 }
 
 export async function* initCurrentModel(abortSignal?: AbortSignal) {

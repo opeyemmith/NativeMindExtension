@@ -1,6 +1,13 @@
 # Changelog
 
 
+## v1.5.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.2...v1.5.3)
+
+### 🩹 Fixes
+
+- **pdf:** Implement PDF file parsing from URL and enhance file handling for Firefox ([bc9ebf6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bc9ebf6))
 ## v1.6.0-beta.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.1...v1.6.0-beta.2)
@@ -13,6 +20,13 @@
 
 - Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
 
+## v1.5.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.1...v1.5.2)
+
+### 🩹 Fixes
+
+- **pdf:** Add Firefox support for PDF text extraction and page count ([a621ca8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a621ca8))
 ## v1.6.0-beta.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.0...v1.6.0-beta.1)
@@ -25,6 +39,17 @@
 
 - Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
 
+## v1.5.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.5.1)
+
+### 🩹 Fixes
+
+- **chat:** Cannot add images in Firefox ([fd98a97](https://github.com/NativeMindBrowser/NativeMindExtension/commit/fd98a97))
+
+### 📖 Documentation
+
+- **browser-llm-api:** Add feature detection section for API availability check ([716657e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/716657e))
 ## v1.6.0-beta.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.6.0-beta.0)

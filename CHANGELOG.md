@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.3...v1.6.0-beta.4)
+
+### 💅 Refactors
+
+- **attachment-selector:** Improve attachment handling and update localization strings ([e6931fb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e6931fb))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.3...v1.6.0-beta.3)

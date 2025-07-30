@@ -15,7 +15,7 @@ import { chatWithPageContent, generateSearchKeywords, nextStep, Page, summarizeW
 import { UserPrompt } from '@/utils/prompts/helpers'
 import { SearchingMessage } from '@/utils/search'
 import { ScopeStorage } from '@/utils/storage'
-import { getTabStore, type HistoryItemV1 } from '@/utils/tab-store'
+import { type HistoryItemV1 } from '@/utils/tab-store'
 import { ActionMessageV1, ActionTypeV1, ActionV1, AssistantMessageV1, ChatHistoryV1, ChatList, pickByRoles, TaskMessageV1, UserMessageV1 } from '@/utils/tab-store/history'
 import { getUserConfig } from '@/utils/user-config'
 
@@ -248,12 +248,11 @@ export class Chat {
 
   static getInstance() {
     if (!this.instance) {
-      this.instance = getTabStore().then(async (tabStore) => {
-        const chatHistoryId = tabStore.chatHistoryId
+      this.instance = (async () => {
+        const userConfig = await getUserConfig()
+        const chatHistoryId = userConfig.chat.history.currentChatId.toRef()
         const chatHistory = ref<ChatHistoryV1>(await this.chatStorage.getItem<ChatHistoryV1>(`${chatHistoryId.value}`, 'chat') ?? { history: [], id: chatHistoryId.value, title: 'New Chat' })
-        const contextAttachments = ref<ContextAttachmentStorage>(await this.chatStorage.getItem<ContextAttachmentStorage>(`${chatHistoryId.value}`, 'context-attachments') ?? { attachments: [
-          { type: 'tab', value: { ...tabStore.currentTabInfo.value, id: generateRandomId() } },
-        ], id: chatHistoryId.value })
+        const contextAttachments = ref<ContextAttachmentStorage>(await this.chatStorage.getItem<ContextAttachmentStorage>(`${chatHistoryId.value}`, 'context-attachments') ?? { attachments: [], id: chatHistoryId.value })
         const chatList = ref<ChatList>([])
         const updateChatList = async () => {
           const chatMeta = await this.chatStorage.getAllMetadata()
@@ -271,11 +270,10 @@ export class Chat {
           if (!contextAttachments.value.lastInteractedAt) return
           await this.chatStorage.setItem(`${contextAttachments.value.id}`, { 'context-attachments': toRaw(contextAttachments.value) }, { timestamp: Date.now(), title: '' })
         }, 1000)
-        watch(tabStore.chatHistoryId, async (newId) => {
+        watch(chatHistoryId, async (newId) => {
           instance.stop()
           Object.assign(chatHistory.value, await this.chatStorage.getItem<ChatHistoryV1>(`${newId}`, 'chat') ?? { history: [], id: newId })
-          Object.assign(contextAttachments.value, await this.chatStorage.getItem<ContextAttachmentStorage>(`${newId}`, 'context-attachments')
-          ?? { attachments: [{ type: 'tab', value: { ...tabStore.currentTabInfo.value, id: generateRandomId() } }], id: newId })
+          Object.assign(contextAttachments.value, await this.chatStorage.getItem<ContextAttachmentStorage>(`${newId}`, 'context-attachments') ?? { attachments: [], id: newId })
           instance.historyManager.cleanupLoadingMessages()
         })
         watch(chatHistory, async () => debounceSaveHistory(), { deep: true })
@@ -284,7 +282,7 @@ export class Chat {
         this.chatStorage.onMetaChange(async () => await updateChatList())
         const instance = new this(new ReactiveHistoryManager(chatHistory), contextAttachments, chatList)
         return instance
-      })
+      })()
     }
     return this.instance
   }
@@ -316,7 +314,10 @@ export class Chat {
   }
 
   get contextTabs() {
-    return this.contextAttachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value)
+    const contextTabs = this.contextAttachments.value.filter((attachment) => attachment.type === 'tab').map((attachment) => attachment.value)
+    const currentTab = this.contextAttachmentStorage.value.currentTab?.type === 'tab' ? this.contextAttachmentStorage.value.currentTab.value : undefined
+    const filteredContextTabs = contextTabs.filter((tab) => tab.id !== currentTab?.id)
+    return [currentTab, ...filteredContextTabs].filter(nonNullable)
   }
 
   get contextImages() {
@@ -324,7 +325,8 @@ export class Chat {
   }
 
   get contextPDFs() {
-    return this.contextAttachments.value.filter((attachment) => attachment.type === 'pdf').map((attachment) => attachment.value)
+    const currentTab = this.contextAttachmentStorage.value.currentTab?.type === 'pdf' ? this.contextAttachmentStorage.value.currentTab.value : undefined
+    return [currentTab, ...this.contextAttachments.value.filter((attachment) => attachment.type === 'pdf').map((attachment) => attachment.value)].filter(nonNullable)
   }
 
   isAnswering() {

@@ -25,26 +25,6 @@ export default defineBackground(() => {
 
   browser.sidePanel.setPanelBehavior({ openPanelOnActionClick: true })
 
-  browser.tabs.onActivated.addListener(async (tabInfo) => {
-    const { t } = await useGlobalI18n()
-    // reset the translate context menu to default
-    const contextMenuManager = await ContextMenuManager.getInstance()
-    const tab = await browser.tabs.get(tabInfo.tabId)
-    const url = tab.url
-    if (url && !INVALID_URLS.some((regex) => regex.test(url))) {
-      contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
-        title: t(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.titleKey),
-        contexts: CONTEXT_MENU_ITEM_TRANSLATE_PAGE.contexts,
-        visible: true,
-      })
-    }
-    else {
-      contextMenuManager.updateContextMenu(CONTEXT_MENU_ITEM_TRANSLATE_PAGE.id, {
-        visible: false,
-      })
-    }
-  })
-
   browser.tabs.onRemoved.addListener(async (tabId, removeInfo) => {
     logger.info('tab removed', { tabId, removeInfo, isFirefox: import.meta.env.FIREFOX })
     bgBroadcastRpc.emit('tabRemoved', {

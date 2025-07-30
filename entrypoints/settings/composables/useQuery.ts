@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { Ref, ref } from 'vue'
 import { LocationQuery, useRoute, useRouter } from 'vue-router'
 
 import { lazyInitialize } from '@/utils/memo'
@@ -6,6 +6,33 @@ import { SettingsScrollTarget } from '@/utils/scroll-targets'
 
 function getFirst<T>(value: T | T[]) {
   return Array.isArray(value) ? value[0] : value
+}
+
+class QueryItem<T> {
+  constructor(private refValue: Ref<T>) {}
+  matchAndRemove(testValue: T) {
+    if (this.refValue.value === testValue) {
+      this.refValue.value = undefined as unknown as T
+      return true
+    }
+    return false
+  }
+
+  match(testValue: T) {
+    return this.refValue.value === testValue
+  }
+
+  remove() {
+    this.refValue.value = undefined as unknown as T
+  }
+
+  hasValue() {
+    return this.refValue.value !== undefined
+  }
+
+  get value() {
+    return this.refValue.value
+  }
 }
 
 export const useSettingsInitialQuery = lazyInitialize(() => {
@@ -48,7 +75,7 @@ export const useSettingsInitialQuery = lazyInitialize(() => {
   })
 
   return {
-    scrollTarget,
-    downloadModel,
+    scrollTarget: new QueryItem(scrollTarget),
+    downloadModel: new QueryItem(downloadModel),
   }
 })

@@ -116,7 +116,7 @@
         :arrivalShadow="{ left: { color: '#E9E9EC', size: 60 }, right: { color: '#E9E9EC', size: 60 } }"
       >
         <div
-          v-for="(attachment, index) in attachments"
+          v-for="(attachment, index) in attachmentsToShow"
           :key="index"
           class="items-center gap-2 grow-0 text-xs shrink-0"
         >
@@ -209,6 +209,7 @@ import { useTimeoutValue } from '@/composables/useTimeoutValue'
 import { AttachmentItem, ContextAttachment, ContextAttachmentStorage, LoadingAttachment } from '@/types/chat'
 import { TabInfo } from '@/types/tab'
 import { nonNullable } from '@/utils/array'
+import { INVALID_URLS } from '@/utils/constants'
 import { FileGetter, PdfTextFile } from '@/utils/file'
 import { hashFile } from '@/utils/hash'
 import { useI18n } from '@/utils/i18n'
@@ -217,20 +218,28 @@ import { convertImageFileToJpegBase64 } from '@/utils/image'
 import { extractPdfText, getPdfPageCount } from '@/utils/pdf'
 import { s2bRpc } from '@/utils/rpc'
 import { ByteSize } from '@/utils/sizes'
+import { tabToTabInfo } from '@/utils/tab'
 import { getUserConfig } from '@/utils/user-config'
 
 import ExternalImage from '../../../components/ExternalImage.vue'
-import { getCurrentTabInfo, getValidTabs } from '../utils/tabs'
+import { getValidTabs } from '../utils/tabs'
 
 const logger = useLogger()
 const { t } = useI18n()
 
-useExtensionEventListener(browser.tabs.onUpdated, async () => {
-  await updateAllTabs()
+useExtensionEventListener(browser.tabs.onUpdated, async (_tabId, changeInfo) => {
+  if (changeInfo.status === 'complete') {
+    await updateAllTabs()
+    await updateCurrentTabAttachment()
+  }
 })
 
 useExtensionEventListener(browser.tabs.onRemoved, async () => {
   await updateAllTabs()
+})
+
+useExtensionEventListener(browser.tabs.onActivated, async () => {
+  await updateCurrentTabAttachment()
 })
 
 const props = defineProps<{
@@ -243,6 +252,23 @@ const emit = defineEmits<{
 
 const attachmentStorage = useVModel(props, 'attachmentStorage', emit)
 const attachments = toRef(attachmentStorage.value, 'attachments')
+const attachmentsWithCurrentTab = computed(() => {
+  return [attachmentStorage.value.currentTab, ...attachments.value].filter(nonNullable)
+})
+const attachmentsToShow = computed(() => {
+  // remove duplicates
+  const existTabId = new Set<number>()
+  const attachmentsToShow: ContextAttachment[] = []
+  for (const attachment of attachmentsWithCurrentTab.value) {
+    const tabId = getTabIdOfAttachment(attachment)
+    if (tabId !== undefined && existTabId.has(tabId)) {
+      continue // Skip if this tab is already added
+    }
+    tabId !== undefined && existTabId.add(tabId)
+    attachmentsToShow.push(attachment)
+  }
+  return attachmentsToShow
+})
 const isShowSelector = ref(false)
 const { value: errorMessages, setValue: setErrorMessages } = useTimeoutValue<string[] | undefined>(undefined, undefined, 5000)
 
@@ -264,7 +290,7 @@ const tabsContainerRef = ref<HTMLDivElement>()
 
 const allTabs = ref<TabInfo[]>([])
 
-const selectedTabs = computed(() => attachments.value.map((attachment) => {
+const selectedTabs = computed(() => attachmentsWithCurrentTab.value.filter(nonNullable).map((attachment) => {
   return getTabIdOfAttachment(attachment)
 }).filter(nonNullable))
 
@@ -413,7 +439,7 @@ function addAttachmentFromFile(fileGetter: FileGetter) {
     ;(async () => {
       try {
         const file = await fileGetter.file()
-        if (!await matchedType.validateFile({ attachments: attachments.value, replaceAttachmentId: loadingId }, file)) {
+        if (!await matchedType.validateFile({ attachments: attachmentsWithCurrentTab.value, replaceAttachmentId: loadingId }, file)) {
           replaceAttachmentWithId(loadingId)
           return
         }
@@ -507,7 +533,7 @@ const showSelector = async () => {
   isShowSelector.value = true
 }
 
-const appendTab = async (tab: TabInfo) => {
+const convertTabToAttachment = async (tab: TabInfo) => {
   const pageContentType = await s2bRpc.getPageContentType(tab.tabId)
   if (pageContentType === 'application/pdf') {
     // TODO: move this check into validateFile()
@@ -516,24 +542,47 @@ const appendTab = async (tab: TabInfo) => {
       return
     }
     // make this process async to not block processing
-    addAttachmentFromFile(new FileGetter(async () => {
+    return new FileGetter(async () => {
       const pdfContent = await s2bRpc.getPagePDFContent(tab.tabId)
       if (pdfContent) {
         return new PdfTextFile(pdfContent.fileName, pdfContent.texts, pdfContent.pageCount, tab.tabId)
       }
       throw new Error('Failed to get PDF content')
-    }, tab.title ?? '', 'application/x-pdf-text'))
+    }, tab.title ?? '', 'application/x-pdf-text')
   }
   else {
-    attachments.value.unshift({
+    return {
       type: 'tab',
       value: { ...tab, id: generateRandomId() },
-    }) // Add the tab if it is not selected
+    } as const
+  }
+}
+
+const appendTab = async (tab: TabInfo) => {
+  const existsIdx = attachments.value.findIndex((attachment) => getTabIdOfAttachment(attachment) === tab.tabId)
+  if (existsIdx !== -1) {
+    // rearrange the order
+    const [existingAttachment] = attachments.value.splice(existsIdx, 1)
+    attachments.value.unshift(existingAttachment)
+  }
+  else {
+    const attachmentOrFileGetter = await convertTabToAttachment(tab)
+    if (attachmentOrFileGetter instanceof FileGetter) addAttachmentFromFile(attachmentOrFileGetter)
+    else if (attachmentOrFileGetter) attachments.value.unshift(attachmentOrFileGetter)
   }
 }
 
 const toggleSelectTab = async (tab: TabInfo) => {
   attachmentStorage.value.lastInteractedAt = Date.now()
+  const currentTabId = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0]?.id)
+  if (attachmentStorage.value.currentTab && getTabIdOfAttachment(attachmentStorage.value.currentTab) === tab.tabId) {
+    attachmentStorage.value.currentTab = undefined // Deselect if already selected
+    return
+  }
+  else if (currentTabId === tab.tabId) {
+    updateCurrentTabAttachment()
+    return
+  }
   const index = attachments.value.findIndex((attachment) => {
     return getTabIdOfAttachment(attachment) === tab.tabId
   })
@@ -550,20 +599,58 @@ const hideSelector = () => {
 }
 
 const removeAttachment = (attachment: ContextAttachment) => {
-  attachments.value = attachments.value.filter((a) => a !== attachment)
+  if (attachment.value.id === attachmentStorage.value.currentTab?.value.id) {
+    attachmentStorage.value.currentTab = undefined
+  }
+  else {
+    attachments.value = attachments.value.filter((a) => a !== attachment)
+  }
 }
 
-const updateCurrentTabIfPDF = async () => {
-  const currentTab = await getCurrentTabInfo()
-  if (attachments.value.length === 1 && attachments.value[0].type === 'tab') {
-    const pageContentType = await s2bRpc.getPageContentType(currentTab.tabId)
-    if (pageContentType !== 'application/pdf') return
-    attachments.value.pop() // pop the original tab
-    const pagePDFContent = await s2bRpc.getPagePDFContent(currentTab.tabId)
-    if (pagePDFContent) {
-      const file = new PdfTextFile(pagePDFContent.fileName, pagePDFContent.texts, pagePDFContent.pageCount, currentTab.tabId)
-      addAttachmentFromFile(FileGetter.fromFile(file))
+const updateCurrentTabAttachment = async () => {
+  const currentTab = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0])
+  const currentTabUrl = currentTab?.url
+  if (currentTabUrl && !INVALID_URLS.some((schema) => schema.test(currentTabUrl))) {
+    const tabInfo = tabToTabInfo(currentTab)
+    const attachmentOrFileGetter = await convertTabToAttachment(tabInfo)
+    if (attachmentOrFileGetter instanceof FileGetter) {
+      const fileType = attachmentOrFileGetter.mimeType
+      const matchedType = SUPPORTED_ATTACHMENT_TYPES.find((type) => type.matchMimeType(fileType))
+      if (matchedType) {
+        const loadingId = generateRandomId()
+        attachmentStorage.value.currentTab = {
+          type: 'loading',
+          value: {
+            id: loadingId,
+            name: attachmentOrFileGetter.name,
+            type: matchedType.type,
+          },
+        }
+        try {
+          const file = await attachmentOrFileGetter.file()
+          if (!await matchedType.validateFile({ attachments: attachmentsWithCurrentTab.value, replaceAttachmentId: loadingId }, file)) {
+            attachmentStorage.value.currentTab = undefined
+            return
+          }
+          const attachment = await matchedType.convertFileToAttachment(file)
+          if (attachmentStorage.value.currentTab?.type === 'loading' && attachmentStorage.value.currentTab.value.id === loadingId) {
+            attachmentStorage.value.currentTab = attachment
+          }
+        }
+        catch (err) {
+          logger.error('Failed to add attachment', err)
+          if (attachmentStorage.value.currentTab?.type === 'loading' && attachmentStorage.value.currentTab.value.id === loadingId) {
+            attachmentStorage.value.currentTab = undefined
+          }
+        }
+      }
     }
+    else if (attachmentOrFileGetter) {
+      attachmentStorage.value.currentTab = attachmentOrFileGetter
+    }
+  }
+  else {
+    attachmentStorage.value.currentTab = undefined // Clear current tab if no valid URL
   }
 }
 
@@ -586,8 +673,8 @@ useEventListener(tabsContainerRef, 'wheel', (e: WheelEvent) => {
   }
 })
 
-onMounted(() => {
+onMounted(async () => {
   updateAllTabs()
-  updateCurrentTabIfPDF()
+  updateCurrentTabAttachment()
 })
 </script>

@@ -21,7 +21,11 @@ export const showSettingsForBackground = only(['background'], () => async (optio
   const path = options?.path ?? 'general'
   if (open) {
     const searchParams = new URLSearchParams()
-    Object.entries(options ?? {}).forEach(([key, value]) => {
+    const query = {
+      scrollTarget: options?.scrollTarget,
+      downloadModel: options?.downloadModel,
+    }
+    Object.entries(query).forEach(([key, value]) => {
       if (value !== undefined) {
         searchParams.set(key, value.toString())
       }

@@ -234,7 +234,7 @@
       "interface_language_desc": "NativeMindインターフェースの表示言語を選択してください"
     },
     "header": {
-      "starts_on_github": "GitHubのスター",
+      "starts_on_github": "Stars on GitHub",
       "goto_website": "ウェブサイトに移動"
     }
   },

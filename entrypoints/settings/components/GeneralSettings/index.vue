@@ -264,7 +264,7 @@ const endpointType = userConfig.llm.endpointType.toRef()
 const loading = ref(false)
 const isShowDownloadWebLLMModal = ref(false)
 const connectionStatus = toRef(ollamaStatusStore, 'connectionStatus')
-const isShowDownloadOllamaModal = ref(!!settingsQuery.downloadModel.value)
+const isShowDownloadOllamaModal = ref(settingsQuery.downloadModel.hasValue())
 // Prompt refs
 const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const translationSystemPromptError = ref('')
@@ -282,7 +282,8 @@ watch(settingsQuery.downloadModel, (v) => {
 })
 const onDownloadOllamaModelFinished = async () => {
   await ollamaStatusStore.updateModelList()
-  settingsQuery.downloadModel.value = undefined
+  // remove the value to avoid open modal in next navigation
+  settingsQuery.downloadModel.remove()
   isShowDownloadOllamaModal.value = false
 }
 

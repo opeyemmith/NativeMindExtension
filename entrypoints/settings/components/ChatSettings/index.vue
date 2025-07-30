@@ -40,7 +40,7 @@
         </div>
       </Block>
       <ScrollTarget
-        :autoScrollIntoView="settingsQuery.scrollTarget.value === 'quick-actions-block'"
+        :autoScrollIntoView="settingsQuery.scrollTarget.matchAndRemove('quick-actions-block')"
         showHighlight
       >
         <Block :title="t('settings.chat.quick_actions.title')">

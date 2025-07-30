@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.4...v1.6.0-beta.5)
+
+### 🚀 Enhancements
+
+- **settings:** Connection status in running models section ([71ba272](https://github.com/NativeMindBrowser/NativeMindExtension/commit/71ba272))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.3...v1.6.0-beta.4)

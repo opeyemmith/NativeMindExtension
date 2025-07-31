@@ -126,7 +126,10 @@
                     >
                       {{ t('settings.ollama.context_window_size_desc') }}
                     </Text>
-                    <SavedMessage :watch="[guardedNumCtx, enableNumCtx]" />
+                    <SavedMessage
+                      v-if="!numCtxError"
+                      :watch="[guardedNumCtx, enableNumCtx]"
+                    />
                   </div>
                   <WarningMessage
                     v-if="numCtxError"

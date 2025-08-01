@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.6...v1.6.0-beta.7)
+
+### 🚀 Enhancements
+
+- **ollama-download-button:** Update "use in nativemind" button style ([e9daedd](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e9daedd))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.6
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.5...v1.6.0-beta.6)

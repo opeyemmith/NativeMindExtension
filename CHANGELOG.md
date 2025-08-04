@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.8...v1.6.0-beta.9)
+
+### 🩹 Fixes
+
+- **ModelSelector:** Register sidepanel RPC event to update model list ([a4d0b01](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a4d0b01))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.8
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.7...v1.6.0-beta.8)

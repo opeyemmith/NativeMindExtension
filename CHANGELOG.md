@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.10
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.9...v1.6.0-beta.10)
+
+### 🩹 Fixes
+
+- **translator:** Update context menu after page navigation ([ef2d683](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ef2d683))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.9
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.8...v1.6.0-beta.9)

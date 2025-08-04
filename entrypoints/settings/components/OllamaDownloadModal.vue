@@ -76,6 +76,7 @@ import { useI18n } from '@/utils/i18n'
 import { PREDEFINED_OLLAMA_MODELS } from '@/utils/llm/predefined-models'
 import logger from '@/utils/logger'
 import { useOllamaStatusStore } from '@/utils/pinia-store/store'
+import { getUserConfig } from '@/utils/user-config'
 
 import { pullOllamaModel } from '../utils/llm'
 
@@ -94,6 +95,8 @@ const modelInfo = PREDEFINED_OLLAMA_MODELS.find((model) => model.id === props.mo
   size: 0,
 }
 const ollamaStatusStore = useOllamaStatusStore()
+const userConfig = await getUserConfig()
+const currentModel = userConfig.llm.model.toRef()
 
 const pulling = ref<{ modelId: string, total: number, completed: number, abort: () => void, status: string, error?: string }>()
 
@@ -127,6 +130,10 @@ const installModel = async () => {
       if (progress.status) {
         pulling.value.status = progress.status
       }
+    }
+    const modelList = await ollamaStatusStore.updateModelList()
+    if (modelList.some((model) => model.model === modelInfo.id)) {
+      currentModel.value = modelInfo.id
     }
     emit('finished')
   }

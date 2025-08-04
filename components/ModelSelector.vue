@@ -223,7 +223,7 @@ watch(modelList, (modelList) => {
   commonModel.value = newCommonModel.model
 })
 
-watch([baseUrl, endpointType], async () => {
+watch([baseUrl, endpointType, selectedModel], async () => {
   updateModelList()
 })
 

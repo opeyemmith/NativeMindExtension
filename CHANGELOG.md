@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.6.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.7...v1.6.0-beta.8)
+
+### 🩹 Fixes
+
+- **ModelSelector:** Update model list after selectedModel changed ([33cd582](https://github.com/NativeMindBrowser/NativeMindExtension/commit/33cd582))
+
+### 💅 Refactors
+
+- **logger:** Update logging level management ([b3b97f1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/b3b97f1))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.7
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.6...v1.6.0-beta.7)

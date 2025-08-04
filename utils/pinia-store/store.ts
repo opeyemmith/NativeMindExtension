@@ -19,7 +19,7 @@ const rpc = forRuntimes({
 export const useOllamaStatusStore = defineStore('ollama-status', () => {
   const modelList = ref<OllamaModelInfo[]>([])
   const connectionStatus = ref<'connected' | 'error' | 'unconnected'>('unconnected')
-  const updateModelList = async () => {
+  const updateModelList = async (): Promise<OllamaModelInfo[]> => {
     try {
       const response = await rpc.getLocalModelList()
       connectionStatus.value = 'connected'

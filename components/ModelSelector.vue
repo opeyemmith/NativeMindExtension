@@ -127,6 +127,8 @@ import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
 import { useOllamaStatusStore } from '@/utils/pinia-store/store'
+import { registerSidepanelRpcEvent } from '@/utils/rpc/sidepanel-fns'
+import { only } from '@/utils/runtime'
 import { showSettings } from '@/utils/settings'
 import { getUserConfig } from '@/utils/user-config'
 import { classNames } from '@/utils/vue/utils'
@@ -152,6 +154,12 @@ const props = withDefaults(defineProps<{
 const { t } = useI18n()
 const { modelList: ollamaModelList } = toRefs(useOllamaStatusStore())
 const { updateModelList: updateOllamaModelList } = useOllamaStatusStore()
+
+only(['sidepanel'], () => {
+  registerSidepanelRpcEvent('updateModelList', async () => {
+    await updateOllamaModelList()
+  })
+})
 
 const modelList = computed(() => {
   if (endpointType.value === 'ollama') {

@@ -19,7 +19,7 @@ import { parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
 import { showSettingsForBackground } from '../settings'
 import { getUserConfig } from '../user-config'
-import { bgBroadcastRpc } from '.'
+import { b2sRpc, bgBroadcastRpc } from '.'
 import { preparePortConnection } from './utils'
 
 type StreamTextOptions = Omit<Parameters<typeof originalStreamText>[0], 'tools'>
@@ -558,6 +558,10 @@ function ping() {
   return 'pong'
 }
 
+function updateSidepanelModelList() {
+  b2sRpc.emit('updateModelList')
+}
+
 export const backgroundFunctions = {
   emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
     eventEmitter.emit(ev, ...args)
@@ -598,5 +602,6 @@ export const backgroundFunctions = {
   captureVisibleTab,
   showSidepanel,
   showSettings: showSettingsForBackground,
+  updateSidepanelModelList,
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

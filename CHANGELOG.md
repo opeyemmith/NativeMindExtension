@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.0-beta.12
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.11...v1.6.0-beta.12)
+
+### 🏡 Chore
+
+- **i18n:** Update settings translations for consistency across languages ([6ecea37](https://github.com/NativeMindBrowser/NativeMindExtension/commit/6ecea37))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0-beta.11
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.10...v1.6.0-beta.11)

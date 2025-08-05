@@ -558,8 +558,9 @@ function ping() {
   return 'pong'
 }
 
-function updateSidepanelModelList() {
+async function updateSidepanelModelList() {
   b2sRpc.emit('updateModelList')
+  return true
 }
 
 export const backgroundFunctions = {

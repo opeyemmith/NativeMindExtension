@@ -1,6 +1,22 @@
 # Changelog
 
 
+## v1.6.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0...v1.6.1)
+
+### 🚀 Enhancements
+
+- **models:** Add support for gpt-oss model ([9708639](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9708639))
+
+### 🩹 Fixes
+
+- **i18n:** Update localized messages for consistency across multiple languages ([803b408](https://github.com/NativeMindBrowser/NativeMindExtension/commit/803b408))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.0
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.12...v1.6.0)

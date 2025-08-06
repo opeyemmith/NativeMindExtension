@@ -1,6 +1,6 @@
 {
   "name": "nativemind-extension",
-  "version": "1.5.3",
+  "version": "1.6.0-beta.12",
   "private": false,
   "author": "NativeMind",
   "keywords": [
@@ -105,6 +105,7 @@
     "vue": "^3.5.13",
     "vue-component-type-helpers": "^2.2.10",
     "vue-i18n": "^11.1.5",
+    "vue-router": "^4.5.1",
     "vue-shadow-dom": "^4.2.0",
     "zod": "^3.24.4",
     "zod-from-json-schema": "0.0.5"
@@ -140,6 +141,7 @@
     "sharp": "^0.34.2",
     "typescript": "5.8.3",
     "typescript-eslint": "^8.32.0",
+    "vite": "6.3.5",
     "vite-bundle-analyzer": "^1.1.0",
     "vite-plugin-node-polyfills": "^0.24.0",
     "vite-plugin-webfont-dl": "^3.10.5",

@@ -7,17 +7,19 @@ import { convertJsonSchemaToZod, JSONSchema } from 'zod-from-json-schema'
 import { TabInfo } from '@/types/tab'
 import logger from '@/utils/logger'
 
+import { sleep } from '../async'
 import { ContextMenuManager } from '../context-menu'
-import { AppError, CreateTabStreamCaptureError, ModelRequestError, UnknownError } from '../error'
+import { AppError, CreateTabStreamCaptureError, FetchError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList, pullModel, showModelDetails } from '../llm/ollama'
+import { deleteModel, getLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
-import { extractPdfText, getPdfPageCount, parsePdfFileOfUrl } from '../pdf'
+import { parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
+import { showSettingsForBackground } from '../settings'
 import { getUserConfig } from '../user-config'
-import { bgBroadcastRpc } from '.'
+import { b2sRpc, bgBroadcastRpc } from '.'
 import { preparePortConnection } from './utils'
 
 type StreamTextOptions = Omit<Parameters<typeof originalStreamText>[0], 'tools'>
@@ -224,7 +226,12 @@ const getAllTabs = async () => {
   }))
 }
 
-const getDocumentContentOfTab = async (tabId: number) => {
+const getDocumentContentOfTab = async (tabId?: number) => {
+  if (!tabId) {
+    const currentTab = (await browser.tabs.query({ active: true, currentWindow: true }))[0]
+    tabId = currentTab.id
+  }
+  if (!tabId) throw new Error('No tab id provided')
   const article = await bgBroadcastRpc.getDocumentContent({ _toTab: tabId })
   return article
 }
@@ -259,10 +266,7 @@ const getPageContentType = async (tabId: number) => {
 const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
   const response = await fetch(url, initOptions)
   if (!response.ok) {
-    return {
-      status: response.status,
-      error: `Failed to fetch ${url}: ${response.statusText}`,
-    }
+    throw new FetchError(`Failed to fetch ${url}: ${response.statusText}`)
   }
 
   const blob = await response.blob()
@@ -306,6 +310,18 @@ const fetchAsText = async (url: string, initOptions?: RequestInit) => {
 
 const deleteOllamaModel = async (modelId: string) => {
   await deleteModel(modelId)
+}
+
+const unloadOllamaModel = async (modelId: string) => {
+  await unloadModel(modelId)
+  const start = Date.now()
+  while (Date.now() - start < 10000) {
+    const modelList = await getRunningModelList()
+    if (!modelList.models.some((m) => m.model === modelId)) {
+      break
+    }
+    await sleep(1000)
+  }
 }
 
 const showOllamaModelDetails = async (modelId: string) => {
@@ -453,14 +469,13 @@ async function deleteWebLLMModelInCache(model: WebLLMSupportedModel) {
   }
 }
 
-async function isCurrentModelReady() {
+async function checkModelReady(modelId: string) {
   try {
     const userConfig = await getUserConfig()
     const endpointType = userConfig.llm.endpointType.get()
-    const model = userConfig.llm.model.get()
     if (endpointType === 'ollama') return true
     else if (endpointType === 'web-llm') {
-      return await hasWebLLMModelInCache(model as WebLLMSupportedModel)
+      return await hasWebLLMModelInCache(modelId as WebLLMSupportedModel)
     }
     else throw new Error('Unsupported endpoint type ' + endpointType)
   }
@@ -502,6 +517,16 @@ export function registerBackgroundRpcEvent<E extends EventKey>(ev: E, fn: (...ar
   }
 }
 
+export async function showSidepanel(onlyCurrentTab?: boolean) {
+  if (onlyCurrentTab) {
+    const currentTab = await browser.tabs.query({ active: true, currentWindow: true }).then((tabs) => tabs[0])
+    const tabId = currentTab.id
+    browser.sidePanel.open({ tabId, windowId: currentTab.windowId })
+    return
+  }
+  browser.sidePanel.open({ windowId: browser.windows.WINDOW_ID_CURRENT })
+}
+
 function getTabCaptureMediaStreamId(tabId: number, consumerTabId?: number) {
   return new Promise<string | undefined>((resolve, reject) => {
     browser.tabCapture.getMediaStreamId(
@@ -525,8 +550,17 @@ function captureVisibleTab(windowId?: number, options?: Browser.tabs.CaptureVisi
   return screenCaptureBase64Url
 }
 
+function getTabInfoByTabId(tabId: number) {
+  return browser.tabs.get(tabId)
+}
+
 function ping() {
   return 'pong'
+}
+
+async function updateSidepanelModelList() {
+  b2sRpc.emit('updateModelList')
+  return true
 }
 
 export const backgroundFunctions = {
@@ -535,14 +569,17 @@ export const backgroundFunctions = {
   },
   ping,
   getTabInfo: (_tabInfo?: { tabId: number }) => _tabInfo as TabInfo, // a trick to get tabId
+  getTabInfoByTabId,
   generateText,
   generateTextAsync,
   streamText,
   getAllTabs,
   getLocalModelList,
+  getRunningModelList,
   deleteOllamaModel,
   pullOllamaModel,
   showOllamaModelDetails,
+  unloadOllamaModel,
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
@@ -558,15 +595,14 @@ export const backgroundFunctions = {
   initWebLLMEngine,
   hasWebLLMModelInCache,
   deleteWebLLMModelInCache,
-  isCurrentModelReady,
+  checkModelReady,
   initCurrentModel,
   checkSupportWebLLM,
   getSystemMemoryInfo,
   testOllamaConnection,
   captureVisibleTab,
-
-  // only for firefox and should be removed after side panel refactor
-  getPdfPageCount: (...args: Parameters<typeof getPdfPageCount>) => getPdfPageCount(...args).then((ret) => ret),
-  extractPdfText: (...args: Parameters<typeof extractPdfText>) => extractPdfText(...args).then((ret) => ({ mergedText: ret.mergedText, texts: ret.texts, pdfProxy: { numPages: ret.pdfProxy.numPages } })),
+  showSidepanel,
+  showSettings: showSettingsForBackground,
+  updateSidepanelModelList,
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

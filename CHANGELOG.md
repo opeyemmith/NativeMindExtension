@@ -1,6 +1,146 @@
 # Changelog
 
 
+## v1.6.0-beta.12
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.11...v1.6.0-beta.12)
+
+### 🏡 Chore
+
+- **i18n:** Update settings translations for consistency across languages ([6ecea37](https://github.com/NativeMindBrowser/NativeMindExtension/commit/6ecea37))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.11
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.10...v1.6.0-beta.11)
+
+## v1.6.0-beta.10
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.9...v1.6.0-beta.10)
+
+### 🩹 Fixes
+
+- **translator:** Update context menu after page navigation ([ef2d683](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ef2d683))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.9
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.8...v1.6.0-beta.9)
+
+### 🩹 Fixes
+
+- **ModelSelector:** Register sidepanel RPC event to update model list ([a4d0b01](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a4d0b01))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.8
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.7...v1.6.0-beta.8)
+
+### 🩹 Fixes
+
+- **ModelSelector:** Update model list after selectedModel changed ([33cd582](https://github.com/NativeMindBrowser/NativeMindExtension/commit/33cd582))
+
+### 💅 Refactors
+
+- **logger:** Update logging level management ([b3b97f1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/b3b97f1))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.7
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.6...v1.6.0-beta.7)
+
+### 🚀 Enhancements
+
+- **ollama-download-button:** Update "use in nativemind" button style ([e9daedd](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e9daedd))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.6
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.5...v1.6.0-beta.6)
+
+### 🩹 Fixes
+
+- **chat:** Limit message bubble width ([2fcc34b](https://github.com/NativeMindBrowser/NativeMindExtension/commit/2fcc34b))
+- **settings:** Conditionally render SavedMessage ([637ece1](https://github.com/NativeMindBrowser/NativeMindExtension/commit/637ece1))
+- **chat:** Set default chat ID to a static value ([0f8ae86](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0f8ae86))
+
+### 💅 Refactors
+
+- **onboarding:** Remove pin sidebar functionality and related icons ([5b8b5b3](https://github.com/NativeMindBrowser/NativeMindExtension/commit/5b8b5b3))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.4...v1.6.0-beta.5)
+
+### 🚀 Enhancements
+
+- **settings:** Connection status in running models section ([71ba272](https://github.com/NativeMindBrowser/NativeMindExtension/commit/71ba272))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.4
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.3...v1.6.0-beta.4)
+
+### 💅 Refactors
+
+- **attachment-selector:** Improve attachment handling and update localization strings ([e6931fb](https://github.com/NativeMindBrowser/NativeMindExtension/commit/e6931fb))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
+## v1.6.0-beta.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.3...v1.6.0-beta.3)
+
+### 🚀 Enhancements
+
+- Side panel refactor ([92536d9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/92536d9))
+- Side panel refactor ([ff98a55](https://github.com/NativeMindBrowser/NativeMindExtension/commit/ff98a55))
+
+### 🩹 Fixes
+
+- **runtime:** Update app metadata handling and improve entrypoint management ([9d181fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9d181fc))
+- **runtime:** Update app metadata handling and improve entrypoint management ([0b4f9fe](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0b4f9fe))
+
+### 💅 Refactors
+
+- **settings:** Refactor settings into a standalone web page ([224a151](https://github.com/NativeMindBrowser/NativeMindExtension/commit/224a151))
+- **settings:** Refactor settings into a standalone web page ([cbaea08](https://github.com/NativeMindBrowser/NativeMindExtension/commit/cbaea08))
+- **settings:** Refactor settings into a standalone web page ([8698549](https://github.com/NativeMindBrowser/NativeMindExtension/commit/8698549))
+
+### 🏡 Chore
+
+- **release:** V1.6.0-beta.0 ([0936359](https://github.com/NativeMindBrowser/NativeMindExtension/commit/0936359))
+- **release:** V1.6.0-beta.1 ([3a8c4d5](https://github.com/NativeMindBrowser/NativeMindExtension/commit/3a8c4d5))
+- **release:** V1.6.0-beta.2 ([6b41fc2](https://github.com/NativeMindBrowser/NativeMindExtension/commit/6b41fc2))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.5.3
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.2...v1.5.3)
@@ -8,6 +148,13 @@
 ### 🩹 Fixes
 
 - **pdf:** Implement PDF file parsing from URL and enhance file handling for Firefox ([bc9ebf6](https://github.com/NativeMindBrowser/NativeMindExtension/commit/bc9ebf6))
+## v1.6.0-beta.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.1...v1.6.0-beta.2)
+
+### 💅 Refactors
+
+- **settings:** Refactor settings into a standalone web page ([224a151](https://github.com/NativeMindBrowser/NativeMindExtension/commit/224a151))
 
 ### ❤️ Contributors
 
@@ -20,6 +167,13 @@
 ### 🩹 Fixes
 
 - **pdf:** Add Firefox support for PDF text extraction and page count ([a621ca8](https://github.com/NativeMindBrowser/NativeMindExtension/commit/a621ca8))
+## v1.6.0-beta.1
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0-beta.0...v1.6.0-beta.1)
+
+### 🩹 Fixes
+
+- **runtime:** Update app metadata handling and improve entrypoint management ([9d181fc](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9d181fc))
 
 ### ❤️ Contributors
 
@@ -36,6 +190,13 @@
 ### 📖 Documentation
 
 - **browser-llm-api:** Add feature detection section for API availability check ([716657e](https://github.com/NativeMindBrowser/NativeMindExtension/commit/716657e))
+## v1.6.0-beta.0
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.5.0...v1.6.0-beta.0)
+
+### 🚀 Enhancements
+
+- Side panel refactor ([92536d9](https://github.com/NativeMindBrowser/NativeMindExtension/commit/92536d9))
 
 ### ❤️ Contributors
 

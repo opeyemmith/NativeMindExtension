@@ -1,29 +1,29 @@
 import { createSharedComposable, useEventListener } from '@vueuse/core'
-import { onMounted, ref, watch } from 'vue'
+import { ref, watch } from 'vue'
 
 import { useToast } from '@/composables/useToast'
 import { getTranslatorEnv, handleTranslatorEnvUpdated, init, setTranslatorEnv, toggleTranslation, translation } from '@/entrypoints/content/utils/translator'
 import { useI18n } from '@/utils/i18n'
 import { LanguageCode } from '@/utils/language/detect'
 import logger from '@/utils/logger'
+import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 import { registerContentScriptRpcEvent } from '@/utils/rpc'
 import { getCommonAncestorElement } from '@/utils/selection'
+import { showSettings } from '@/utils/settings'
 import { getUserConfig } from '@/utils/user-config'
 
-import { useOllamaStatusStore } from '../store'
 import { setTranslationMenuTargetLanguage } from '../utils/context-menu'
-import { showSettings } from '../utils/settings'
 
 async function _useTranslator() {
   // useToast/useI18n must be called before the first await
   const { locale } = useI18n()
   const toast = useToast()
-  onMounted(() => {
-    setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
-  })
+  const enabled = ref(false)
+  const isTranslating = ref(false)
   const userConfig = await getUserConfig()
   const targetLocale = userConfig.translation.targetLocale.toRef()
   const ollamaStatusStore = useOllamaStatusStore()
+  setTranslationMenuTargetLanguage(enabled.value, targetLocale.value)
   watch(targetLocale, async (targetLocale) => {
     logger.debug('targetLocale changed', targetLocale)
     const curEnv = await getTranslatorEnv()
@@ -35,9 +35,6 @@ async function _useTranslator() {
     }
     logger.debug(await getTranslatorEnv())
   })
-
-  const enabled = ref(false)
-  const isTranslating = ref(false)
 
   let initialized = false
   async function onInit() {
@@ -75,12 +72,12 @@ async function _useTranslator() {
       if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
         if (!(await ollamaStatusStore.updateConnectionStatus())) {
           toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
-          showSettings(true, { scrollTarget: 'server-address-section' })
+          showSettings({ scrollTarget: 'server-address-section' })
           return
         }
         else if ((await ollamaStatusStore.updateModelList()).length === 0) {
           toast('No model found, please download a model.', { duration: 2000 })
-          showSettings(true, { scrollTarget: 'model-download-section' })
+          showSettings({ scrollTarget: 'model-download-section' })
           return
         }
       }

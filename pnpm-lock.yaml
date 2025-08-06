@@ -164,6 +164,9 @@ importers:
       vue-i18n:
         specifier: ^11.1.5
         version: 11.1.5(vue@3.5.13(typescript@5.8.3))
+      vue-router:
+        specifier: ^4.5.1
+        version: 4.5.1(vue@3.5.13(typescript@5.8.3))
       vue-shadow-dom:
         specifier: ^4.2.0
         version: 4.2.0
@@ -264,6 +267,9 @@ importers:
       typescript-eslint:
         specifier: ^8.32.0
         version: 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
+      vite:
+        specifier: 6.3.5
+        version: 6.3.5(@types/node@24.0.4)(jiti@2.4.2)(lightningcss@1.30.1)(sass-embedded@1.87.0)(yaml@2.7.1)
       vite-bundle-analyzer:
         specifier: ^1.1.0
         version: 1.1.0
@@ -5361,6 +5367,11 @@ packages:
     peerDependencies:
       vue: ^3.0.0
 
+  vue-router@4.5.1:
+    resolution: {integrity: sha512-ogAF3P97NPm8fJsE4by9dwSYtDwXIY1nFY9T6DyQnGHd1E2Da94w9JIolpe42LJGIl0DwOHBi8TcRPlPGwbTtw==}
+    peerDependencies:
+      vue: ^3.2.0
+
   vue-shadow-dom@4.2.0:
     resolution: {integrity: sha512-lguI064rT2HT/dxqSmXtz860KOvCq+W3nU1jMqroTmX3K1H46q22BMR4emh/Ld3ozy35XJKOaNGcr6mkJ/t/yg==}
 
@@ -6692,7 +6703,7 @@ snapshots:
       '@typescript-eslint/types': 8.32.0
       '@typescript-eslint/typescript-estree': 8.32.0(typescript@5.8.3)
       '@typescript-eslint/visitor-keys': 8.32.0
-      debug: 4.4.0
+      debug: 4.4.1
       eslint: 9.26.0(jiti@2.4.2)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -6725,7 +6736,7 @@ snapshots:
     dependencies:
       '@typescript-eslint/typescript-estree': 8.32.0(typescript@5.8.3)
       '@typescript-eslint/utils': 8.32.0(eslint@9.26.0(jiti@2.4.2))(typescript@5.8.3)
-      debug: 4.4.0
+      debug: 4.4.1
       eslint: 9.26.0(jiti@2.4.2)
       ts-api-utils: 2.1.0(typescript@5.8.3)
       typescript: 5.8.3
@@ -6740,11 +6751,11 @@ snapshots:
     dependencies:
       '@typescript-eslint/types': 8.32.0
       '@typescript-eslint/visitor-keys': 8.32.0
-      debug: 4.4.0
+      debug: 4.4.1
       fast-glob: 3.3.3
       is-glob: 4.0.3
       minimatch: 9.0.5
-      semver: 7.7.1
+      semver: 7.7.2
       ts-api-utils: 2.1.0(typescript@5.8.3)
       typescript: 5.8.3
     transitivePeerDependencies:
@@ -10794,7 +10805,7 @@ snapshots:
       picomatch: 4.0.2
       postcss: 8.5.3
       rollup: 4.40.1
-      tinyglobby: 0.2.13
+      tinyglobby: 0.2.14
     optionalDependencies:
       '@types/node': 24.0.4
       fsevents: 2.3.3
@@ -10869,6 +10880,11 @@ snapshots:
     dependencies:
       '@intlify/core-base': 11.1.5
       '@intlify/shared': 11.1.5
+      '@vue/devtools-api': 6.6.4
+      vue: 3.5.13(typescript@5.8.3)
+
+  vue-router@4.5.1(vue@3.5.13(typescript@5.8.3)):
+    dependencies:
       '@vue/devtools-api': 6.6.4
       vue: 3.5.13(typescript@5.8.3)
 

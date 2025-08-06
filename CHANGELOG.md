@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.2
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.1...v1.6.2)
+
+### 🏡 Chore
+
+- **i18n:** Update Russian extension name ([4745c59](https://github.com/NativeMindBrowser/NativeMindExtension/commit/4745c59))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.1
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.0...v1.6.1)

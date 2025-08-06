@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.3
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.2...v1.6.3)
+
+### 🩹 Fixes
+
+- **manifest:** Remove unused 'system.display' permission ([c86a776](https://github.com/NativeMindBrowser/NativeMindExtension/commit/c86a776))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.2
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.1...v1.6.2)

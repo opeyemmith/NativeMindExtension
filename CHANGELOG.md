@@ -1,6 +1,18 @@
 # Changelog
 
 
+## v1.6.5
+
+[compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.4...v1.6.5)
+
+### 🩹 Fixes
+
+- **settings:** Filter running models by expiration instead of VRAM size ([9173c98](https://github.com/NativeMindBrowser/NativeMindExtension/commit/9173c98))
+
+### ❤️ Contributors
+
+- Tony Hu ([@tonyhu-012](http://github.com/tonyhu-012))
+
 ## v1.6.4
 
 [compare changes](https://github.com/NativeMindBrowser/NativeMindExtension/compare/v1.6.3...v1.6.4)

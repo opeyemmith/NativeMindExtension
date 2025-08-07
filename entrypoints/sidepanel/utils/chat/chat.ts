@@ -7,7 +7,7 @@ import { PDFContentForModel } from '@/types/pdf'
 import { nonNullable } from '@/utils/array'
 import { debounce } from '@/utils/debounce'
 import { parseDocument } from '@/utils/document-parser'
-import { AbortError, AppError } from '@/utils/error'
+import { AbortError, AppError, fromError, GenerateObjectSchemaError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
 import logger from '@/utils/logger'
@@ -376,9 +376,13 @@ export class Chat {
       prompt: prompt.user.extractText(),
       system: prompt.system,
       abortSignal: abortController.signal,
+    }).then((r) => r.object).catch((e) => {
+      log.error('Error in nextStep', e)
+      if (fromError(e) instanceof GenerateObjectSchemaError) return { action: 'chat' as const }
+      throw e
     })
-    log.debug('nextStep', next.object)
-    return next.object
+    log.debug('nextStep', next)
+    return next
   }
 
   private createAbortController() {

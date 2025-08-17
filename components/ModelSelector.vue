@@ -3,8 +3,32 @@
     class="flex justify-between items-center gap-3 relative"
     @click="onClick"
   >
+    <!-- Loading state for OpenRouter -->
+    <div
+      v-if="endpointType === 'openrouter' && openRouterLoading && modelList.length === 0"
+      class="flex items-center gap-2 px-3 py-2"
+    >
+      <div class="w-4 h-4 border-2 border-gray-300 border-t-blue-500 rounded-full animate-spin" />
+      <span class="text-sm text-gray-600">Loading OpenRouter models...</span>
+    </div>
+
+    <!-- Error state for OpenRouter -->
+    <div
+      v-else-if="endpointType === 'openrouter' && openRouterStatus === 'no-credits' && modelList.length === 0"
+      class="flex items-center gap-2 px-3 py-2 bg-yellow-50 border border-yellow-200 rounded"
+    >
+      <span class="text-sm text-yellow-800">⚠️ Add credits to your OpenRouter account to use models</span>
+    </div>
+
+    <div
+      v-else-if="endpointType === 'openrouter' && openRouterStatus === 'error' && modelList.length === 0"
+      class="flex items-center gap-2 px-3 py-2 bg-red-50 border border-red-200 rounded"
+    >
+      <span class="text-sm text-red-800">❌ Failed to load OpenRouter models. Check your API key.</span>
+    </div>
+
     <a
-      v-if="modelList.length === 0 && showDiscoverMore"
+      v-else-if="modelList.length === 0 && showDiscoverMore && endpointType === 'ollama'"
       :href="OLLAMA_SEARCH_URL"
       rel="noopener noreferrer"
       target="_blank"
@@ -125,7 +149,9 @@ import ModelLogo from '@/components/ModelLogo.vue'
 import { OLLAMA_SEARCH_URL } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
 import { useI18n } from '@/utils/i18n'
+// import { PREDEFINED_OPENROUTER_MODELS } from '@/utils/llm/predefined-models'
 import { SUPPORTED_MODELS } from '@/utils/llm/web-llm'
+import { useOpenRouterStore } from '@/utils/pinia-store/openrouter-store'
 import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 import { registerSidepanelRpcEvent } from '@/utils/rpc/sidepanel-fns'
 import { only } from '@/utils/runtime'
@@ -155,6 +181,15 @@ const { t } = useI18n()
 const { modelList: ollamaModelList } = toRefs(useOllamaStatusStore())
 const { updateModelList: updateOllamaModelList } = useOllamaStatusStore()
 
+// OpenRouter store
+const {
+  modelList: openRouterModelList,
+  isLoading: openRouterLoading,
+  connectionStatus: openRouterStatus,
+  searchQuery: _openRouterSearchQuery,
+} = toRefs(useOpenRouterStore())
+const { updateModelList: updateOpenRouterModelList } = useOpenRouterStore()
+
 only(['sidepanel'], () => {
   const removeListener = registerSidepanelRpcEvent('updateModelList', async () => await updateOllamaModelList())
   onBeforeUnmount(() => removeListener())
@@ -163,6 +198,16 @@ only(['sidepanel'], () => {
 const modelList = computed(() => {
   if (endpointType.value === 'ollama') {
     return ollamaModelList.value
+  }
+  else if (endpointType.value === 'openrouter') {
+    return openRouterModelList.value.map((model) => ({
+      name: model.name,
+      model: model.model,
+      description: model.description,
+      pricing: model.pricing,
+      contextLength: model.contextLength,
+      provider: model.provider,
+    }))
   }
   else {
     return SUPPORTED_MODELS.map((model) => ({
@@ -175,6 +220,9 @@ const modelList = computed(() => {
 const updateModelList = async () => {
   if (endpointType.value === 'ollama') {
     await updateOllamaModelList()
+  }
+  else if (endpointType.value === 'openrouter') {
+    await updateOpenRouterModelList()
   }
 }
 

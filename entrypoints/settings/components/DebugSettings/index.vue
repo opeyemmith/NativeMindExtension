@@ -449,6 +449,7 @@ const articles = ref<{ type: 'html' | 'pdf', url: string, title: string, content
 const modelProviderOptions = [
   { id: 'ollama' as const, label: 'Ollama' },
   { id: 'web-llm' as const, label: 'Web LLM' },
+  { id: 'openrouter' as const, label: 'OpenRouter' },
 ]
 
 const resetOnboarding = async () => {

@@ -86,6 +86,10 @@ export async function checkBackendModelReady(model?: string): Promise<{ backend:
         return { backend: true, model: modelList.models.some((m) => m.model === model) }
       }
     }
+    else if (userConfig.llm.endpointType.get() === 'openrouter') {
+      // For OpenRouter, always return true as models are predefined
+      return { backend: true, model: true }
+    }
     else if (userConfig.llm.endpointType.get() === 'web-llm') {
       return { backend: true, model: await c2bRpc.hasWebLLMModelInCache('Qwen3-0.6B-q4f16_1-MLC') }
     }

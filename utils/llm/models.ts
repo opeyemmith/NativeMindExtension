@@ -5,6 +5,7 @@ import { getUserConfig } from '@/utils/user-config'
 import { ModelNotFoundError } from '../error'
 import { makeCustomFetch } from '../fetch'
 import { createOllama } from './providers/ollama'
+import { createOpenRouter } from './providers/openrouter'
 import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
 import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
 
@@ -70,6 +71,15 @@ export async function getModel(options: {
       structuredOutputs: true,
     })
   }
+  else if (endpointType === 'openrouter') {
+    const openrouter = createOpenRouter({
+      baseURL: options.baseUrl,
+      apiKey: options.apiKey,
+    })
+    model = openrouter(options.model, {
+      structuredOutputs: true,
+    })
+  }
   else if (endpointType === 'web-llm') {
     const engine = await getWebLLMEngine({
       model: options.model as WebLLMSupportedModel,
@@ -95,7 +105,7 @@ export async function getModel(options: {
   })
 }
 
-export type LLMEndpointType = 'ollama' | 'web-llm'
+export type LLMEndpointType = 'ollama' | 'web-llm' | 'openrouter'
 
 export function parseErrorMessageFromChunk(error: unknown): string | null {
   if (error && typeof error === 'object' && 'message' in error && typeof (error as { message: unknown }).message === 'string') {

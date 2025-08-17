@@ -13,8 +13,15 @@ import { MODELS_NOT_SUPPORTED_FOR_STRUCTURED_OUTPUT } from '../constants'
 import { ContextMenuManager } from '../context-menu'
 import { AppError, CreateTabStreamCaptureError, FetchError, GenerateObjectSchemaError, ModelRequestError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
+import { deleteModel, getLocalModelList as getOllamaLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
+import {
+  clearOpenRouterModelsCache,
+  getOpenRouterModelsWithCache,
+  OpenRouterModel,
+  POPULAR_OPENROUTER_MODELS,
+} from '../llm/openrouter-models'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
+import { PREDEFINED_OPENROUTER_MODELS } from '../llm/predefined-models'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
 import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
 import { parsePdfFileOfUrl } from '../pdf'
@@ -397,18 +404,56 @@ const pullOllamaModel = async (modelId: string) => {
 
 async function testOllamaConnection() {
   const userConfig = await getUserConfig()
-  try {
-    const baseUrl = userConfig.llm.baseUrl.get()
-    const origin = new URL(baseUrl).origin
-    const response = await fetch(origin)
-    if (!response.ok) return false
-    const text = await response.text()
-    if (text.includes('Ollama is running')) return true
-    else return false
+  const endpointType = userConfig.llm.endpointType.get()
+
+  if (endpointType === 'openrouter') {
+    try {
+      const apiKey = userConfig.llm.apiKey.get()
+      const baseUrl = userConfig.llm.baseUrl.get()
+
+      if (!apiKey) {
+        logger.error('OpenRouter API key not configured')
+        return false
+      }
+
+      // Test OpenRouter connection by making a simple API call
+      const response = await fetch(`${baseUrl}/models`, {
+        headers: {
+          'Authorization': `Bearer ${apiKey}`,
+          'Content-Type': 'application/json',
+        },
+      })
+
+      if (!response.ok) {
+        logger.error('OpenRouter API test failed:', response.status, response.statusText)
+        return false
+      }
+
+      return true
+    }
+    catch (error: unknown) {
+      logger.error('error connecting to openrouter api', error)
+      return false
+    }
   }
-  catch (error: unknown) {
-    logger.error('error connecting to ollama api', error)
-    return false
+  else if (endpointType === 'ollama') {
+    try {
+      const baseUrl = userConfig.llm.baseUrl.get()
+      const origin = new URL(baseUrl).origin
+      const response = await fetch(origin)
+      if (!response.ok) return false
+      const text = await response.text()
+      if (text.includes('Ollama is running')) return true
+      else return false
+    }
+    catch (error: unknown) {
+      logger.error('error connecting to ollama api', error)
+      return false
+    }
+  }
+  else {
+    // For web-llm, always return true as it doesn't need external connection
+    return true
   }
 }
 
@@ -498,6 +543,7 @@ async function checkModelReady(modelId: string) {
     const userConfig = await getUserConfig()
     const endpointType = userConfig.llm.endpointType.get()
     if (endpointType === 'ollama') return true
+    else if (endpointType === 'openrouter') return true
     else if (endpointType === 'web-llm') {
       return await hasWebLLMModelInCache(modelId as WebLLMSupportedModel)
     }
@@ -514,6 +560,9 @@ async function initCurrentModel() {
   const endpointType = userConfig.llm.endpointType.get()
   const model = userConfig.llm.model.get()
   if (endpointType === 'ollama') {
+    return false
+  }
+  else if (endpointType === 'openrouter') {
     return false
   }
   else if (endpointType === 'web-llm') {
@@ -582,8 +631,117 @@ function ping() {
   return 'pong'
 }
 
+async function getLocalModelList() {
+  const userConfig = await getUserConfig()
+  const endpointType = userConfig.llm.endpointType.get()
+
+  if (endpointType === 'openrouter') {
+    // For OpenRouter, return predefined models
+    return {
+      models: PREDEFINED_OPENROUTER_MODELS.map((model) => ({
+        model: model.id,
+        name: model.name,
+        size: 0,
+        modifiedAt: new Date().toISOString(),
+        quantizationLevel: undefined,
+      })),
+    }
+  }
+  else if (endpointType === 'ollama') {
+    // For Ollama, use the existing function
+    return await getOllamaLocalModelList()
+  }
+  else {
+    // For web-llm, return empty list as models are handled differently
+    return { models: [] }
+  }
+}
+
 async function updateSidepanelModelList() {
   b2sRpc.emit('updateModelList')
+  return true
+}
+
+async function getOpenRouterModels() {
+  try {
+    const userConfig = await getUserConfig()
+    const apiKey = userConfig.llm.apiKey.get()
+
+    if (!apiKey) {
+      throw new Error('OpenRouter API key not configured')
+    }
+
+    const models = await getOpenRouterModelsWithCache(apiKey)
+    logger.debug('Fetched OpenRouter models:', models.length)
+
+    return { models }
+  }
+  catch (error) {
+    logger.error('Error fetching OpenRouter models:', error)
+
+    // Return fallback models if API fails
+    return {
+      models: POPULAR_OPENROUTER_MODELS.map((id): OpenRouterModel => ({
+        id: id as string,
+        name: id.split('/').pop() || id,
+        description: 'Popular model',
+        pricing: { prompt: '0', completion: '0' },
+        context_length: 8192,
+        architecture: { modality: 'text', tokenizer: 'unknown', instruct_type: 'unknown' },
+        top_provider: { max_completion_tokens: 4096, is_moderated: false },
+        per_request_limits: { prompt_tokens: '0', completion_tokens: '0' },
+      })),
+      error: error instanceof Error ? error.message : 'Unknown error',
+    }
+  }
+}
+
+async function testOpenRouterConnection() {
+  try {
+    const userConfig = await getUserConfig()
+    const apiKey = userConfig.llm.apiKey.get()
+
+    if (!apiKey) {
+      throw new Error('OpenRouter API key not configured')
+    }
+
+    // Test with a simple, cheap model
+    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://nativemind.app',
+        'X-Title': 'NativeMind',
+      },
+      body: JSON.stringify({
+        model: 'openai/gpt-4o-mini',
+        messages: [{ role: 'user', content: 'test' }],
+        max_tokens: 1,
+      }),
+    })
+
+    // 402 means API key is valid but no credits - that's a successful connection
+    if (response.status === 402) {
+      const errorData = await response.json()
+      throw new Error(`Payment Required: ${errorData.error?.message || 'Insufficient credits'}`)
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text()
+      throw new Error(`OpenRouter API error: ${response.status} ${response.statusText}. ${errorText}`)
+    }
+
+    return true
+  }
+  catch (error) {
+    logger.error('OpenRouter connection test failed:', error)
+    throw error
+  }
+}
+
+async function clearOpenRouterModelsCacheRpc() {
+  clearOpenRouterModelsCache()
   return true
 }
 
@@ -628,5 +786,8 @@ export const backgroundFunctions = {
   showSidepanel,
   showSettings: showSettingsForBackground,
   updateSidepanelModelList,
+  getOpenRouterModels,
+  testOpenRouterConnection,
+  clearOpenRouterModelsCache: clearOpenRouterModelsCacheRpc,
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

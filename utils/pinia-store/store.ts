@@ -24,7 +24,7 @@ export const useOllamaStatusStore = defineStore('ollama-status', () => {
       const response = await rpc.getLocalModelList()
       connectionStatus.value = 'connected'
       log.debug('Model list fetched:', response)
-      modelList.value = response.models
+      modelList.value = response.models as OllamaModelInfo[]
       return modelList.value
     }
     catch (error) {

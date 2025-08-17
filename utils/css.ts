@@ -24,9 +24,12 @@ export function scopeStyleIntoShadowRoot(cssText: string) {
 
 async function loadContentScriptCss(name: string): Promise<string> {
   // @ts-expect-error - css output files is not defined in the types
-  const url = browser.runtime.getURL(`/content-scripts/${name}.css`)
+  const url = browser.runtime.getURL(`content-scripts/${name}.css`)
   try {
     const res = await fetch(url)
+    if (!res.ok) {
+      throw new Error(`HTTP ${res.status}: ${res.statusText}`)
+    }
     return await res.text()
   }
   catch (err) {

@@ -84,6 +84,55 @@
                   </div>
                 </Section>
               </ScrollTarget>
+              <ScrollTarget
+                v-if="endpointType === 'openrouter'"
+                :autoScrollIntoView="settingsQuery.scrollTarget.value === 'openrouter-config-section'"
+                showHighlight
+                class="w-full"
+              >
+                <Section
+                  title="OpenRouter Configuration"
+                  class="w-full"
+                >
+                  <div class="flex flex-col gap-4">
+                    <div class="flex flex-col gap-1">
+                      <div class="flex gap-3 items-stretch">
+                        <Input
+                          v-model="baseUrl"
+                          placeholder="https://openrouter.ai/api/v1"
+                          class="rounded-md py-2 px-4 grow"
+                        />
+                      </div>
+                      <Text
+                        color="secondary"
+                        size="xs"
+                        display="block"
+                      >
+                        OpenRouter API endpoint URL
+                      </Text>
+                      <SavedMessage :watch="baseUrl" />
+                    </div>
+                    <div class="flex flex-col gap-1">
+                      <div class="flex gap-3 items-stretch">
+                        <Input
+                          v-model="apiKey"
+                          type="password"
+                          placeholder="Enter your OpenRouter API key"
+                          class="rounded-md py-2 px-4 grow"
+                        />
+                      </div>
+                      <Text
+                        color="secondary"
+                        size="xs"
+                        display="block"
+                      >
+                        Your OpenRouter API key (get one at openrouter.ai)
+                      </Text>
+                      <SavedMessage :watch="apiKey" />
+                    </div>
+                  </div>
+                </Section>
+              </ScrollTarget>
               <Section class="w-full">
                 <template #title>
                   <div class="flex justify-between">
@@ -263,6 +312,7 @@ const settingsQuery = useSettingsInitialQuery()
 const settingsRef = ref<HTMLElement | null>(null)
 const userConfig = await getUserConfig()
 const baseUrl = userConfig.llm.baseUrl.toRef()
+const apiKey = userConfig.llm.apiKey.toRef()
 const endpointType = userConfig.llm.endpointType.toRef()
 const loading = ref(false)
 const isShowDownloadWebLLMModal = ref(false)
@@ -282,6 +332,16 @@ const enableNumCtx = userConfig.llm.enableNumCtx.toRef()
 
 watch(() => settingsQuery.downloadModel.value, (v) => {
   if (v) isShowDownloadOllamaModal.value = true
+})
+
+// Set default base URL when endpoint type changes
+watch(endpointType, (newType) => {
+  if (newType === 'openrouter' && baseUrl.value === 'http://localhost:11434/api') {
+    baseUrl.value = 'https://openrouter.ai/api/v1'
+  }
+  else if (newType === 'ollama' && baseUrl.value === 'https://openrouter.ai/api/v1') {
+    baseUrl.value = 'http://localhost:11434/api'
+  }
 })
 const onDownloadOllamaModelFinished = async () => {
   await ollamaStatusStore.updateModelList()

@@ -61,9 +61,16 @@ watchEffect(async () => {
       default: () => fetch(src).then((res) => res.blob()).then((blob) => fileToDataURL(blob)),
     })
     dataUrl.value = r
+    imageCache.set(src, r)
   }
   catch (error) {
-    logger.error('Failed to fetch image', error)
+    const isFaviconUrl = src.includes('favicon.ico') || src.includes('favicons/') || src.includes('icon')
+    if (isFaviconUrl) {
+      // For favicon requests, log at debug level instead of error level
+      logger.debug('Failed to fetch favicon', { src, error })
+    } else {
+      logger.error('Failed to fetch image', error)
+    }
     onError()
   }
 })

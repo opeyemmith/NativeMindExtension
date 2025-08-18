@@ -203,7 +203,7 @@ Examples of good emoji usage:
 Return ONLY the enhanced text with emojis. No explanations.`
 
 export const TARGET_ONBOARDING_VERSION = 1
-const MIN_SYSTEM_MEMORY = 8 // GB
+const MIN_SYSTEM_MEMORY = 8 // GB - Still useful for context window management
 
 export const DEFAULT_QUICK_ACTIONS = [
   { editedTitle: '', defaultTitleKey: 'chat.prompt.summarize_page_content.title' as const, prompt: 'Please summarize the main content of this page in a clear and concise manner.', showInContextMenu: false, edited: false },
@@ -216,9 +216,9 @@ type OnlineSearchStatus = 'force' | 'disable' | 'auto'
 export async function _getUserConfig() {
   let enableNumCtx = true
 
-  // Disable numCtx when baseUrl is localhost and system memory is less than MIN_SYSTEM_MEMORY
-  // This is only available in chromium-based browsers
-  // baseUrl detection logic runs when user changes baseUrl in settings, so we only need to check system memory here
+  // Keep memory detection for intelligent context window management with OpenRouter
+  // Lower memory systems should use smaller context windows to avoid browser performance issues
+  // when handling large responses from OpenRouter
   if (!import.meta.env.FIREFOX) {
     const systemMemoryInfo = await forRuntimes({
       content: () => c2bRpc.getSystemMemoryInfo(),
@@ -227,6 +227,7 @@ export async function _getUserConfig() {
     if (!systemMemoryInfo) log.error('getUserConfig is used in an unknown runtime')
     else {
       const systemMemory = ByteSize.fromBytes(systemMemoryInfo.capacity).toGB()
+      // On lower memory systems, disable large context windows to prevent browser slowdowns
       enableNumCtx = systemMemory > MIN_SYSTEM_MEMORY ? true : false
     }
   }
@@ -236,10 +237,10 @@ export async function _getUserConfig() {
       current: await new Config<SupportedLocaleCode, undefined>('locale.current').build(),
     },
     llm: {
-      endpointType: await new Config('llm.endpointType').default('web-llm' as LLMEndpointType).build(),
-      baseUrl: await new Config('llm.baseUrl').default('http://localhost:11434/api').build(),
+      endpointType: await new Config('llm.endpointType').default('openrouter' as LLMEndpointType).build(),
+      baseUrl: await new Config('llm.baseUrl').default('https://openrouter.ai/api/v1').build(),
       model: await new Config<string, undefined>('llm.model').build(),
-      apiKey: await new Config('llm.apiKey').default('ollama').build(),
+      apiKey: await new Config('llm.apiKey').default('').build(),
       numCtx: await new Config('llm.numCtx').default(1024 * 8).build(),
       enableNumCtx: await new Config('llm.enableNumCtx').default(enableNumCtx).build(),
       reasoning: await new Config('llm.reasoning').default(true).build(),

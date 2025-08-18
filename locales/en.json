@@ -17,6 +17,16 @@
     },
     "get_ollama": "Get Ollama",
     "test": "Test",
+    "cloud_provider": {
+      "api_endpoint": "API Endpoint",
+      "api_endpoint_desc": "The base URL for your cloud AI provider. Default is OpenRouter's API endpoint.",
+      "api_key": "API Key", 
+      "api_key_desc": "Your API key for accessing cloud AI models. Get one from your provider's dashboard.",
+      "connected": "Connected",
+      "unconnected": "Not Connected",
+      "connection_error": "Connection Error",
+      "test_connection": "Test Connection"
+    },
     "ollama": {
       "already_installed": "Already installed and run Ollama?",
       "need_help": "Need help?",
@@ -50,7 +60,17 @@
       "title": "Models",
       "discover_more": " Discover more models",
       "no_model": "⚠️ No model",
-      "add_model_to_start": "Add a model to start"
+      "add_model_to_start": "Add a model to start",
+      "search_models": "Search models...",
+      "no_api_key": "⚠️ No API key configured",
+      "no_api_key_desc": "Please configure your API key in settings to access AI models",
+      "configure_api": "Configure API Key",
+      "loading_models": "Loading models...",
+      "connection_error": "❌ Connection failed",
+      "connection_error_desc": "Failed to connect to AI provider. Check your API key and connection.",
+      "no_credits": "⚠️ Insufficient credits",
+      "no_credits_desc": "Add credits to your account to access AI models",
+      "add_credits": "Add Credits"
     },
     "quick_actions": {
       "title": "Customize Quick Actions",
@@ -104,9 +124,6 @@
       "unable_to_download": "Unable to Start Download",
       "retry": "Retry",
       "could_not_connect_ollama": "We couldn’t connect to Ollama. Please make sure Ollama is running and try again."
-    },
-    "webllm_downloader": {
-      "description": "To use Local mode, you need to download the {model} model ({size}). Would you like to download it now?"
     },
     "writing_tools": {
       "title": "Writing Tools",
@@ -209,33 +226,27 @@
   },
   "onboarding": {
     "banner": {
-      "title": "On-device AI, built just for you",
-      "description": "Private and secure, with powerful features that run entirely in your device."
+      "title": "Cloud AI, built just for you",
+      "description": "Powerful AI features powered by OpenRouter's cloud models."
     },
     "guide": {
       "step1": "STEP 1",
-      "install_desc": "Install Ollama to set up your local AI.",
-      "ollama_desc": "Unlock full local AI power with Ollama.",
+      "install_desc": "Configure OpenRouter to access cloud AI models.",
+      "openrouter_desc": "Access 100+ AI models through OpenRouter's unified API.",
       "features": {
-        "1": "Run advanced models like DeepSeek, Qwen, Llama",
-        "2": "Customize and switch models with full control",
-        "3": "Your data stays private, on your device"
+        "1": "Access models from OpenAI, Anthropic, Google, Meta",
+        "2": "Switch between models instantly with no downloads",
+        "3": "Pay-per-use pricing with transparent costs"
       },
-      "get_ollama": "Get Ollama",
-      "already_installed": "Already installed and run Ollama?",
-      "setup": "Setup",
+      "get_openrouter": "Get OpenRouter API Key",
+      "already_have_key": "Already have an API key?",
+      "setup": "Configure",
       "need_help": "Need help?",
-      "follow_our_tutorial": "Follow our installation guide",
-      "download_model_to_begin": "Download a model to begin.",
-      "select_model_to_start": "Select and download a model to get started",
-      "download_and_install": "Download & Install",
+      "follow_our_tutorial": "Follow our setup guide",
+      "configure_to_begin": "Configure your API key to begin.",
+      "select_model_to_start": "Select a model to get started",
+      "configure_api": "Configure API",
       "choose_model": "Choose Model"
-    },
-    "webllm_tutorial": {
-      "title": "Not ready to install? Try it instantly.",
-      "desc": "Use a lightweight model (Qwen 0.6b)right in your browser — no setup, no wait.",
-      "start_with_webllm": "Start with Web Model",
-      "not_support_webllm": "WebLLM is not supported on your device"
     },
     "welcome_msg": {
       "title": "👋 Welcome to **NativeMind**",
@@ -260,12 +271,13 @@
     }
   },
   "errors": {
-    "unknown_error": "An unexpected error occurred: {message}",
-    "model_request_error": "Oops! Something went wrong. Please check your AI provider connection in settings and try again.",
-    "model_not_found": "Oops! Something went wrong. Please check your AI provider connection in settings and try again.",
-    "model_request_timeout": "Request timeout, please check your AI provider connection or consider starting a new session as long contexts may affect response times.",
-    "timeout_error": "Operation timed out: {message}",
-    "webllm_not_supported": "WebLLM not supported on your device."
+    "unknown_error": "😅 Something unexpected happened. Please try again!",
+    "model_request_error": "🤖 Unable to connect to AI. Please check your settings and try again.",
+    "model_not_found": "🔍 AI model not found. Please check your model selection in settings.",
+    "model_request_timeout": "⏱️ Request is taking too long. Try shortening your message or starting a new chat.",
+    "rate_limit_error": "⏱️ You've hit the rate limit! Please wait a moment before sending another message, or consider upgrading your OpenRouter plan for higher limits.",
+    "timeout_error": "⏱️ This is taking longer than expected. Please try again.",
+    "webllm_not_supported": "❌ This feature isn't supported on your device."
   },
   "common": {
     "cancel": "Cancel",
@@ -306,7 +318,8 @@
     "reset_to_default": "Reset to default"
   },
   "tooltips": {
-    "clear_chat": "Clear chat",
+    "chat_history": "Chat History",
+    "clear_chat": "New Chat",
     "settings": "Settings",
     "pin_sidebar": "Pin",
     "unpin_sidebar": "Unpin",

@@ -1,6 +1,6 @@
 import { useGlobalI18n } from './i18n'
 
-export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError' | 'modelNotFound' | 'createTabStreamCaptureError' | 'translateError' | 'unsupportedEndpointType' | 'fetchError' | 'generateObjectSchemaError'
+export type ErrorCode = 'unknown' | 'requestError' | 'requestTimeout' | 'abortError' | 'timeoutError' | 'modelNotFound' | 'createTabStreamCaptureError' | 'translateError' | 'unsupportedEndpointType' | 'fetchError' | 'generateObjectSchemaError' | 'rateLimitError'
 
 export abstract class AppError<Code extends ErrorCode> extends Error {
   private _appError = true
@@ -136,6 +136,17 @@ export class GenerateObjectSchemaError extends AppError<'generateObjectSchemaErr
   }
 }
 
+export class RateLimitError extends AppError<'rateLimitError'> {
+  constructor(message?: string) {
+    super('rateLimitError', message)
+  }
+
+  async toLocaleMessage() {
+    const { t } = await useGlobalI18n()
+    return t('errors.rate_limit_error')
+  }
+}
+
 const errors = {
   unknown: UnknownError,
   requestError: ModelRequestError,
@@ -148,6 +159,7 @@ const errors = {
   unsupportedEndpointType: UnsupportedEndpointType,
   fetchError: FetchError,
   generateObjectSchemaError: GenerateObjectSchemaError,
+  rateLimitError: RateLimitError,
 } satisfies Record<ErrorCode, typeof AppError<ErrorCode>>
 
 export function fromError(error: unknown): AppError<ErrorCode> {

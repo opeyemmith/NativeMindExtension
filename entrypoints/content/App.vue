@@ -11,11 +11,11 @@ import { registerContentScriptRpcEventFromMainWorld } from '@/utils/rpc/content-
 import WritingTools from './components/WritingTools/index.vue'
 import { useTranslator } from './composables/useTranslator'
 import { initContextMenu } from './utils/context-menu'
-import { useInjectOllamaDownloadButtons } from './utils/page-injection/ollama-search-page'
+// import { useInjectOllamaDownloadButtons } from './utils/page-injection/ollama-search-page' // Removed - no longer supporting Ollama
 
 // init translator global event listeners
 useTranslator()
-useInjectOllamaDownloadButtons()
+// useInjectOllamaDownloadButtons() // Removed - no longer supporting Ollama
 initContextMenu()
 const toast = useToast()
 

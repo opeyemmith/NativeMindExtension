@@ -4,34 +4,40 @@
       ref="topRef"
       class="bg-[#E9E9EC]"
     >
-      <div class="h-15 px-4 flex items-center justify-between border-b border-gray-200 ">
+      <div class="h-15 px-4 flex items-center justify-between border-b border-gray-200">
         <div class="left flex items-center gap-2">
           <Logo
             class="font-bold text-base"
           />
-          <ModelSelector
-            containerClass="h-7"
-            class="max-w-44"
-            dropdownAlign="left"
-          />
         </div>
         <div class="right flex items-center gap-2">
           <Tooltip
-            v-if="!chat.historyManager.onlyHasDefaultMessages()"
+            :content="t('tooltips.chat_history')"
+          >
+            <div
+              class="p-2 cursor-pointer hover:bg-gray-100 rounded-lg transition-colors"
+              @click="toggleChatHistory"
+            >
+              <IconMenu
+                class="size-4"
+              />
+            </div>
+          </Tooltip>
+          <Tooltip
             :content="t('tooltips.clear_chat')"
           >
             <div
-              class="p-1 cursor-pointer hover:text-gray-500"
+              class="p-2 cursor-pointer hover:bg-gray-100 rounded-lg transition-colors"
               @click="onNewChat"
             >
-              <IconClearChat
+              <IconNewChat
                 class="size-4"
               />
             </div>
           </Tooltip>
           <Tooltip :content="t('tooltips.settings')">
             <div
-              class="p-1 cursor-pointer hover:text-gray-500"
+              class="p-2 cursor-pointer hover:bg-gray-100 rounded-lg transition-colors"
               @click="onClickSetting"
             >
               <IconSetting
@@ -40,6 +46,25 @@
             </div>
           </Tooltip>
         </div>
+      </div>
+      <!-- Header Divider -->
+      <div class="h-px bg-gradient-to-r from-transparent via-gray-300 to-transparent"></div>
+      <!-- Chat History Dropdown -->
+      <div
+        v-if="showChatHistory"
+        ref="chatHistoryRef"
+        class="absolute top-full right-4 z-50 bg-white border border-gray-200 rounded-lg shadow-lg p-4 w-80 max-h-96 overflow-y-auto"
+      >
+        <div class="flex justify-between items-center mb-3">
+          <h3 class="font-semibold text-sm">Chat History</h3>
+          <button
+            @click="toggleChatHistory"
+            class="text-gray-400 hover:text-gray-600"
+          >
+            ×
+          </button>
+        </div>
+        <ChatHistory @chat-selected="onChatSelected" />
       </div>
     </div>
     <div class="px-5 py-2">
@@ -57,24 +82,34 @@
 </template>
 
 <script setup lang="tsx">
-import { useElementBounding } from '@vueuse/core'
+import { useElementBounding, onClickOutside } from '@vueuse/core'
 import { ref } from 'vue'
 
-import IconClearChat from '@/assets/icons/clear-chat.svg?component'
+import IconNewChat from '@/assets/icons/new-chat-add.svg?component'
+import IconMenu from '@/assets/icons/menu.svg?component'
 import IconSetting from '@/assets/icons/setting.svg?component'
 import Logo from '@/components/Logo.vue'
-import ModelSelector from '@/components/ModelSelector.vue'
 import Tooltip from '@/components/ui/Tooltip.vue'
+import { generateRandomId } from '@/utils/id'
 import { useI18n } from '@/utils/i18n'
+import { getUserConfig } from '@/utils/user-config'
 
 import { showSettings } from '../../../utils/settings'
 import { Chat as ChatManager } from '../utils/chat/index'
 import Chat from './Chat/index.vue'
+import ChatHistory from './ChatHistory/index.vue'
 
 const chatRef = ref<InstanceType<typeof Chat>>()
 const topRef = ref<HTMLDivElement>()
+const chatHistoryRef = ref<HTMLDivElement>()
 const topBounding = useElementBounding(topRef)
 const { t } = useI18n()
+const showChatHistory = ref(false)
+
+// Close chat history when clicking outside
+onClickOutside(chatHistoryRef, () => {
+  showChatHistory.value = false
+})
 
 defineExpose({
   chatRef: chatRef,
@@ -84,7 +119,20 @@ const chat = await ChatManager.getInstance()
 
 const onNewChat = async () => {
   chat.stop()
-  chat.historyManager.clear()
+  // Create a new chat ID and set it in user config
+  const newChatId = generateRandomId()
+  const userConfig = await getUserConfig()
+  await userConfig.chat.history.currentChatId.set(newChatId)
+}
+
+const toggleChatHistory = () => {
+  showChatHistory.value = !showChatHistory.value
+}
+
+const onChatSelected = async (chatId: string) => {
+  const userConfig = await getUserConfig()
+  await userConfig.chat.history.currentChatId.set(chatId)
+  showChatHistory.value = false
 }
 
 const onClickSetting = () => {

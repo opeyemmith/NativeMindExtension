@@ -7,13 +7,13 @@ import { readPortMessageIntoIterator, toAsyncIter } from '@/utils/async'
 import { AbortError, fromError, ModelRequestTimeoutError } from '@/utils/error'
 import { BackgroundAliveKeeper } from '@/utils/keepalive'
 import { SchemaName } from '@/utils/llm/output-schema'
-import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
+// import { WebLLMSupportedModel } from '@/utils/llm/web-llm' // Removed - no longer supporting WebLLM
 import logger from '@/utils/logger'
 import { s2bRpc } from '@/utils/rpc'
 import { getUserConfig } from '@/utils/user-config'
 const log = logger.child('llm')
 
-const DEFAULT_PENDING_TIMEOUT = 60_000 // 60 seconds
+const DEFAULT_PENDING_TIMEOUT = 120_000 // 120 seconds (increased for rate-limited scenarios)
 
 interface ExtraOptions {
   abortSignal?: AbortSignal
@@ -76,40 +76,10 @@ export async function generateObjectInBackground<S extends SchemaName>(options: 
   return await Promise.race([abortPromise, promise])
 }
 
-export async function deleteOllamaModel(modelId: string) {
-  await s2bRpc.deleteOllamaModel(modelId)
-}
-
-export async function* pullOllamaModel(modelId: string, abortSignal?: AbortSignal) {
-  const { portName } = await s2bRpc.pullOllamaModel(modelId)
-  const aliveKeeper = new BackgroundAliveKeeper()
-  const port = browser.runtime.connect({ name: portName })
-  port.onDisconnect.addListener(() => aliveKeeper.dispose())
-  abortSignal?.addEventListener('abort', () => {
-    port.disconnect()
-  })
-  const iter = readPortMessageIntoIterator<ProgressResponse>(port, { abortSignal })
-  yield* iter
-}
-
-export async function* initWebLLMEngine(model: WebLLMSupportedModel) {
-  const { portName } = await s2bRpc.initWebLLMEngine(model)
-  const port = browser.runtime.connect({ name: portName })
-  const iter = toAsyncIter<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>((yieldData, done) => {
-    port.onMessage.addListener((message) => {
-      if (message.type === 'progress') {
-        yieldData(message)
-      }
-      else if (message.type === 'ready') {
-        done()
-      }
-    })
-    port.onDisconnect.addListener(() => {
-      done()
-    })
-  })
-  yield* iter
-}
+// All Ollama and WebLLM LLM functions removed - no longer supporting local LLMs
+// - deleteOllamaModel
+// - pullOllamaModel  
+// - initWebLLMEngine
 
 export async function isCurrentModelReady() {
   const userConfig = await getUserConfig()
@@ -118,11 +88,5 @@ export async function isCurrentModelReady() {
   return s2bRpc.checkModelReady(modelId)
 }
 
-export async function* initCurrentModel(abortSignal?: AbortSignal) {
-  const portName = await s2bRpc.initCurrentModel()
-  if (portName) {
-    const port = browser.runtime.connect({ name: portName })
-    const iter = readPortMessageIntoIterator<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>(port, { abortSignal })
-    yield* iter
-  }
-}
+// initCurrentModel removed - no longer needed for cloud providers
+// Cloud providers like OpenRouter don't require local model initialization

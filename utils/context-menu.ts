@@ -203,7 +203,7 @@ class PrivateContextMenuManager {
 
   async createContextMenu(id: ContextMenuId, props: Omit<Browser.contextMenus.CreateProperties, 'id'> & ExtraCreateProperties) {
     if (this.currentMenuMap.has(id)) {
-      log.warn('Context menu with id already exists, updating instead', id)
+      log.debug('Context menu with id already exists, updating instead', id)
       await this.updateContextMenu(id, props)
       return
     }

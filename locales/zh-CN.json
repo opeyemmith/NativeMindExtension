@@ -50,7 +50,8 @@
       "title": "模型",
       "discover_more": "发现更多模型",
       "no_model": "⚠️ 无模型",
-      "add_model_to_start": "添加模型以开始"
+      "add_model_to_start": "添加模型以开始",
+      "search_models": "搜索模型..."
     },
     "quick_actions": {
       "title": "自定义快捷操作",
@@ -213,22 +214,22 @@
       "title": "为您打造的本地AI助手"
     },
     "guide": {
-      "already_installed": "已安装并运行Ollama？",
+      "step1": "步骤 1",
+      "install_desc": "配置 OpenRouter 以访问云端 AI 模型。",
+      "openrouter_desc": "通过 OpenRouter 的统一 API 访问 100+ AI 模型。",
       "features": {
-        "1": "运行DeepSeek、Qwen、Llama等高级模型",
-        "2": "完全掌控模型的自定义和切换",
-        "3": "您的数据始终保持在本地设备上"
+        "1": "访问来自 OpenAI、Anthropic、Google、Meta 的模型",
+        "2": "无需下载即可在模型间瞬间切换",
+        "3": "按使用量付费，成本透明"
       },
-      "follow_our_tutorial": "查看我们的安装指南",
-      "get_ollama": "获取Ollama",
-      "install_desc": "安装Ollama以设置您的本地AI助手。",
+      "get_openrouter": "获取 OpenRouter API 密钥",
+      "already_have_key": "已有 API 密钥？",
+      "setup": "配置",
       "need_help": "需要帮助？",
-      "ollama_desc": "借助Ollama释放AI的全部潜力。",
-      "setup": "开始设置",
-      "step1": "步骤1",
-      "download_model_to_begin": "下载模型以开始。",
-      "select_model_to_start": "选择并下载模型以开始使用",
-      "download_and_install": "下载并安装",
+      "follow_our_tutorial": "按照我们的设置指南操作",
+      "configure_to_begin": "配置您的 API 密钥以开始使用。",
+      "select_model_to_start": "选择模型开始使用",
+      "configure_api": "配置 API",
       "choose_model": "选择模型"
     },
     "webllm_tutorial": {

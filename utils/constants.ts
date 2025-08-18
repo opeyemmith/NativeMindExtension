@@ -1,10 +1,7 @@
-export const OLLAMA_TUTORIAL_URL = 'https://nativemind.app/blog/tutorial/ollama-setup'
-export const OLLAMA_DOWNLOAD_URL = 'https://ollama.com/download'
-export const OLLAMA_HOMEPAGE_URL = 'https://ollama.com'
-export const OLLAMA_SEARCH_URL = 'https://ollama.com/search'
+// Ollama constants removed - migrated to OpenRouter-only
 export const NATIVEMIND_HOMEPAGE_URL = 'https://nativemind.app'
 export const NATIVEMIND_REPOSITORY_URL = 'https://github.com/NativeMindBrowser/NativeMindExtension'
-export const OLLAMA_SITE_DOWNLOAD_BUTTON_CLASS = 'nativemind-ollama-download-button'
+// Ollama download button class removed - no longer needed
 export const CONTEXT_MENU_STORAGE_KEY = 'local:context-menu-map_1'
 export const MIN_SELECTION_LENGTH_TO_SHOW_WRITING_TOOLS = 10
 export const TAB_STORE_STORAGE_KEY_PREFIX = 'tab-store-'

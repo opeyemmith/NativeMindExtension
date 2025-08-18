@@ -46,23 +46,23 @@
       "title": "AI trên thiết bị, được xây dựng chỉ dành cho bạn"
     },
     "guide": {
-      "already_installed": "Bạn đã cài đặt và chạy Ollama?",
+      "step1": "BƯỚC 1",
+      "install_desc": "Cấu hình OpenRouter để truy cập các mô hình AI đám mây.",
+      "openrouter_desc": "Truy cập hơn 100 mô hình AI thông qua API thống nhất của OpenRouter.",
       "features": {
-        "1": "Chạy các mô hình nâng cao như Deepseek, Qwen, Llama",
-        "2": "Tùy chỉnh và chuyển đổi các mô hình với toàn bộ điều khiển",
-        "3": "Dữ liệu của bạn vẫn riêng tư, trên thiết bị của bạn"
+        "1": "Truy cập các mô hình từ OpenAI, Anthropic, Google, Meta",
+        "2": "Chuyển đổi giữa các mô hình ngay lập tức mà không cần tải xuống",
+        "3": "Giá cả trả theo sử dụng với chi phí minh bạch"
       },
-      "follow_our_tutorial": "Thực hiện theo hướng dẫn cài đặt của chúng tôi",
-      "get_ollama": "Nhận Ollama",
-      "install_desc": "Cài đặt Ollama để thiết lập AI cục bộ của bạn.",
+      "get_openrouter": "Lấy khóa API OpenRouter",
+      "already_have_key": "Đã có khóa API?",
+      "setup": "Cấu hình",
       "need_help": "Cần giúp đỡ?",
-      "ollama_desc": "Mở khóa toàn bộ sức mạnh của AI trên thiết bị với Ollama.",
-      "setup": "Cài đặt",
-      "step1": "Bước 1",
-      "download_model_to_begin": "Tải xuống một mô hình để bắt đầu.",
-      "select_model_to_start": "Chọn và tải xuống một mô hình để bắt đầu",
-      "download_and_install": "Tải xuống & Cài đặt",
-      "choose_model": "Chọn Mô hình"
+      "follow_our_tutorial": "Theo dõi hướng dẫn thiết lập của chúng tôi",
+      "configure_to_begin": "Cấu hình khóa API của bạn để bắt đầu.",
+      "select_model_to_start": "Chọn một mô hình để bắt đầu",
+      "configure_api": "Cấu hình API",
+      "choose_model": "Chọn mô hình"
     },
     "webllm_tutorial": {
       "desc": "Sử dụng mô hình nhẹ (QWEN 0,6B) ngay trong trình duyệt của bạn - không thiết lập, không chờ đợi.",
@@ -93,7 +93,8 @@
       "title": "Mô hình",
       "discover_more": "Khám phá thêm các mô hình",
       "no_model": "⚠️ Không có mô hình",
-      "add_model_to_start": "Thêm một mô hình để bắt đầu"
+      "add_model_to_start": "Thêm một mô hình để bắt đầu",
+      "search_models": "Tìm kiếm mô hình..."
     },
     "ollama": {
       "already_installed": "Bạn đã cài đặt và chạy Ollama?",

@@ -57,11 +57,10 @@
       </div>
       <div class="flex gap-1 relative">
         <ScrollContainer
-          class="max-h-72 grow shadow-02 bg-white rounded-md overflow-hidden"
-          itemContainerClass="px-2 py-[7px]"
-          :style="{ paddingRight: `${sendButtonContainerWidth}px` }"
+          class="max-h-96 grow shadow-lg bg-white rounded-xl overflow-hidden border border-gray-200"
+          itemContainerClass="px-5 py-4"
         >
-          <div class="h-max min-h-[30px] grid place-items-center">
+          <div class="h-max min-h-[80px] flex flex-col gap-4">
             <AutoExpandTextArea
               v-model="userInput"
               maxlength="2000"
@@ -71,36 +70,41 @@
                 ? t('chat.input.placeholder.ask_anything')
                 : t('chat.input.placeholder.ask_follow_up')
               "
-              class="w-full block outline-none border-none resize-none field-sizing-content leading-5 text-sm wrap-anywhere"
+              class="w-full block outline-none border-none resize-none field-sizing-content leading-6 text-base wrap-anywhere flex-1 placeholder-gray-400 min-h-[40px]"
               @paste="onPaste"
               @keydown="onKeydown"
               @compositionstart="isComposing = true"
               @compositionend="isComposing = false"
             />
+            <div class="flex justify-between items-center pt-1 border-t border-gray-100">
+              <ModelSelector
+                containerClass="h-7"
+                class="max-w-32 shrink-0 text-sm"
+                dropdownAlign="left"
+                variant="compact"
+              />
+              <div class="flex items-center gap-2">
+                <Button
+                  v-if="chat.isAnswering()"
+                  variant="secondary"
+                  class="px-[6px] grow-0 shrink-0 h-7"
+                  @click="onStop"
+                >
+                  {{ "Stop" }}
+                </Button>
+                <Button
+                  v-else
+                  variant="primary"
+                  class="px-[6px] grow-0 shrink-0 h-7"
+                  :disabled="!allowAsk"
+                  @click="onSubmit"
+                >
+                  <IconSendFill class="w-4 h-4 text-white" />
+                </Button>
+              </div>
+            </div>
           </div>
         </ScrollContainer>
-        <div
-          ref="sendButtonContainerRef"
-          class="absolute right-0 top-0 bottom-0 p-2 pl-0"
-        >
-          <Button
-            v-if="chat.isAnswering()"
-            variant="secondary"
-            class="px-[6px] grow-0 shrink-0 h-7"
-            @click="onStop"
-          >
-            {{ "Stop" }}
-          </Button>
-          <Button
-            v-else
-            variant="primary"
-            class="px-[6px] grow-0 shrink-0 h-7"
-            :disabled="!allowAsk"
-            @click="onSubmit"
-          >
-            <IconSendFill class="w-4 h-4 text-white" />
-          </Button>
-        </div>
       </div>
     </div>
   </div>
@@ -114,6 +118,7 @@ import { computed, onBeforeUnmount, ref } from 'vue'
 import IconSendFill from '@/assets/icons/send-fill.svg?component'
 import AutoExpandTextArea from '@/components/AutoExpandTextArea.vue'
 import ExhaustiveError from '@/components/ExhaustiveError.vue'
+import ModelSelector from '@/components/ModelSelector.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
 import Button from '@/components/ui/Button.vue'
 import { FileGetter } from '@/utils/file'
@@ -133,9 +138,7 @@ import MessageAssistant from './Messages/Assistant.vue'
 import MessageTask from './Messages/Task.vue'
 
 const inputContainerRef = ref<HTMLDivElement>()
-const sendButtonContainerRef = ref<HTMLDivElement>()
 const { height: inputContainerHeight } = useElementBounding(inputContainerRef)
-const { width: sendButtonContainerWidth } = useElementBounding(sendButtonContainerRef)
 
 const { t } = useI18n()
 const userInput = ref('')

@@ -42,26 +42,26 @@
   },
   "onboarding": {
     "banner": {
-      "description": "Privat dan aman, dengan fitur-fitur canggih yang sepenuhnya berjalan di perangkat Anda.",
-      "title": "AI di perangkat, dibuat khusus untuk Anda"
+      "title": "AI cloud, dibuat khusus untuk Anda",
+      "description": "Fitur AI yang kuat didukung oleh model cloud OpenRouter."
     },
     "guide": {
-      "already_installed": "Sudah menginstal dan menjalankan Ollama?",
-      "features": {
-        "1": "Jalankan model canggih seperti DeepSeek, Qwen, Llama",
-        "2": "Sesuaikan dan beralih antar model dengan kontrol penuh",
-        "3": "Data Anda tetap pribadi, tersimpan di perangkat Anda"
-      },
-      "follow_our_tutorial": "Ikuti panduan instalasi kami",
-      "get_ollama": "Dapatkan Ollama",
-      "install_desc": "Instal Ollama untuk mengatur AI lokal Anda.",
-      "need_help": "Butuh bantuan?",
-      "ollama_desc": "Buka kekuatan penuh AI lokal dengan Ollama.",
-      "setup": "Pengaturan",
       "step1": "LANGKAH 1",
-      "download_model_to_begin": "Unduh model untuk memulai.",
-      "select_model_to_start": "Pilih dan unduh model untuk memulai",
-      "download_and_install": "Unduh & Instal",
+      "install_desc": "Konfigurasi OpenRouter untuk mengakses model AI cloud.",
+      "openrouter_desc": "Akses 100+ model AI melalui API terpadu OpenRouter.",
+      "features": {
+        "1": "Akses model dari OpenAI, Anthropic, Google, Meta",
+        "2": "Beralih antar model secara instan tanpa unduhan",
+        "3": "Harga bayar-per-penggunaan dengan biaya transparan"
+      },
+      "get_openrouter": "Dapatkan Kunci API OpenRouter",
+      "already_have_key": "Sudah memiliki kunci API?",
+      "setup": "Konfigurasi",
+      "need_help": "Butuh bantuan?",
+      "follow_our_tutorial": "Ikuti panduan pengaturan kami",
+      "configure_to_begin": "Konfigurasi kunci API Anda untuk memulai.",
+      "select_model_to_start": "Pilih model untuk memulai",
+      "configure_api": "Konfigurasi API",
       "choose_model": "Pilih Model"
     },
     "webllm_tutorial": {
@@ -89,11 +89,31 @@
       "discord": "Discord"
     },
     "get_ollama": "Dapatkan Ollama",
+    "cloud_provider": {
+      "api_endpoint": "API Endpoint",
+      "api_endpoint_desc": "URL dasar untuk penyedia AI cloud Anda. Default adalah endpoint API OpenRouter.",
+      "api_key": "Kunci API", 
+      "api_key_desc": "Kunci API Anda untuk mengakses model AI cloud. Dapatkan dari dashboard penyedia Anda.",
+      "connected": "Terhubung",
+      "unconnected": "Tidak Terhubung",
+      "connection_error": "Kesalahan Koneksi",
+      "test_connection": "Tes Koneksi"
+    },
     "models": {
       "title": "Model",
       "discover_more": "Temukan lebih banyak model",
       "no_model": "⚠️ Tidak ada model",
-      "add_model_to_start": "Tambahkan model untuk memulai"
+      "add_model_to_start": "Tambahkan model untuk memulai",
+      "search_models": "Cari model...",
+      "no_api_key": "⚠️ Kunci API tidak dikonfigurasi",
+      "no_api_key_desc": "Silakan konfigurasi kunci API Anda di pengaturan untuk mengakses model AI",
+      "configure_api": "Konfigurasi Kunci API",
+      "loading_models": "Memuat model...",
+      "connection_error": "❌ Koneksi gagal",
+      "connection_error_desc": "Gagal terhubung ke penyedia AI. Periksa kunci API dan koneksi Anda.",
+      "no_credits": "⚠️ Kredit tidak mencukupi",
+      "no_credits_desc": "Tambahkan kredit ke akun Anda untuk mengakses model AI",
+      "add_credits": "Tambah Kredit"
     },
     "ollama": {
       "already_installed": "Sudah menginstal dan menjalankan Ollama?",
@@ -260,12 +280,13 @@
     }
   },
   "errors": {
-    "model_not_found": "Ups! Ada yang salah. Silakan periksa koneksi Ollama Anda di pengaturan dan coba lagi.",
-    "model_request_error": "Ups! Ada yang salah. Silakan periksa koneksi Ollama Anda di pengaturan dan coba lagi.",
-    "model_request_timeout": "Waktu permintaan habis. Silakan periksa koneksi Ollama Anda atau pertimbangkan untuk memulai sesi baru karena konteks yang panjang dapat memengaruhi waktu respons.",
-    "timeout_error": "Operasi waktu habis: {message}",
-    "unknown_error": "Terjadi kesalahan yang tidak terduga: {message}",
-    "webllm_not_supported": "WebLLM tidak didukung pada perangkat Anda."
+    "unknown_error": "😅 Terjadi sesuatu yang tidak terduga. Silakan coba lagi!",
+    "model_request_error": "🤖 Tidak dapat terhubung ke AI. Silakan periksa pengaturan Anda dan coba lagi.",
+    "model_not_found": "🔍 Model AI tidak ditemukan. Silakan periksa pilihan model Anda di pengaturan.",
+    "model_request_timeout": "⏱️ Permintaan membutuhkan waktu terlalu lama. Coba persingkat pesan Anda atau mulai obrolan baru.",
+    "rate_limit_error": "⏱️ Anda telah mencapai batas tarif! Silakan tunggu sebentar sebelum mengirim pesan lain, atau pertimbangkan untuk meningkatkan paket OpenRouter Anda untuk batas yang lebih tinggi.",
+    "timeout_error": "⏱️ Ini membutuhkan waktu lebih lama dari yang diharapkan. Silakan coba lagi.",
+    "webllm_not_supported": "❌ Fitur ini tidak didukung di perangkat Anda."
   },
   "common": {
     "cancel": "Batal",
@@ -306,6 +327,7 @@
     "reset_to_default": "Atur ulang ke default"
   },
   "tooltips": {
+    "chat_history": "Riwayat Obrolan",
     "clear_chat": "Hapus obrolan",
     "settings": "Pengaturan",
     "pin_sidebar": "Sematkan",

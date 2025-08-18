@@ -2,11 +2,11 @@
 
 <h1 align="center">
   <a href="https://nativemind.app" style="text-decoration: none; color: inherit;">NativeMind</a><br>
-  Private, On-device Al Assistant
+  Cloud AI Assistant for Browsing
 </h1>
 <img src="docs/images/demo-screenshot.png" alt="NativeMind in Action" width="800">
 
-*NativeMind is a private, open-source alternative to ChatGPT — a fully local browser extension built on Ollama that brings local AI models into your workflow.*
+*NativeMind is a powerful, privacy-focused browser extension that connects you to leading AI models through secure cloud providers — bringing advanced AI capabilities directly into your browsing experience.*
 
 [![Chrome](https://img.shields.io/badge/Chrome-Supported-4285F4?style=flat&logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/nativemind-private-on-dev/mgchaojnijgpemdfhpnbeejnppigfllj)
 [![Firefox](https://img.shields.io/badge/Firefox-Supported-FF7139?style=flat&logo=firefox-browser&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/nativemind?utm_source=github)
@@ -17,15 +17,15 @@
 
 [![Privacy First](https://img.shields.io/badge/Privacy-First-brightgreen?style=flat&logo=security&logoColor=white)]()
 [![No Tracking](https://img.shields.io/badge/Tracking-None-success?style=flat&logo=shield&logoColor=white)]()
-[![Data](https://img.shields.io/badge/Data-On%20Device-blue?style=flat&logo=lock&logoColor=white)]()
+[![Your API Keys](https://img.shields.io/badge/API_Keys-Your_Control-blue?style=flat&logo=key&logoColor=white)]()
 [![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue?style=flat&logoColor=white)](https://www.gnu.org/licenses/agpl-3.0)
-[![Ollama](https://img.shields.io/badge/Ollama-Integrated-orange?style=flat&logo=llama&logoColor=white)](https://github.com/ollama/ollama)
-[![WebLLM](https://img.shields.io/badge/WebLLM-Trial%20Support-purple?style=flat&logo=webassembly&logoColor=white)](https://github.com/mlc-ai/web-llm)
+[![OpenRouter](https://img.shields.io/badge/OpenRouter-Integrated-orange?style=flat&logo=router&logoColor=white)](https://openrouter.ai)
+[![Cloud AI](https://img.shields.io/badge/Cloud_AI-Multi_Provider-purple?style=flat&logo=cloud&logoColor=white)]()
 
 ---
-**The Future of Private AI is Here, Running Entirely on Your Device**
+**Powerful AI Integration for Modern Browsing**
 
-*NativeMind delivers cutting-edge intelligence without cloud dependencies—**faster responses, zero tracking, unlimited usage**—all running quietly in your browser while you stay in **complete** control.*
+*NativeMind seamlessly integrates with leading cloud AI providers, giving you access to the latest models while maintaining privacy through your own API keys—**no subscriptions, no data sharing, complete control**.*
 
 </div>
 
@@ -43,29 +43,35 @@ Star this project to get all the latest updates — you'll never miss a new rele
   <img src="docs/images/demo-screenrecord-2.gif" alt="NativeMind Demo" width="800">
 </div>
 
-### 💬 **Browse Smarter with Local AI**
+### 💬 **Browse Smarter with Cloud AI**
 
 - **Contextual Awareness Across Tabs**: Seamlessly continue AI conversations with memory that spans across tabs  
-- **AI-Powered Local Search**: Ask questions and search the web directly from your browser—no third-party APIs required  
+- **AI-Powered Search Integration**: Ask questions and search the web directly from your browser with AI assistance  
 - **Smart Page Understanding**: Instantly summarize and interpret any webpage content  
-- **Bilingual Translation**: Translate full pages or selected text with side-by-side view (supports multiple languages)  
-- **Quick Prompts**: Save and trigger your frequently used prompts with a single click  
+- **Multilingual Translation**: Translate full pages or selected text with side-by-side view (supports 12 languages)  
+- **Quick Actions**: Save and trigger your frequently used prompts with a single click  
 
-### ✍️ **Boost Productivity with AI Tools**
-- **Writing Enhancement**: Rewrite, proofread, and creatively rephrase content with intelligent suggestions  
-- **Custom Prompts for Any Task**: Adapt system prompts to match your workflow and local model capabilities  
-- **Chat with PDFs** *(coming soon)*: Ask questions directly about local PDF files  
-- **Chat with Images** *(coming soon)*: Understand and interact with visual content, including screenshots and uploaded images  
+### ✍️ **Boost Productivity with AI Writing Tools**
+- **Smart Writing Enhancement**: Rewrite, proofread, and creatively rephrase content with intelligent suggestions  
+- **Automatic Detection**: Works seamlessly with any text field, editor, or content-editable area
+- **Multiple Writing Modes**: Rewrite for clarity, proofread for accuracy, create lists, or add creative flair
+- **Custom Prompts**: Adapt system prompts to match your workflow and preferred writing style  
 
-### 🧠 **Run Your Own AI Models Locally**
-- **Offline-First**: Use all features without an internet connection after downloading a model—your data stays on your device  
-- **Model Switching**: Easily switch between models based on performance, speed, or privacy needs  
+### 🌐 **Multi-Provider Cloud AI Support**
+- **OpenRouter Integration**: Access to 100+ AI models from leading providers
+- **Direct Provider Support**: Connect directly to OpenAI, Anthropic, Google AI, and more *(coming soon)*
+- **Your API Keys**: Use your own API keys — no subscriptions, pay only for what you use
+- **Model Search & Discovery**: Easily find and switch between models based on your needs
 
+### 🔒 **Privacy & Control**
+- **API Key Security**: Your credentials are stored locally and never shared with third parties
+- **No Data Collection**: NativeMind doesn't collect, store, or analyze your conversations
+- **Transparent Operation**: Open-source code means you can verify exactly what the extension does
+- **Local Storage**: All settings and chat history remain on your device
 
 ## 📦 Installation
 
 NativeMind supports **Chrome**, **Firefox**, **Brave**, and **Edge** browsers.
-
 
 <div align="center">
 
@@ -81,7 +87,6 @@ NativeMind supports **Chrome**, **Firefox**, **Brave**, and **Edge** browsers.
 
 </div>
 
-
 ## 🚀 Quick Start
 
 ### ⚡ First-Time Setup
@@ -94,225 +99,125 @@ NativeMind supports **Chrome**, **Firefox**, **Brave**, and **Edge** browsers.
 <em>For more details, visit our official website: <strong><a href="https://nativemind.app/?utm_source=github">nativemind.app</a></strong></em>
 </div>
 
-1. **Pin the Extension**: Click the extension icon and pin it to your toolbar
-2. **Setup Ollama**: Follow the [Ollama Setup Guide](https://nativemind.app/blog/tutorial/ollama-setup?utm_source=github) for full AI capabilities
-3. **Start Using**: Click the NativeMind icon in your browser toolbar
+1. **Install the Extension**: Add NativeMind to your browser from the official store
+2. **Get an API Key**: Sign up with [OpenRouter](https://openrouter.ai) for access to multiple AI models
+3. **Configure Settings**: Open NativeMind settings and enter your API key
+4. **Start Using**: Click the NativeMind icon in your browser toolbar and start chatting!
 
-## 🤖 AI Model Options
+## 🤖 Supported AI Providers
 
-### 🦙 **[Ollama](https://github.com/ollama/ollama) (Recommended)**
-- **Advanced Models**: Deepseek, Qwen, Llama, Gemma, Mistral, Phi and more
-- **Superior Performance**: Leverage full system resources
-- **Model Flexibility**: Download and switch between specialized models
-- **Local Server**: Self-hosted for maximum control
+### 🌟 **[OpenRouter](https://openrouter.ai) (Primary)**
+- **100+ Models**: Access to GPT-4, Claude, Gemini, Llama, and many more
+- **Unified API**: Single API key for multiple providers
+- **Transparent Pricing**: Pay only for what you use with clear pricing
+- **Model Discovery**: Browse and compare models easily
 
-### ⚡ **[WebLLM](https://github.com/mlc-ai/web-llm) (Quick Trial)**
-- **Instant Demo**: Try AI capabilities immediately with Qwen3-0.6B in your browser
-- **Zero Setup**: No additional software installation required for quick testing
-- **WebAssembly-Powered**: Runs directly in browser using WebAssembly
-- **Trial Experience**: Perfect for evaluating the extension before setting up Ollama
+### 🔄 **Direct Provider Support** *(Coming Soon)*
+- **[OpenAI](https://openai.com)**: Direct access to GPT models
+- **[Anthropic](https://anthropic.com)**: Claude models with advanced reasoning
+- **[Google AI](https://ai.google.dev)**: Gemini models with multimodal capabilities
+- **[Azure OpenAI](https://azure.microsoft.com/en-us/products/ai-services/openai-service)**: Enterprise-grade OpenAI models
 
-## 🔮 Why On-Device AI？
+> **Note**: You can use your existing API keys from any supported provider. NativeMind simply provides a convenient interface — you maintain full control over your AI usage and costs.
 
-### ⚠️ **The Problem with Cloud AI**
-In an era where every keystroke can be monitored and every document potentially analyzed, **cloud-based AI services represent a fundamental privacy risk**. Your sensitive data—personal documents, business communications, creative work—becomes part of someone else's training data or surveillance apparatus.
+### 💡 **Model Recommendations**
 
-### 🚀 **Performance Revolution**
-**Privacy no longer means compromise.** Recent breakthroughs in model efficiency mean on-device AI now **outperforms cloud alternatives**:
+**For General Chat:**
+- `openai/gpt-4o` - Best overall performance
+- `anthropic/claude-3.5-sonnet` - Excellent reasoning
+- `google/gemini-pro-1.5` - Great for long contexts
 
-- **Qwen3-4B**: Outperforms Qwen2.5-72B while being 18x smaller
-- **Gemma3-4B**: Matches Gemma2-27B performance with 6.75x fewer parameters and exceptional image recognition capabilities
-- **Phi-4**: Outperforms Gemini Pro 1.5 in mathematical reasoning and competition problems
-- **Zero Latency**: No network delays mean instant responses
-- **Always Available**: No API limits, rate limiting, or service outages
+**For Writing Tasks:**
+- `openai/gpt-4o` - Creative and professional writing
+- `anthropic/claude-3-haiku` - Fast and efficient
 
-### 🔒 **True Data Sovereignty**
-**NativeMind puts you back in control.** By running AI models entirely on your device, we eliminate the fundamental privacy risks of cloud AI:
+**For Translation:**
+- `google/gemini-pro` - Excellent multilingual support
+- `openai/gpt-4o-mini` - Cost-effective for simple translations
 
-- **100% On-Device Processing**: Every keystroke, every document, every conversation stays on your device
-- **Zero Cloud Dependencies**: No data ever transmitted to external servers
-- **No Corporate Surveillance**: No tech giant can analyze your usage patterns or content
-- **No Government Access**: No backdoors or potential government data requests
-- **No Data Breaches**: If your data never leaves your device, it can't be stolen from servers
-- **No Account Required**: Use all features without registration or login
-- **Open Source Transparency**: Every line of code is publicly auditable
+## 🔧 Configuration
 
-## 🧩 How Does NativeMind Compare?
+### API Key Setup
+1. **OpenRouter** (Recommended):
+   - Sign up at [openrouter.ai](https://openrouter.ai)
+   - Generate an API key in your dashboard
+   - Add credits to your account
+   - Paste the key in NativeMind settings
 
-Wondering how NativeMind compares to ChatGPT or Ollama?
-Here’s a quick breakdown to help you see where it stands — and when it might be the better choice.
+2. **Direct Providers** *(Coming Soon)*:
+   - Get API keys directly from OpenAI, Anthropic, etc.
+   - Configure each provider separately
+   - Switch between providers as needed
 
-| Feature / Tool              | **NativeMind**                                        | **ChatGPT**                                                   | **Ollama**                                     |
-| --------------------------- | ----------------------------------------------------- | ------------------------------------------------------------- | ---------------------------------------------- |
-| **Run Mode**                | Browser extension using local models                  | Cloud-based service                                           | Local CLI for running models                   |
-| **Open Source**             | ✅ Yes                                                 | ❌ No                                                          | ✅ Yes                                          |
-| **Offline Capable**         | ✅ Yes (all processing is local)                       | ❌ No                                                          | ✅ Yes                                          |
-| **Model Source**            | Runs local models via Ollama                          | Cloud-based language models by OpenAI                         | Supports any Ollama-compatible open models     |
-| **Use Cases**               | In-Browser AI for Reading, Research, and Productivity | Chat, Q&A, content generation                                 | Model serving / backend integration            |
-| **Browser Integration**     | ✅ Strong (in-page UI, sidebar, right-click)           | 🔶 Limited (official / 3rd-party extensions)                   | ❌ None                                         |
-| **Privacy**                 | ✅ High — no cloud, no data leaves your device         | 🔶 Cloud processing; Enterprise offers data controls           | ✅ High                                         |
-| **Installation Complexity** | 🟢 Very low (just install the extension)               | 🟢 Low (use via website)                                       | 🔶 Medium (requires CLI setup)                  |
-| **Workflow Convenience**    | 🟢 In-page actions—no copy-paste                       | 🔶 Mostly copy-paste between site & page (no built-in plug-in) | 🔶 CLI output—manual copy or custom integration |
-## 🛠️ For Developers
+### Advanced Settings
+- **System Prompts**: Customize AI behavior for chat and writing tools
+- **Quick Actions**: Create custom prompts for frequent tasks
+- **Translation**: Set preferred languages and translation style
+- **Writing Tools**: Enable/disable specific writing assistance features
 
-### Technology Stack
-
-<table>
-<tr>
-<td><strong>Frontend</strong></td>
-<td>Vue 3 + TypeScript</td>
-</tr>
-<tr>
-<td><strong>Build Tools</strong></td>
-<td>WXT (Web Extension Tools) + Vite</td>
-</tr>
-<tr>
-<td><strong>Styling</strong></td>
-<td>TailwindCSS</td>
-</tr>
-<tr>
-<td><strong>AI Integration</strong></td>
-<td>WebLLM + Ollama + AI SDK</td>
-</tr>
-<tr>
-<td><strong>Package Manager</strong></td>
-<td>PNPM</td>
-</tr>
-</table>
+## 🛠️ Development
 
 ### Prerequisites
+- Node.js 22.14.0 or later
+- pnpm package manager
 
-- [Node.js](https://nodejs.org/) (v22.14.0 recommended)
-- [PNPM](https://pnpm.io/) (v10.10.0 or later)
-- Modern browser (Chrome, Firefox, or Edge)
-
-### Installation
-
-1. **Clone the repository**
+### Building from Source
 ```bash
+# Clone the repository
 git clone https://github.com/NativeMindBrowser/NativeMindExtension.git
 cd NativeMindExtension
-```
 
-2. **Install dependencies**
-```bash
+# Install dependencies
 pnpm install
+
+# Build for development
+pnpm run dev
+
+# Build for production
+pnpm run build:prod
 ```
 
-3. **Start development server**
-```bash
-pnpm dev         # Chrome development (default)
-pnpm dev:edge    # Edge development
-```
-
-### Building for Production
-
-```bash
-# Development build
-pnpm zip:beta
-
-# Production build  
-pnpm zip:prod
-
-```
-
-The built extension will be in the `.output/` directory.
-
-### Manual Installation (Development)
-1. **Download**: Get the latest release from [GitHub Releases](https://github.com/NativeMindBrowser/NativeMindExtension/releases)
-2. **Install**: Open `chrome://extensions/` → Enable "Developer mode" → Click "Load unpacked"
-3. **Setup**: Pin the extension and choose your AI model
-
-## 🔨 Troubleshooting
-
-### Common Issues
-
-**Extension Not Loading**
-- Ensure Developer mode is enabled in browser extensions page
-- Check that all files were extracted/loaded correctly
-- Try refreshing the extensions page and reloading
-
-**AI Models Not Working**
-- **WebLLM**: Ensure sufficient RAM (8GB+ recommended) and modern browser
-- **Ollama**: Verify Ollama is running locally on port 11434
-- Clear browser cache and restart extension
-- Check browser console for error messages
-
-**Slow Performance** 
-- **WebLLM**: Close other tabs to free up memory
-- **Ollama**: Ensure sufficient system resources
-- Try smaller AI models for faster response times
-- Check if antivirus software is interfering
-
-**Translation/Summarization Not Working**
-- Verify AI model is properly loaded
-- Check if page has restricted content policies
-- Try refreshing the page and retrying
-- Ensure page content is selectable text (not images)
-
-### Getting Help
-- Check browser console (F12 → Console) for error messages
-- Join our Discord community for support: https://discord.gg/b8p54DKhha
-- Report issues on [GitHub Issues](https://github.com/NativeMindBrowser/NativeMindExtension/issues)
-- Include browser version, OS, and error details in reports
+### Architecture
+- **Framework**: Built with [WXT](https://wxt.dev/) for modern Chrome extension development
+- **Frontend**: Vue 3 + TypeScript + Tailwind CSS
+- **State Management**: Pinia for reactive state management
+- **Communication**: Custom RPC system for extension component communication
 
 ## 🤝 Contributing
 
-<div align="center">
+We welcome contributions! Here's how you can help:
 
-**Contributions are welcome! Help us build the future of private AI.**
+1. **Report Issues**: Found a bug? [Open an issue](https://github.com/NativeMindBrowser/NativeMindExtension/issues)
+2. **Feature Requests**: Have an idea? [Start a discussion](https://github.com/NativeMindBrowser/NativeMindExtension/discussions)
+3. **Code Contributions**: Fork the repo, make changes, and submit a pull request
+4. **Documentation**: Help improve our documentation and guides
 
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)]()
-[![Contributors](https://img.shields.io/badge/Contributors-Welcome-orange.svg)]()
-
-</div>
-
-### 🚀 Quick Start for Contributors
-
-1. **Fork** the project
-2. **Create** your feature branch (`git checkout -b feature/amazing-feature`)
-3. **Commit** your changes (`git commit -m 'Add some amazing feature'`)
-4. **Push** to the branch (`git push origin feature/amazing-feature`)
-5. **Open** a Pull Request
-
-### 📋 Development Guidelines
-
-- ✅ Follow the existing code style
-- ✅ Add tests for new functionality  
-- ✅ Update documentation as needed
-- ✅ Ensure privacy-first principles
+### Development Guidelines
+- Follow TypeScript best practices
+- Maintain Vue 3 Composition API standards
+- Ensure cross-browser compatibility
+- Add appropriate error handling
+- Include tests for new features
 
 ## 📄 License
 
+This project is licensed under the **AGPL-3.0 License** - see the [LICENSE](LICENSE) file for details.
+
+## 🆘 Support
+
+- **Documentation**: [nativemind.app](https://nativemind.app)
+- **Discord Community**: [Join our Discord](https://discord.gg/b8p54DKhha)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/NativeMindBrowser/NativeMindExtension/issues)
+- **Email Support**: support@nativemind.app
+
+## 🌟 Star History
+
 <div align="center">
-
-**GNU Affero General Public License v3.0**
-
-*Ensuring this project remains open source and privacy-focused*
-
-See the [LICENSE](LICENSE) file for complete details.
-
+  <img src="https://api.star-history.com/svg?repos=NativeMindBrowser/NativeMindExtension&type=Date" alt="Star History Chart">
 </div>
-
-## 🙏 Acknowledgments
-
-<div align="center">
-
-*Standing on the shoulders of giants*
-
-</div>
-
-- 👥 **Contributors**: Thanks to all who have helped shape NativeMind
-- 🛠️ **[WXT](https://github.com/wxt-dev/wxt)**: Making browser extension development easier
-- 🧠 **[WebLLM](https://github.com/mlc-ai/web-llm)**: Enabling in-browser AI capabilities
-- 🦙 **[Ollama](https://github.com/ollama/ollama)**: Powering local LLM support
 
 ---
 
 <div align="center">
-
-**Made with ❤️ for Privacy and AI Innovation**
-
-*[⭐ Star this project](https://github.com/NativeMindBrowser/NativeMindExtension) if you find it useful!*
-
+  <sub>Built with ❤️ by the NativeMind team. Star ⭐ this repo to support the project!</sub>
 </div>

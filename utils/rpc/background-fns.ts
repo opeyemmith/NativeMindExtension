@@ -11,19 +11,18 @@ import logger from '@/utils/logger'
 import { sleep } from '../async'
 import { MODELS_NOT_SUPPORTED_FOR_STRUCTURED_OUTPUT } from '../constants'
 import { ContextMenuManager } from '../context-menu'
-import { AppError, CreateTabStreamCaptureError, FetchError, GenerateObjectSchemaError, ModelRequestError, UnknownError } from '../error'
+import { AppError, CreateTabStreamCaptureError, FetchError, GenerateObjectSchemaError, ModelRequestError, RateLimitError, UnknownError } from '../error'
 import { getModel, getModelUserConfig, ModelLoadingProgressEvent } from '../llm/models'
-import { deleteModel, getLocalModelList as getOllamaLocalModelList, getRunningModelList, pullModel, showModelDetails, unloadModel } from '../llm/ollama'
+import { ContextMenuId } from '../context-menu'
+
 import {
   clearOpenRouterModelsCache,
   getOpenRouterModelsWithCache,
   OpenRouterModel,
-  POPULAR_OPENROUTER_MODELS,
 } from '../llm/openrouter-models'
 import { SchemaName, Schemas, selectSchema } from '../llm/output-schema'
 import { PREDEFINED_OPENROUTER_MODELS } from '../llm/predefined-models'
 import { selectTools, ToolName, ToolWithName } from '../llm/tools'
-import { getWebLLMEngine, WebLLMSupportedModel } from '../llm/web-llm'
 import { parsePdfFileOfUrl } from '../pdf'
 import { searchOnline } from '../search'
 import { showSettingsForBackground } from '../settings'
@@ -69,6 +68,18 @@ const normalizeError = (_error: unknown) => {
   }
   else if (_error instanceof Error && _error.message.includes('Failed to fetch')) {
     error = new ModelRequestError(_error.message)
+  }
+  else if (_error instanceof Error && _error.message.includes('Rate limit exceeded')) {
+    error = new RateLimitError(_error.message)
+  }
+  else if (_error instanceof Error && _error.name === 'AI_RetryError') {
+    // Check if this is a rate limiting issue - AI_RetryError often indicates rate limiting
+    // Since we're using OpenRouter and most failures are due to rate limits, assume it's a rate limit error
+    if (_error.message.includes('429') || _error.message.includes('Too Many Requests') || _error.message.includes('Rate limit') || _error.message.includes('Failed after 3 attempts')) {
+      error = new RateLimitError(_error.message)
+    } else {
+      error = new ModelRequestError(`Request failed after multiple attempts. This may be due to high server load or rate limiting. Please try again in a moment.`)
+    }
   }
   else {
     error = new UnknownError(`Unexpected error occurred during request: ${_error}`)
@@ -294,10 +305,20 @@ const getPageContentType = async (tabId: number) => {
   return contentType ?? 'text/html'
 }
 
-const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
+const fetchAsDataUrl = async (url: string, initOptions?: RequestInit & { silentErrors?: boolean }) => {
+  const isFaviconUrl = url.includes('favicon.ico') || url.includes('favicons/') || url.includes('icon')
+  const shouldSilentError = initOptions?.silentErrors || isFaviconUrl
+  
+  try {
   const response = await fetch(url, initOptions)
   if (!response.ok) {
-    throw new FetchError(`Failed to fetch ${url}: ${response.statusText}`)
+      const error = new FetchError(`Failed to fetch ${url}: ${response.statusText}`)
+      if (shouldSilentError) {
+        // For favicon requests, log at debug level instead of error level
+        logger.debug(`Favicon fetch failed (${response.status}): ${url}`)
+        throw error
+      }
+      throw error
   }
 
   const blob = await response.blob()
@@ -313,6 +334,13 @@ const fetchAsDataUrl = async (url: string, initOptions?: RequestInit) => {
     reader.onerror = reject
     reader.readAsDataURL(blob)
   })
+  } catch (error) {
+    if (shouldSilentError && (error instanceof FetchError || (error instanceof Error && error.message.includes('fetch')))) {
+      // For favicon requests, log at debug level instead of error level
+      logger.debug(`Favicon fetch failed: ${url}`, error)
+    }
+    throw error
+  }
 }
 
 const fetchAsText = async (url: string, initOptions?: RequestInit) => {
@@ -339,215 +367,57 @@ const fetchAsText = async (url: string, initOptions?: RequestInit) => {
   }
 }
 
-const deleteOllamaModel = async (modelId: string) => {
-  await deleteModel(modelId)
-}
 
-const unloadOllamaModel = async (modelId: string) => {
-  await unloadModel(modelId)
-  const start = Date.now()
-  while (Date.now() - start < 10000) {
-    const modelList = await getRunningModelList()
-    if (!modelList.models.some((m) => m.model === modelId)) {
-      break
-    }
-    await sleep(1000)
-  }
-}
 
-const showOllamaModelDetails = async (modelId: string) => {
-  return showModelDetails(modelId)
-}
-
-const pullOllamaModel = async (modelId: string) => {
-  const abortController = new AbortController()
-  const portName = `streamText-${Date.now().toString(32)}`
-  const onStart = async (port: Browser.runtime.Port) => {
-    if (port.name !== portName) {
-      return
-    }
-    browser.runtime.onConnect.removeListener(onStart)
-    port.onDisconnect.addListener(() => {
-      logger.debug('port disconnected from client')
-      abortController.abort()
-    })
-    const response = await pullModel(modelId)
-    abortController.signal.addEventListener('abort', () => {
-      response.abort()
-    })
-    try {
-      for await (const chunk of response) {
-        if (abortController.signal.aborted) {
-          response.abort()
-          break
-        }
-        port.postMessage(chunk)
-      }
-    }
-    catch (error: unknown) {
-      logger.debug('[pullOllamaModel] error', error)
-      if (error instanceof Error) {
-        port.postMessage({ error: error.message })
-      }
-      else {
-        port.postMessage({ error: 'Unknown error' })
-      }
-    }
-    port.disconnect()
-  }
-  browser.runtime.onConnect.addListener(onStart)
-  setTimeout(() => {
-    browser.runtime.onConnect.removeListener(onStart)
-  }, 20000)
-  return { portName }
-}
-
-async function testOllamaConnection() {
+async function testConnection() {
   const userConfig = await getUserConfig()
-  const endpointType = userConfig.llm.endpointType.get()
-
-  if (endpointType === 'openrouter') {
+  
     try {
       const apiKey = userConfig.llm.apiKey.get()
       const baseUrl = userConfig.llm.baseUrl.get()
-
+      
       if (!apiKey) {
         logger.error('OpenRouter API key not configured')
         return false
       }
-
+      
       // Test OpenRouter connection by making a simple API call
       const response = await fetch(`${baseUrl}/models`, {
         headers: {
           'Authorization': `Bearer ${apiKey}`,
           'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://nativemind.app',
+        'X-Title': 'NativeMind',
         },
       })
-
+      
       if (!response.ok) {
         logger.error('OpenRouter API test failed:', response.status, response.statusText)
         return false
       }
-
+      
       return true
     }
     catch (error: unknown) {
       logger.error('error connecting to openrouter api', error)
       return false
-    }
-  }
-  else if (endpointType === 'ollama') {
-    try {
-      const baseUrl = userConfig.llm.baseUrl.get()
-      const origin = new URL(baseUrl).origin
-      const response = await fetch(origin)
-      if (!response.ok) return false
-      const text = await response.text()
-      if (text.includes('Ollama is running')) return true
-      else return false
-    }
-    catch (error: unknown) {
-      logger.error('error connecting to ollama api', error)
-      return false
-    }
-  }
-  else {
-    // For web-llm, always return true as it doesn't need external connection
-    return true
   }
 }
 
-function initWebLLMEngine(model: WebLLMSupportedModel) {
-  try {
-    const portName = `web-llm-${model}-${Date.now().toString(32)}`
-    preparePortConnection(portName).then(async (port) => {
-      port.onDisconnect.addListener(() => {
-        logger.debug('port disconnected from client')
-      })
-      await getWebLLMEngine({
-        model,
-        contextWindowSize: 8192,
-        onInitProgress: (progress) => {
-          port.postMessage({ type: 'progress', progress })
-        },
-      })
-      port.postMessage({ type: 'ready' })
-    })
-    return { portName }
-  }
-  catch (error) {
-    logger.error('Error initializing WebLLM engine:', error)
-    throw error
-  }
-}
 
-type UnsupportedWebLLMReason = 'browser' | 'not_support_webgpu' | 'not_support_high_performance'
-async function checkSupportWebLLM(): Promise<{ supported: boolean, reason?: UnsupportedWebLLMReason }> {
-  if (import.meta.env.FIREFOX) {
-    return {
-      supported: false,
-      reason: 'browser',
-    }
-  }
-  if (!navigator.gpu) {
-    return {
-      supported: false,
-      reason: 'not_support_webgpu',
-    }
-  }
-  try {
-    const adapter = await navigator.gpu.requestAdapter({
-      powerPreference: 'high-performance',
-    })
-    const device = await adapter?.requestDevice()
-    device?.destroy()
-    return {
-      supported: true,
-    }
-  }
-  catch (error) {
-    logger.debug('WebGPU not supported', error)
-    return {
-      supported: false,
-      reason: 'not_support_high_performance',
-    }
-  }
-}
 
 async function getSystemMemoryInfo() {
   if (import.meta.env.FIREFOX) throw new Error('system.memory API is not supported in Firefox')
   return browser.system.memory.getInfo()
 }
 
-async function hasWebLLMModelInCache(model: WebLLMSupportedModel) {
-  const { hasModelInCache } = await import('@mlc-ai/web-llm')
-  const hasCache = await hasModelInCache(model)
-  logger.debug('Checking cache for model', model, hasCache)
-  return hasCache
-}
 
-async function deleteWebLLMModelInCache(model: WebLLMSupportedModel) {
-  const { deleteModelInCache, hasModelInCache } = await import('@mlc-ai/web-llm')
-  const hasCache = await hasModelInCache(model)
-  logger.debug(`Deleting model ${model} from cache`, hasCache)
-  try {
-    await deleteModelInCache(model)
-  }
-  catch (error) {
-    logger.error(`Failed to delete model ${model} from cache:`, error)
-  }
-}
 
 async function checkModelReady(modelId: string) {
   try {
-    const userConfig = await getUserConfig()
-    const endpointType = userConfig.llm.endpointType.get()
-    if (endpointType === 'ollama') return true
-    else if (endpointType === 'openrouter') return true
-    else if (endpointType === 'web-llm') {
-      return await hasWebLLMModelInCache(modelId as WebLLMSupportedModel)
-    }
-    else throw new Error('Unsupported endpoint type ' + endpointType)
+    // For OpenRouter, models are always ready since they're cloud-based
+    // We could add additional validation here like checking if the model exists in OpenRouter's catalog
+    return true
   }
   catch (error) {
     logger.error('Error checking current model readiness:', error)
@@ -556,22 +426,9 @@ async function checkModelReady(modelId: string) {
 }
 
 async function initCurrentModel() {
-  const userConfig = await getUserConfig()
-  const endpointType = userConfig.llm.endpointType.get()
-  const model = userConfig.llm.model.get()
-  if (endpointType === 'ollama') {
+  // OpenRouter models don't need initialization since they're cloud-based
+  // Always return false to indicate no initialization is needed
     return false
-  }
-  else if (endpointType === 'openrouter') {
-    return false
-  }
-  else if (endpointType === 'web-llm') {
-    const connectInfo = initWebLLMEngine(model as WebLLMSupportedModel)
-    return connectInfo.portName
-  }
-  else {
-    throw new Error('Unsupported endpoint type ' + endpointType)
-  }
 }
 
 const eventEmitter = new EventEmitter()
@@ -632,34 +489,21 @@ function ping() {
 }
 
 async function getLocalModelList() {
-  const userConfig = await getUserConfig()
-  const endpointType = userConfig.llm.endpointType.get()
-
-  if (endpointType === 'openrouter') {
-    // For OpenRouter, return predefined models
+  // For OpenRouter, return predefined popular models
+  // This provides a quick list of available models without requiring API calls
     return {
       models: PREDEFINED_OPENROUTER_MODELS.map((model) => ({
         model: model.id,
         name: model.name,
-        size: 0,
+      size: 0, // Cloud models don't have local size
         modifiedAt: new Date().toISOString(),
-        quantizationLevel: undefined,
-      })),
-    }
-  }
-  else if (endpointType === 'ollama') {
-    // For Ollama, use the existing function
-    return await getOllamaLocalModelList()
-  }
-  else {
-    // For web-llm, return empty list as models are handled differently
-    return { models: [] }
+      quantizationLevel: undefined, // Not applicable for cloud models
+    })),
   }
 }
 
 async function updateSidepanelModelList() {
-  b2sRpc.emit('updateModelList')
-  return true
+  return await safeEmit('updateModelList');
 }
 
 async function getOpenRouterModels() {
@@ -678,21 +522,8 @@ async function getOpenRouterModels() {
   }
   catch (error) {
     logger.error('Error fetching OpenRouter models:', error)
-
-    // Return fallback models if API fails
-    return {
-      models: POPULAR_OPENROUTER_MODELS.map((id): OpenRouterModel => ({
-        id: id as string,
-        name: id.split('/').pop() || id,
-        description: 'Popular model',
-        pricing: { prompt: '0', completion: '0' },
-        context_length: 8192,
-        architecture: { modality: 'text', tokenizer: 'unknown', instruct_type: 'unknown' },
-        top_provider: { max_completion_tokens: 4096, is_moderated: false },
-        per_request_limits: { prompt_tokens: '0', completion_tokens: '0' },
-      })),
-      error: error instanceof Error ? error.message : 'Unknown error',
-    }
+    // No fallbacks - always throw the error
+    throw error
   }
 }
 
@@ -705,20 +536,16 @@ async function testOpenRouterConnection() {
       throw new Error('OpenRouter API key not configured')
     }
 
-    // Test with a simple, cheap model
-    const response = await fetch('https://openrouter.ai/api/v1/chat/completions', {
-      method: 'POST',
+    // Test connection by fetching available models instead of making a chat completion
+    // This is more reliable and doesn't require a specific model to be available
+    const response = await fetch('https://openrouter.ai/api/v1/models', {
+      method: 'GET',
       headers: {
         'Authorization': `Bearer ${apiKey}`,
         'Content-Type': 'application/json',
         'HTTP-Referer': 'https://nativemind.app',
         'X-Title': 'NativeMind',
       },
-      body: JSON.stringify({
-        model: 'openai/gpt-4o-mini',
-        messages: [{ role: 'user', content: 'test' }],
-        max_tokens: 1,
-      }),
     })
 
     // 402 means API key is valid but no credits - that's a successful connection
@@ -745,6 +572,126 @@ async function clearOpenRouterModelsCacheRpc() {
   return true
 }
 
+async function notifyApiKeyValidated() {
+  // Emit to all connected components that API key is validated (non-blocking)
+  const result = await safeEmit('updateModelList'); // Use existing event for now
+  if (result) {
+    logger.debug('API key validation event emitted');
+  }
+  return result;
+}
+
+async function validateOpenRouterApiKey() {
+  try {
+    const userConfig = await getUserConfig()
+    const apiKey = userConfig.llm.apiKey.get()
+    const baseUrl = userConfig.llm.baseUrl.get()
+
+    if (!apiKey || !apiKey.trim()) {
+      throw new Error('OpenRouter API key not configured')
+    }
+
+    // Test the API key using the auth endpoint which properly validates keys
+    const response = await fetch(`${baseUrl}/auth/key`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://nativemind.app',
+        'X-Title': 'NativeMind',
+      },
+    })
+
+    if (response.status === 401) {
+      throw new Error('Invalid API key - authentication failed')
+    }
+
+    if (response.status === 403) {
+      throw new Error('API key does not have permission to access models')
+    }
+
+    if (response.status === 402) {
+      // API key is valid but no credits
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(`Valid API key but insufficient credits: ${errorData.error?.message || 'Add credits to your OpenRouter account'}`)
+    }
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => 'Unknown error')
+      throw new Error(`OpenRouter API error (${response.status}): ${errorText}`)
+    }
+
+    let authData
+    try {
+      authData = await response.json()
+    } catch (parseError) {
+      logger.error('Failed to parse auth response as JSON:', parseError)
+      throw new Error('Invalid JSON response from OpenRouter auth API')
+    }
+    
+    if (!authData || !authData.data) {
+      logger.error('Invalid auth response structure:', authData)
+      throw new Error('Invalid response format from OpenRouter auth API')
+    }
+
+    // API key is valid, now get the model count
+    const modelsResponse = await fetch(`${baseUrl}/models`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${apiKey}`,
+        'Content-Type': 'application/json',
+        'HTTP-Referer': 'https://nativemind.app',
+        'X-Title': 'NativeMind',
+      },
+    })
+
+    let modelCount = 0
+    if (modelsResponse.ok) {
+      try {
+        const modelsData = await modelsResponse.json()
+        modelCount = modelsData.data?.length || 0
+      } catch (modelsParseError) {
+        logger.warn('Failed to parse models response, but auth succeeded:', modelsParseError)
+        modelCount = 0
+      }
+    }
+
+    logger.info('API key validation successful:', modelCount, 'models available')
+    
+    return {
+      valid: true,
+      modelCount: modelCount,
+      authData: authData.data
+    }
+  }
+  catch (error) {
+    logger.error('API key validation failed:', error)
+    return {
+      valid: false,
+      error: error instanceof Error ? error.message : '❌ Unable to validate API key. Please try again!',
+      modelCount: 0
+    }
+  }
+}
+
+// Utility function for safe emission of events to sidepanel
+// This prevents uncaught promise rejections due to timeouts
+export async function safeEmit(event: 'updateModelList'): Promise<boolean>;
+export async function safeEmit(event: 'contextMenuClicked', data: Browser.contextMenus.OnClickData & { menuItemId: ContextMenuId }): Promise<boolean>;
+export async function safeEmit(event: string, data?: any): Promise<boolean> {
+  try {
+    if (data !== undefined) {
+      await b2sRpc.emit(event as any, data);
+    } else {
+      await b2sRpc.emit(event as any);
+    }
+    return true;
+  } catch (error) {
+    logger.debug(`Non-critical emit error on "${event}":`, error);
+    return false;
+  }
+}
+
 export const backgroundFunctions = {
   emit: <E extends keyof Events>(ev: E, ...args: Parameters<Events[E]>) => {
     eventEmitter.emit(ev, ...args)
@@ -757,11 +704,7 @@ export const backgroundFunctions = {
   streamText,
   getAllTabs,
   getLocalModelList,
-  getRunningModelList,
-  deleteOllamaModel,
-  pullOllamaModel,
-  showOllamaModelDetails,
-  unloadOllamaModel,
+  // getRunningModelList removed with Ollama - no longer supporting local LLM
   searchOnline,
   generateObjectFromSchema,
   getDocumentContentOfTab,
@@ -774,14 +717,11 @@ export const backgroundFunctions = {
   createContextMenu: (...args: Parameters<ContextMenuManager['createContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.createContextMenu(...args)),
   deleteContextMenu: (...args: Parameters<ContextMenuManager['deleteContextMenu']>) => ContextMenuManager.getInstance().then((manager) => manager.deleteContextMenu(...args)),
   getTabCaptureMediaStreamId,
-  initWebLLMEngine,
-  hasWebLLMModelInCache,
-  deleteWebLLMModelInCache,
+  // WebLLM functions removed - no longer supporting local LLM
   checkModelReady,
   initCurrentModel,
-  checkSupportWebLLM,
   getSystemMemoryInfo,
-  testOllamaConnection,
+  testConnection,
   captureVisibleTab,
   showSidepanel,
   showSettings: showSettingsForBackground,
@@ -789,5 +729,7 @@ export const backgroundFunctions = {
   getOpenRouterModels,
   testOpenRouterConnection,
   clearOpenRouterModelsCache: clearOpenRouterModelsCacheRpc,
+  validateOpenRouterApiKey,
+  notifyApiKeyValidated,
 }
 ;(self as unknown as { backgroundFunctions: unknown }).backgroundFunctions = backgroundFunctions

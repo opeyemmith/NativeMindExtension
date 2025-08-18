@@ -152,7 +152,8 @@ const prompts: Record<WritingToolType, (text: string) => PromiseLike<Prompt> | P
 }
 
 async function checkOllamaStatus() {
-  if (userConfig.llm.endpointType.get() !== 'ollama') return true
+  // Only OpenRouter is supported now - always return true
+  return true
   if (!(await ollamaStatusStore.updateConnectionStatus())) {
     toast(t('errors.model_request_error'), { duration: 2000 })
     showSettings({ scrollTarget: 'server-address-section' })
@@ -191,8 +192,8 @@ const start = async () => {
     log.debug('Rewrite response:', output.value)
   }
   catch (error) {
-    const errorMessage = (error && typeof error === 'object' && 'name' in error) ? error.name : 'Unknown error'
-    output.value = `Error generating suggestion: ${errorMessage}`
+    const errorMessage = (error && typeof error === 'object' && 'name' in error) ? error.name : 'Something went wrong'
+    output.value = `😅 Unable to generate suggestion. Please try again!`
     log.error('Error in writing tool stream:', error)
   }
   finally {

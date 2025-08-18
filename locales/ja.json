@@ -46,22 +46,22 @@
       "title": "あなたのために開発されたオンデバイスAI"
     },
     "guide": {
-      "already_installed": "すでにOllamaをインストールして実行していますか？",
+      "step1": "ステップ1",
+      "install_desc": "OpenRouterを設定してクラウドAIモデルにアクセスします。",
+      "openrouter_desc": "OpenRouterの統合APIを通じて100以上のAIモデルにアクセスします。",
       "features": {
-        "1": "DeepSeek、Qwen、Llamaなどの高度なモデルを実行できます",
-        "2": "完全な制御でモデルをカスタマイズし切り替えられます",
-        "3": "あなたのデータはデバイス上でプライベートに保たれます"
+        "1": "OpenAI、Anthropic、Google、Metaのモデルにアクセス",
+        "2": "ダウンロードなしでモデル間を瞬時に切り替え",
+        "3": "透明なコストでの従量課金制"
       },
-      "follow_our_tutorial": "インストールガイドを確認する",
-      "get_ollama": "Ollamaを入手する",
-      "install_desc": "Ollamaをインストールして、ローカルAI環境を構築しましょう。",
-      "need_help": "お困りですか？",
-      "ollama_desc": "Ollamaで完全なローカルAIのパワーを活用しましょう。",
-      "setup": "セットアップ",
-      "step1": "ステップ 1",
-      "download_model_to_begin": "モデルをダウンロードして開始してください。",
-      "select_model_to_start": "モデルを選択してダウンロードし、開始してください",
-      "download_and_install": "ダウンロード & インストール",
+      "get_openrouter": "OpenRouter APIキーを取得",
+      "already_have_key": "すでにAPIキーをお持ちですか？",
+      "setup": "設定",
+      "need_help": "ヘルプが必要ですか？",
+      "follow_our_tutorial": "セットアップガイドに従ってください",
+      "configure_to_begin": "APIキーを設定して開始してください。",
+      "select_model_to_start": "開始するモデルを選択してください",
+      "configure_api": "API設定",
       "choose_model": "モデルを選択"
     },
     "webllm_tutorial": {
@@ -93,7 +93,8 @@
       "title": "モデル",
       "discover_more": "より多くのモデルを発見する",
       "no_model": "⚠️ モデルなし",
-      "add_model_to_start": "モデルを追加して開始"
+      "add_model_to_start": "モデルを追加して開始",
+      "search_models": "モデルを検索..."
     },
     "ollama": {
       "already_installed": "Ollamaをすでにインストールして実行していますか？",

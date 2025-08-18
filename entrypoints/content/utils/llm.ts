@@ -7,7 +7,7 @@ import { readPortMessageIntoIterator, toAsyncIter } from '@/utils/async'
 import { AbortError, fromError, ModelRequestTimeoutError } from '@/utils/error'
 import { BackgroundAliveKeeper } from '@/utils/keepalive'
 import { SchemaName } from '@/utils/llm/output-schema'
-import { WebLLMSupportedModel } from '@/utils/llm/web-llm'
+// import { WebLLMSupportedModel } from '@/utils/llm/web-llm' // Removed - no longer supporting WebLLM
 import logger from '@/utils/logger'
 import { c2bRpc } from '@/utils/rpc'
 
@@ -77,50 +77,13 @@ export async function generateObjectInBackground<S extends SchemaName>(options: 
   return await Promise.race([abortPromise, promise])
 }
 
-export async function deleteOllamaModel(modelId: string) {
-  await c2bRpc.deleteOllamaModel(modelId)
-}
+// deleteOllamaModel and pullOllamaModel removed - no longer supporting Ollama
 
-export async function* pullOllamaModel(modelId: string, abortSignal?: AbortSignal) {
-  const { portName } = await c2bRpc.pullOllamaModel(modelId)
-  const aliveKeeper = new BackgroundAliveKeeper()
-  const port = browser.runtime.connect({ name: portName })
-  port.onDisconnect.addListener(() => aliveKeeper.dispose())
-  abortSignal?.addEventListener('abort', () => {
-    port.disconnect()
-  })
-  const iter = readPortMessageIntoIterator<ProgressResponse>(port, { abortSignal })
-  yield* iter
-}
-
-export async function* initWebLLMEngine(model: WebLLMSupportedModel) {
-  const { portName } = await c2bRpc.initWebLLMEngine(model)
-  const port = browser.runtime.connect({ name: portName })
-  const iter = toAsyncIter<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>((yieldData, done) => {
-    port.onMessage.addListener((message) => {
-      if (message.type === 'progress') {
-        yieldData(message)
-      }
-      else if (message.type === 'ready') {
-        done()
-      }
-    })
-    port.onDisconnect.addListener(() => {
-      done()
-    })
-  })
-  yield* iter
-}
+// initWebLLMEngine removed - no longer supporting WebLLM
 
 export function checkModelReady(modeId: string) {
   return c2bRpc.checkModelReady(modeId)
 }
 
-export async function* initCurrentModel(abortSignal?: AbortSignal) {
-  const portName = await c2bRpc.initCurrentModel()
-  if (portName) {
-    const port = browser.runtime.connect({ name: portName })
-    const iter = readPortMessageIntoIterator<{ type: 'progress', progress: InitProgressReport } | { type: 'ready' }>(port, { abortSignal })
-    yield* iter
-  }
-}
+// initCurrentModel removed - no longer needed for cloud providers
+// Cloud providers like OpenRouter don't require local model initialization

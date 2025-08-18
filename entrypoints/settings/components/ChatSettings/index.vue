@@ -22,9 +22,6 @@
                 type="buttons"
                 dropdownAlign="left"
                 showDetails
-                showDiscoverMore
-                allowDelete
-                @deleteModel="deleteOllamaModel"
               />
             </div>
           </Section>
@@ -90,7 +87,7 @@ import { settings2bRpc } from '@/utils/rpc'
 import { getUserConfig } from '@/utils/user-config'
 
 import { useSettingsInitialQuery } from '../../composables/useQuery'
-import { deleteOllamaModel } from '../../utils/llm'
+// import { deleteOllamaModel } from '../../utils/llm' // Removed - no longer supporting Ollama
 import Block from '../Block.vue'
 import BlockTitle from '../BlockTitle.vue'
 import Section from '../Section.vue'

@@ -2,8 +2,8 @@ import { type BrowserContext, chromium, Page, test as base } from '@playwright/t
 import fs from 'fs'
 import path from 'path'
 
-import { ollamaPsResponse } from './mock-responses/ollama/ps'
-import { ollamaTagsResponse } from './mock-responses/ollama/tags'
+// import { ollamaPsResponse } from './mock-responses/ollama/ps' // Removed - no longer supporting Ollama
+// import { ollamaTagsResponse } from './mock-responses/ollama/tags' // Removed - no longer supporting Ollama
 
 type Extended = {
   context: BrowserContext
@@ -76,13 +76,13 @@ export const mockOllamaAPI = (page: Page, options: OllamaMockOptions) => {
   page.route('http://localhost:11434/api/tags', (route) => {
     route.fulfill({
       status: 200,
-      body: JSON.stringify(ollamaTagsResponse),
+      body: JSON.stringify([]), // Ollama mocks removed - no longer supporting local LLMs
     })
   })
   page.route('http://localhost:11434/api/ps', (route) => {
     route.fulfill({
       status: 200,
-      body: JSON.stringify(ollamaPsResponse),
+      body: JSON.stringify([]), // Ollama mocks removed - no longer supporting local LLMs
     })
   })
   if (options.chatResponse) {

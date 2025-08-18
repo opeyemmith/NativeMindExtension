@@ -13,5 +13,12 @@ export type OpenRouterErrorData = z.infer<typeof openrouterErrorDataSchema>
 
 export const openrouterFailedResponseHandler = createJsonErrorResponseHandler({
   errorSchema: openrouterErrorDataSchema,
-  errorToMessage: (data) => data.error.message,
+  errorToMessage: (data) => {
+    const message = data.error.message
+    // Add additional context for rate limiting errors
+    if (data.error.code === 'rate_limit_exceeded' || message.includes('rate limit') || message.includes('429')) {
+      return `Rate limit exceeded: ${message}. Please wait a moment and try again, or consider upgrading your OpenRouter plan for higher limits.`
+    }
+    return message
+  },
 })

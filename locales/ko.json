@@ -46,22 +46,22 @@
       "title": "사용자를 위해 만들어진 온디바이스 AI"
     },
     "guide": {
-      "already_installed": "이미 Ollama를 설치하고 실행 중인가요?",
-      "features": {
-        "1": "DeepSeek, Qwen, Llama와 같은 고급 모델을 실행할 수 있습니다",
-        "2": "모델을 완전히 제어하여 사용자 지정하고 전환할 수 있습니다",
-        "3": "사용자의 데이터는 기기에서 안전하게 유지됩니다"
-      },
-      "follow_our_tutorial": "설치 가이드를 확인하세요",
-      "get_ollama": "Ollama 얻기",
-      "install_desc": "Ollama를 설치하여 로컬 AI를 설정하세요.",
-      "need_help": "도움이 필요하세요?",
-      "ollama_desc": "Ollama로 로컬 AI의 모든 기능을 활용하세요.",
-      "setup": "설정",
       "step1": "1단계",
-      "download_model_to_begin": "시작하려면 모델을 다운로드하세요.",
-      "select_model_to_start": "시작하려면 모델을 선택하고 다운로드하세요",
-      "download_and_install": "다운로드 & 설치",
+      "install_desc": "OpenRouter를 구성하여 클라우드 AI 모델에 액세스하세요.",
+      "openrouter_desc": "OpenRouter의 통합 API를 통해 100개 이상의 AI 모델에 액세스하세요.",
+      "features": {
+        "1": "OpenAI, Anthropic, Google, Meta의 모델에 액세스",
+        "2": "다운로드 없이 모델 간 즉시 전환",
+        "3": "투명한 비용의 사용량 기반 요금제"
+      },
+      "get_openrouter": "OpenRouter API 키 받기",
+      "already_have_key": "이미 API 키가 있으신가요?",
+      "setup": "구성",
+      "need_help": "도움이 필요하신가요?",
+      "follow_our_tutorial": "설정 가이드를 따라하세요",
+      "configure_to_begin": "API 키를 구성하여 시작하세요.",
+      "select_model_to_start": "시작할 모델을 선택하세요",
+      "configure_api": "API 구성",
       "choose_model": "모델 선택"
     },
     "webllm_tutorial": {
@@ -93,7 +93,8 @@
       "title": "모델",
       "discover_more": "더 많은 모델 살펴보기",
       "no_model": "⚠️ 모델 없음",
-      "add_model_to_start": "모델을 추가하여 시작하세요"
+      "add_model_to_start": "모델을 추가하여 시작하세요",
+      "search_models": "모델 검색..."
     },
     "ollama": {
       "already_installed": "이미 Ollama를 설치하고 실행 중인가요?",

@@ -70,23 +70,23 @@
       "title": "IA en el dispositivo, creada solo para ti"
     },
     "guide": {
-      "already_installed": "¿Ya instalaste y ejecutaste Ollama?",
-      "features": {
-        "1": "Ejecuta modelos avanzados como DeepSeek, Qwen, Llama",
-        "2": "Personaliza y cambia modelos con control total",
-        "3": "Tus datos permanecen privados, en tu dispositivo"
-      },
-      "follow_our_tutorial": "Sigue nuestra guía de instalación",
-      "get_ollama": "Obtener Ollama",
-      "install_desc": "Instala Ollama para configurar tu IA local.",
-      "need_help": "¿Necesitas ayuda?",
-      "ollama_desc": "Desbloquea todo el poder de la IA local con Ollama.",
-      "setup": "Configuración",
       "step1": "PASO 1",
-      "download_model_to_begin": "Descarga un modelo para comenzar.",
-      "select_model_to_start": "Selecciona y descarga un modelo para comenzar",
-      "download_and_install": "Descargar & Instalar",
-      "choose_model": "Elegir Modelo"
+      "install_desc": "Configure OpenRouter para acceder a modelos de IA en la nube.",
+      "openrouter_desc": "Acceda a más de 100 modelos de IA a través de la API unificada de OpenRouter.",
+      "features": {
+        "1": "Acceso a modelos de OpenAI, Anthropic, Google, Meta",
+        "2": "Cambie entre modelos al instante sin descargas",
+        "3": "Precios de pago por uso con costos transparentes"
+      },
+      "get_openrouter": "Obtener clave API de OpenRouter",
+      "already_have_key": "¿Ya tienes una clave API?",
+      "setup": "Configurar",
+      "need_help": "¿Necesitas ayuda?",
+      "follow_our_tutorial": "Sigue nuestra guía de configuración",
+      "configure_to_begin": "Configure su clave API para comenzar.",
+      "select_model_to_start": "Seleccione un modelo para comenzar",
+      "configure_api": "Configurar API",
+      "choose_model": "Elegir modelo"
     },
     "webllm_tutorial": {
       "desc": "Usa un modelo ligero (Qwen 0.6b) directamente en tu navegador — sin configuración, sin espera.",
@@ -132,7 +132,8 @@
       "title": "Modelos",
       "discover_more": "Descubre más modelos",
       "no_model": "⚠️ Sin modelo",
-      "add_model_to_start": "Añadir un modelo para empezar"
+      "add_model_to_start": "Añadir un modelo para empezar",
+      "search_models": "Buscar modelos..."
     },
     "ollama": {
       "already_installed": "¿Ya instalaste y ejecutaste Ollama?",

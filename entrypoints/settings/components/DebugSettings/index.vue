@@ -38,43 +38,13 @@
             </button>
           </div>
         </Block>
-        <Block title="WebLLM">
-          <div class="flex gap-2 flex-col justify-start items-start">
-            <div>WebLLM model cache status</div>
-            <div class="text-xs font-normal">
-              <button
-                class="bg-blue-400 hover:bg-blue-500 text-white rounded-md cursor-pointer text-xs py-[2px] px-2"
-                @click="checkWebLLMCacheStatus"
-              >
-                Refresh
-              </button>
-              <div
-                v-for="s of webllmCacheStatus"
-                :key="s.modelId"
-                class="flex justify-start items-center gap-2 ml-2 mt-2"
-              >
-                <div>{{ s.modelId }}</div>
-                <button
-                  class="bg-blue-400 hover:bg-blue-500 text-white rounded-md cursor-pointer text-xs py-[2px] px-2"
-                  @click="deleteWebLLMModelCache(s.modelId)"
-                >
-                  <IconDelete class="w-3 h-3" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </Block>
+        <!-- WebLLM Block removed - no longer supporting WebLLM -->
         <Block title="Models">
           <div class="flex flex-col gap-3 justify-start items-stretch">
             <div class="flex gap-3 justify-start items-center">
-              Provider
-              <Selector
-                v-model="endpointType"
-                :options="modelProviderOptions"
-                dropdownClass="text-xs text-black w-52"
-                containerClass="py-0"
-                dropdownAlign="left"
-              />
+              <Text size="sm" color="secondary">
+                Provider: OpenRouter (Cloud AI)
+              </Text>
             </div>
             <div class="flex flex-col gap-3 justify-start items-start">
               Enable Context Window Size (Num ctx)
@@ -409,13 +379,13 @@ import Button from '@/components/ui/Button.vue'
 import UILanguageSelector from '@/components/UILanguageSelector.vue'
 import { INVALID_URLS } from '@/utils/constants'
 import { formatSize } from '@/utils/formatter'
-import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm'
+// import { SUPPORTED_MODELS, WebLLMSupportedModel } from '@/utils/llm/web-llm' // Removed - no longer supporting WebLLM
 import logger from '@/utils/logger'
 import { settings2bRpc } from '@/utils/rpc'
 import { SettingsScrollTarget } from '@/utils/scroll-targets'
 import { getUserConfig } from '@/utils/user-config'
 
-import { pullOllamaModel } from '../../utils/llm'
+// import { pullOllamaModel } from '../../utils/llm' // Removed - no longer supporting Ollama
 import BlockTitle from '../BlockTitle.vue'
 import Block from './Block.vue'
 
@@ -443,38 +413,16 @@ const localeInConfig = userConfig.locale.current.toRef()
 const translationSystemPromptError = ref('')
 const newModelId = ref('')
 const pulling = ref<{ modelId: string, total: number, completed: number, abort: () => void, status: string, error?: string }[]>([])
-const webllmCacheStatus = ref<{ modelId: WebLLMSupportedModel, hasCache: boolean }[]>([])
+// webllmCacheStatus removed - no longer supporting WebLLM
 
 const articles = ref<{ type: 'html' | 'pdf', url: string, title: string, content: string, html?: string, fileName?: string }[]>()
-const modelProviderOptions = [
-  { id: 'ollama' as const, label: 'Ollama' },
-  { id: 'web-llm' as const, label: 'Web LLM' },
-  { id: 'openrouter' as const, label: 'OpenRouter' },
-]
+// Provider options removed - OpenRouter is the only supported provider
 
 const resetOnboarding = async () => {
   onboardingVersion.value = 0
 }
 
-const checkWebLLMCacheStatus = async () => {
-  const cacheStatus = await Promise.all(
-    SUPPORTED_MODELS.map(async (model) => {
-      const hasCache = await settings2bRpc.hasWebLLMModelInCache(model.modelId)
-      return {
-        modelId: model.modelId,
-        hasCache,
-      }
-    }),
-  )
-  webllmCacheStatus.value = cacheStatus.filter((s) => s.hasCache)
-}
-
-checkWebLLMCacheStatus()
-
-const deleteWebLLMModelCache = async (model: WebLLMSupportedModel) => {
-  await settings2bRpc.deleteWebLLMModelInCache(model)
-  await checkWebLLMCacheStatus()
-}
+// checkWebLLMCacheStatus and deleteWebLLMModelCache removed - no longer supporting WebLLM
 
 const parseAllDocuments = async () => {
   const allTabs = await settings2bRpc.getAllTabs()
@@ -507,40 +455,10 @@ const parseAllDocuments = async () => {
   }
 }
 
+// onPullModel removed - no longer supporting Ollama model pulling
+// Cloud providers like OpenRouter don't require local model downloads
 const onPullModel = async () => {
-  if (!newModelId.value) {
-    return
-  }
-  const abortController = new AbortController()
-  const response = pullOllamaModel(newModelId.value, abortController.signal)
-  pulling.value.push({
-    modelId: newModelId.value,
-    total: 0,
-    completed: 0,
-    status: 'pulling',
-    abort: () => {
-      abortController.abort()
-      pulling.value = pulling.value.filter((item) => item !== pullingInfo)
-    },
-  })
-  const pullingInfo = pulling.value[pulling.value.length - 1]
-  try {
-    for await (const progress of response) {
-      logger.debug('pulling progress', progress)
-      if (progress.total) {
-        pullingInfo.total = progress.total
-      }
-      if (progress.completed) {
-        pullingInfo.completed = progress.completed
-      }
-      if (progress.status) {
-        pullingInfo.status = progress.status
-      }
-    }
-  }
-  catch (error: unknown) {
-    pullingInfo.error = String(error)
-  }
+  // No-op - cloud providers don't need model pulling
 }
 
 watch(translationSystemPrompt, (newValue) => {

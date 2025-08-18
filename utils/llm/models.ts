@@ -3,11 +3,8 @@ import { extractReasoningMiddleware, LanguageModelV1, wrapLanguageModel } from '
 import { getUserConfig } from '@/utils/user-config'
 
 import { ModelNotFoundError } from '../error'
-import { makeCustomFetch } from '../fetch'
-import { createOllama } from './providers/ollama'
 import { createOpenRouter } from './providers/openrouter'
-import { WebLLMChatLanguageModel } from './providers/web-llm/openai-compatible-chat-language-model'
-import { getWebLLMEngine, WebLLMSupportedModel } from './web-llm'
+// Only OpenRouter provider supported
 
 const reasoningMiddleware = extractReasoningMiddleware({
   tagName: 'think',
@@ -47,65 +44,22 @@ export async function getModel(options: {
   reasoning: boolean
   onLoadingModel?: (prg: ModelLoadingProgressEvent) => void
 }) {
-  const userConfig = await getUserConfig()
-  let model: LanguageModelV1
-  const endpointType = userConfig.llm.endpointType.get()
-  if (endpointType === 'ollama') {
-    const customFetch = makeCustomFetch({
-      bodyTransformer: (body) => {
-        // reasoning is enabled by default in Ollama
-        if (options.reasoning) return body
-        if (typeof body !== 'string') return body
-        return JSON.stringify({
-          ...JSON.parse(body),
-          think: false, // disable reasoning
-        })
-      },
-    })
-    const ollama = createOllama({
-      baseURL: new URL('/api', options.baseUrl).href,
-      fetch: customFetch,
-    })
-    model = ollama(options.model, {
-      numCtx: options.enableNumCtx ? options.numCtx : undefined,
-      structuredOutputs: true,
-    })
-  }
-  else if (endpointType === 'openrouter') {
-    const openrouter = createOpenRouter({
-      baseURL: options.baseUrl,
-      apiKey: options.apiKey,
-    })
-    model = openrouter(options.model, {
-      structuredOutputs: true,
-    })
-  }
-  else if (endpointType === 'web-llm') {
-    const engine = await getWebLLMEngine({
-      model: options.model as WebLLMSupportedModel,
-      contextWindowSize: options.enableNumCtx ? options.numCtx : undefined,
-      onInitProgress(report) {
-        options.onLoadingModel?.({ model: options.model, progress: report.progress, type: 'loading' })
-      },
-    })
-    options.onLoadingModel?.({ type: 'finished' })
-    model = new WebLLMChatLanguageModel(
-      options.model,
-      engine,
-      {},
-      { supportsStructuredOutputs: true, provider: 'web-llm', defaultObjectGenerationMode: 'json' },
-    )
-  }
-  else {
-    throw new Error('Unsupported endpoint type ' + endpointType)
-  }
+  // Only OpenRouter is supported
+  const openrouter = createOpenRouter({
+    baseURL: options.baseUrl,
+    apiKey: options.apiKey,
+  })
+  const model = openrouter(options.model, {
+    structuredOutputs: true,
+  })
+  
   return wrapLanguageModel({
     model,
     middleware: [reasoningMiddleware],
   })
 }
 
-export type LLMEndpointType = 'ollama' | 'web-llm' | 'openrouter'
+export type LLMEndpointType = 'openrouter' // Only OpenRouter supported
 
 export function parseErrorMessageFromChunk(error: unknown): string | null {
   if (error && typeof error === 'object' && 'message' in error && typeof (error as { message: unknown }).message === 'string') {

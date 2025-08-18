@@ -477,13 +477,14 @@ onChange(async (files) => {
 
 const modelsSupportVision = new Map()
 const checkCurrentModelSupportVision = async () => {
-  if (endpointType.value !== 'ollama') return false
+  // Only OpenRouter is supported now
   if (!currentModel.value) return false
   if (modelsSupportVision.has(currentModel.value)) {
     return modelsSupportVision.get(currentModel.value)
   }
-  const modelDetails = await s2bRpc.showOllamaModelDetails(currentModel.value)
-  const supported = !!modelDetails.capabilities?.includes('vision')
+  // For OpenRouter, check if model name suggests vision support
+  // Common vision models include: gpt-4-vision, claude-3, gemini-pro-vision, etc.
+  const supported = /vision|claude-3|gpt-4.*vision|gemini.*vision/i.test(currentModel.value)
   modelsSupportVision.set(currentModel.value, supported)
   return supported
 }

@@ -9,6 +9,8 @@ import { forRuntimes } from '../runtime'
 
 const log = logger.child('openrouter-store')
 
+// Primary model management store for OpenRouter-only architecture
+
 const rpc = forRuntimes({
   sidepanel: () => s2bRpc,
   settings: () => settings2bRpc,
@@ -34,6 +36,8 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
   const isLoading = ref(false)
   const searchQuery = ref('')
   const lastError = ref<string | null>(null)
+  const isValidated = ref(false) // Track if API key is validated
+  const lastValidatedAt = ref(0) // Timestamp of last validation
 
   const updateModelList = async (): Promise<OpenRouterModelInfo[]> => {
     if (isLoading.value) return modelList.value
@@ -44,6 +48,7 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     try {
       const response = await rpc.getOpenRouterModels()
       connectionStatus.value = 'connected'
+      isValidated.value = true // Mark as validated on successful fetch
       log.debug('OpenRouter models fetched:', response.models.length)
 
       // Transform to our format
@@ -62,6 +67,7 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
       log.error('Failed to fetch OpenRouter models:', error)
       const errorMessage = error instanceof Error ? error.message : 'Failed to fetch models'
       lastError.value = errorMessage
+      isValidated.value = false // Mark as not validated on error
 
       // Determine error type
       if (errorMessage.includes('402') || errorMessage.includes('Payment Required') || errorMessage.includes('Insufficient credits')) {
@@ -151,6 +157,22 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     }
   }
 
+  const clearValidation = () => {
+    isValidated.value = false
+    modelList.value = []
+    connectionStatus.value = 'unconnected'
+    lastError.value = null
+  }
+
+  const setValidated = (validated: boolean) => {
+    isValidated.value = validated
+    if (validated) {
+      connectionStatus.value = 'connected'
+      lastError.value = null
+      lastValidatedAt.value = Date.now()
+    }
+  }
+
   return {
     // State
     modelList,
@@ -158,6 +180,8 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     isLoading,
     searchQuery,
     lastError,
+    isValidated,
+    lastValidatedAt,
 
     // Computed
     filteredModelList,
@@ -167,5 +191,7 @@ export const useOpenRouterStore = defineStore('openrouter', () => {
     updateModelList,
     refreshModels,
     testConnection,
+    clearValidation,
+    setValidated,
   }
 })

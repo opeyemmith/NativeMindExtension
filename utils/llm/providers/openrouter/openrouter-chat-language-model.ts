@@ -98,7 +98,7 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
   ): Promise<Awaited<ReturnType<LanguageModelV1['doGenerate']>>> {
     const { arguments: args, warnings } = this.getArguments(options)
 
-    // Debug logging
+    // Debug logging - uncomment for debugging
     // console.log('OpenRouter Request:', {
     //   url: `${this.config.baseURL}/chat/completions`,
     //   headers: this.config.headers(),
@@ -188,7 +188,7 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
   ): Promise<Awaited<ReturnType<LanguageModelV1['doStream']>>> {
     const { arguments: args, warnings } = this.getArguments(options)
 
-    // Debug logging
+    // Debug logging - uncomment for debugging
     // console.log('OpenRouter Stream Request:', {
     //   url: `${this.config.baseURL}/chat/completions`,
     //   headers: this.config.headers(),
@@ -210,12 +210,20 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
 
     if (!response.ok) {
       const errorText = await response.text()
+      
+      // Handle rate limiting specifically
+      if (response.status === 429) {
+        const retryAfter = response.headers.get('retry-after')
+        const resetTime = response.headers.get('x-ratelimit-reset')
+        throw new Error(`Rate limit exceeded. ${retryAfter ? `Retry after ${retryAfter} seconds.` : ''} ${resetTime ? `Rate limit resets at ${new Date(parseInt(resetTime) * 1000).toLocaleTimeString()}.` : ''} Consider upgrading your OpenRouter plan or waiting before making more requests.`)
+      }
+      
       try {
         const errorData = JSON.parse(errorText)
-        throw new Error(errorData.error?.message || `OpenRouter API error: ${response.statusText}`)
+        throw new Error(errorData.error?.message || `OpenRouter API error (${response.status}): ${response.statusText}`)
       }
       catch {
-        throw new Error(`OpenRouter API error: ${response.statusText}`)
+        throw new Error(`OpenRouter API error (${response.status}): ${response.statusText}`)
       }
     }
 
@@ -266,39 +274,39 @@ export class OpenRouterChatLanguageModel implements LanguageModelV1 {
                 if (!choice) continue
 
                 if (choice.delta?.content) {
-                  controller.enqueue({
-                    type: 'text-delta',
-                    textDelta: choice.delta.content,
-                  })
-                }
+          controller.enqueue({
+            type: 'text-delta',
+            textDelta: choice.delta.content,
+          })
+        }
 
                 if (choice.delta?.tool_calls) {
-                  for (const toolCall of choice.delta.tool_calls) {
-                    controller.enqueue({
-                      type: 'tool-call-delta',
-                      toolCallId: toolCall.id || generateRandomId(),
-                      toolCallType: 'function',
-                      toolName: toolCall.function?.name || '',
-                      argsTextDelta: toolCall.function?.arguments || '',
-                    })
-                  }
-                }
+          for (const toolCall of choice.delta.tool_calls) {
+            controller.enqueue({
+              type: 'tool-call-delta',
+              toolCallId: toolCall.id || generateRandomId(),
+              toolCallType: 'function',
+              toolName: toolCall.function?.name || '',
+              argsTextDelta: toolCall.function?.arguments || '',
+            })
+          }
+        }
 
-                if (choice.finish_reason) {
-                  controller.enqueue({
-                    type: 'finish',
+        if (choice.finish_reason) {
+          controller.enqueue({
+            type: 'finish',
                     finishReason: mapFinishReason(choice.finish_reason),
                     usage: parsed.usage
-                      ? {
+              ? {
                           promptTokens: parsed.usage.prompt_tokens,
                           completionTokens: parsed.usage.completion_tokens,
-                        }
-                      : {
-                          promptTokens: 0,
-                          completionTokens: 0,
-                        },
-                  })
                 }
+              : {
+                  promptTokens: 0,
+                  completionTokens: 0,
+                },
+          })
+        }
               }
               catch (_parseError) {
                 // console.warn('Failed to parse OpenRouter SSE chunk:', parseError, data)

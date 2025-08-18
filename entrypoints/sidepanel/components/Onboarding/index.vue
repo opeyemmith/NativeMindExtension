@@ -9,7 +9,7 @@
         <div class="absolute right-4 h-full flex items-center gap-4">
           <IconClose
             class="w-4 h-4 cursor-pointer hover:text-gray-500"
-            @click="onModelDownloaderFinished"
+            @click="onSetupComplete"
           />
         </div>
       </div>
@@ -27,90 +27,80 @@
           class="mx-auto text-base"
         />
         <SloganCard />
-        <div
-          v-if="panel === 'tutorial'"
-          class="bg-white rounded-lg overflow-hidden grow flex flex-col justify-between font"
-        >
-          <OllamaTutorialCard
-            @installed="onOllamaInstalled"
-            @settings="onOpenSettings"
-          />
-          <WebLLMTutorialCard
-            v-if="!isFirefox"
-            @installed="onWebLLMInstalled"
-          />
+        <div class="bg-white rounded-lg overflow-hidden grow flex flex-col justify-between font p-6">
+          <div class="flex flex-col gap-4">
+            <h2 class="text-xl font-semibold text-gray-800">Welcome to NativeMind</h2>
+            <p class="text-gray-600">
+              Get started with AI-powered browsing using OpenRouter's cloud models.
+            </p>
+            <div class="flex flex-col gap-3">
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span class="text-sm text-gray-700">Access to 100+ AI models</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span class="text-sm text-gray-700">No local installation required</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <div class="w-2 h-2 bg-blue-500 rounded-full"></div>
+                <span class="text-sm text-gray-700">Pay-per-use pricing</span>
+              </div>
+            </div>
+          </div>
+          <div class="flex flex-col gap-3 mt-6">
+            <button
+              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              @click="onOpenSettings"
+            >
+              Configure OpenRouter API Key
+            </button>
+            <button
+              class="text-blue-600 hover:text-blue-700 text-sm"
+              @click="openOpenRouterSignup"
+            >
+              Don't have an account? Sign up for OpenRouter
+            </button>
+          </div>
         </div>
-        <div
-          v-else-if="panel === 'model-downloader'"
-          class="grow grid place-content-stretch"
-        >
-          <OllamaModelDownloader
-            @finished="onModelDownloaderFinished"
-          />
-        </div>
-        <ExhaustiveError v-else />
       </div>
     </ScrollContainer>
   </div>
 </template>
 
 <script setup lang="tsx">
-import { computed, onMounted, ref } from 'vue'
+import { computed } from 'vue'
 
 import IconClose from '@/assets/icons/close.svg?component'
-import ExhaustiveError from '@/components/ExhaustiveError.vue'
 import Logo from '@/components/Logo.vue'
 import ScrollContainer from '@/components/ScrollContainer.vue'
 import { useI18n } from '@/utils/i18n'
-import { useOllamaStatusStore } from '@/utils/pinia-store/store'
 import { getUserConfig, TARGET_ONBOARDING_VERSION } from '@/utils/user-config'
 
 import { showSettings } from '../../../../utils/settings'
 import { Chat } from '../../utils/chat'
 import { welcomeMessage } from '../../utils/chat/texts'
-import OllamaModelDownloader from './OllamaModelDownloader.vue'
-import OllamaTutorialCard from './OllamaTutorialCard.vue'
 import SloganCard from './SloganCard.vue'
-import WebLLMTutorialCard from './WebLLMTutorialCard.vue'
 
-const isFirefox = import.meta.env.FIREFOX
 const { t } = useI18n()
 const userConfig = await getUserConfig()
 const chat = await Chat.getInstance()
-const ollamaStatusStore = useOllamaStatusStore()
-const endpointType = userConfig.llm.endpointType.toRef()
 const onboardingVersion = userConfig.ui.onboarding.version.toRef()
-const panel = ref<'tutorial' | 'model-downloader'>('tutorial')
+
 const isShow = computed(() => {
   return onboardingVersion.value !== TARGET_ONBOARDING_VERSION
 })
 
-const onOllamaInstalled = async () => {
-  endpointType.value = 'ollama'
-  const modelList = await ollamaStatusStore.updateModelList()
-  if (modelList.length === 0) {
-    panel.value = 'model-downloader'
-  }
-  else {
-    close()
-  }
-}
-
 const onOpenSettings = async () => {
-  endpointType.value = 'ollama'
   close()
   showSettings()
 }
 
-const onModelDownloaderFinished = async () => {
-  endpointType.value = 'ollama'
-  await ollamaStatusStore.updateConnectionStatus()
-  await ollamaStatusStore.updateModelList()
-  close()
+const openOpenRouterSignup = () => {
+  window.open('https://openrouter.ai/', '_blank')
 }
 
-const onWebLLMInstalled = () => {
-  endpointType.value = 'web-llm'
+const onSetupComplete = () => {
   close()
 }
 
@@ -131,13 +121,4 @@ const close = () => {
   setWelcomeChatMessage()
   onboardingVersion.value = TARGET_ONBOARDING_VERSION
 }
-
-onMounted(async () => {
-  if (isShow.value) {
-    const success = await ollamaStatusStore.updateConnectionStatus()
-    if (success) {
-      onOllamaInstalled()
-    }
-  }
-})
 </script>

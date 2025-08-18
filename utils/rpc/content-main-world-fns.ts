@@ -75,27 +75,19 @@ export async function getBrowserAIConfig() {
 }
 
 export async function checkBackendModelReady(model?: string): Promise<{ backend: boolean, model: boolean }> {
-  const userConfig = await getUserConfig()
   try {
-    if (userConfig.llm.endpointType.get() === 'ollama') {
-      const modelList = await c2bRpc.getLocalModelList()
-      if (model === undefined) {
-        return { backend: true, model: modelList.models.length > 0 }
-      }
-      else {
-        return { backend: true, model: modelList.models.some((m) => m.model === model) }
-      }
+    // For OpenRouter, we can enhance this by checking if the API key is configured
+    // and optionally validating the specific model exists in OpenRouter's catalog
+    const userConfig = await getUserConfig()
+    const apiKey = userConfig.llm.apiKey.get()
+
+    if (!apiKey) {
+      return { backend: false, model: false }
     }
-    else if (userConfig.llm.endpointType.get() === 'openrouter') {
-      // For OpenRouter, always return true as models are predefined
-      return { backend: true, model: true }
-    }
-    else if (userConfig.llm.endpointType.get() === 'web-llm') {
-      return { backend: true, model: await c2bRpc.hasWebLLMModelInCache('Qwen3-0.6B-q4f16_1-MLC') }
-    }
-    else {
-      throw new UnsupportedEndpointType(userConfig.llm.endpointType.get())
-    }
+
+    // For OpenRouter, backend is ready if API key exists, models are always available
+    // We could add more sophisticated model validation here if needed
+    return { backend: true, model: true }
   }
   catch (error) {
     log.debug('Error checking backend model', error)

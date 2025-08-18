@@ -69,14 +69,15 @@ async function _useTranslator() {
     if (isWaiting) return
     isWaiting = true
     try {
-      if (!enabled.value && userConfig.llm.endpointType.get() === 'ollama') {
+      if (!enabled.value) {
+        // Only OpenRouter is supported now - simplified condition
         if (!(await ollamaStatusStore.updateConnectionStatus())) {
-          toast('Failed to connect to Ollama server, please check your Ollama connection', { duration: 2000 })
+          toast('🤖 Unable to connect to AI. Please check your settings!', { duration: 2000 })
           showSettings({ scrollTarget: 'server-address-section' })
           return
         }
         else if ((await ollamaStatusStore.updateModelList()).length === 0) {
-          toast('No model found, please download a model.', { duration: 2000 })
+          toast('🔍 No AI model found. Please check your model selection!', { duration: 2000 })
           showSettings({ scrollTarget: 'model-download-section' })
           return
         }

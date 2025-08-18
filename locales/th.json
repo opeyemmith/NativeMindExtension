@@ -46,22 +46,22 @@
       "title": "AI บนอุปกรณ์ สร้างขึ้นเพื่อคุณ"
     },
     "guide": {
-      "already_installed": "ได้ติดตั้งและกำลังใช้งาน Ollama อยู่แล้ว?",
-      "features": {
-        "1": "ใช้งานโมเดลขั้นสูง เช่น Deepseek, Qwen, Llama",
-        "2": "ปรับแต่งและสลับโมเดลได้อย่างเต็มรูปแบบ",
-        "3": "ข้อมูลของคุณปลอดภัยอยู่บนอุปกรณ์ของคุณเท่านั้น"
-      },
-      "follow_our_tutorial": "ทำตามคู่มือการติดตั้งของเรา",
-      "get_ollama": "รับ Ollama",
-      "install_desc": "ติดตั้ง Ollama เพื่อตั้งค่า AI ในพื้นที่ของคุณ",
-      "need_help": "ต้องการความช่วยเหลือ?",
-      "ollama_desc": "ปลดล็อกพลัง AI ท้องถิ่นเต็มรูปแบบด้วย Ollama",
-      "setup": "การตั้งค่า",
       "step1": "ขั้นตอนที่ 1",
-      "download_model_to_begin": "ดาวน์โหลดโมเดลเพื่อเริ่มต้น",
-      "select_model_to_start": "เลือกและดาวน์โหลดโมเดลเพื่อเริ่มต้น",
-      "download_and_install": "ดาวน์โหลดและติดตั้ง",
+      "install_desc": "กำหนดค่า OpenRouter เพื่อเข้าถึงโมเดล AI บนคลาวด์",
+      "openrouter_desc": "เข้าถึงโมเดล AI มากกว่า 100 รายการผ่าน API แบบรวมของ OpenRouter",
+      "features": {
+        "1": "เข้าถึงโมเดลจาก OpenAI, Anthropic, Google, Meta",
+        "2": "สลับระหว่างโมเดลได้ทันทีโดยไม่ต้องดาวน์โหลด",
+        "3": "ราคาจ่ายตามการใช้งานแบบโปร่งใส"
+      },
+      "get_openrouter": "รับ API Key ของ OpenRouter",
+      "already_have_key": "มี API key อยู่แล้ว?",
+      "setup": "กำหนดค่า",
+      "need_help": "ต้องการความช่วยเหลือ?",
+      "follow_our_tutorial": "ทำตามคู่มือการตั้งค่าของเรา",
+      "configure_to_begin": "กำหนดค่า API key ของคุณเพื่อเริ่มต้น",
+      "select_model_to_start": "เลือกโมเดลเพื่อเริ่มต้น",
+      "configure_api": "กำหนดค่า API",
       "choose_model": "เลือกโมเดล"
     },
     "webllm_tutorial": {
@@ -93,7 +93,8 @@
       "title": "โมเดล",
       "discover_more": "ค้นหาโมเดลเพิ่มเติม",
       "no_model": "⚠️ ไม่มีโมเดล",
-      "add_model_to_start": "เพิ่มโมเดลเพื่อเริ่มต้น"
+      "add_model_to_start": "เพิ่มโมเดลเพื่อเริ่มต้น",
+      "search_models": "ค้นหาโมเดล..."
     },
     "ollama": {
       "already_installed": "ติดตั้งและใช้งาน Ollama อยู่แล้ว?",

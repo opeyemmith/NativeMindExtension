@@ -13,7 +13,7 @@ const IS_FIREFOX = process.argv.includes('firefox')
 const FIREFOX_EXTENSION_ID = '{48e0818d-6c94-43d4-9465-61ceb28080e3}'
 const ENABLE_BUNDLE_ANALYZER = process.argv.includes('--analyze') || process.env.ANALYZE === 'true'
 
-const permissionsForChrome = ['system.memory']
+const permissionsForChrome = ['system.memory'] // Still needed for context window management
 const permissionsForFirefox = ['menus']
 const extraPermissions = IS_FIREFOX ? permissionsForFirefox : permissionsForChrome
 
@@ -59,8 +59,7 @@ export default defineConfig({
     return {
       build: {
         target: ['chrome124', 'firefox120', 'safari16'],
-        // firefox does't support js file larger than 5MB, so we exclude @mlc-ai/web-llm from the bundle (which firefox does not use)
-        rollupOptions: { external: IS_FIREFOX ? ['@mlc-ai/web-llm', '@huggingface/transformers'] : undefined },
+        // No external dependencies needed since we removed WebLLM and Hugging Face transformers
       },
       plugins: [
         nodePolyfills(),

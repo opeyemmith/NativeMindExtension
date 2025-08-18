@@ -7,63 +7,19 @@
       :title="t('settings.general.title')"
       :description="t('settings.general.description')"
     />
-    <DownloadConfirmModal
-      v-if="isShowDownloadOllamaModal && settingsQuery.downloadModel.value"
-      :model="settingsQuery.downloadModel.value"
-      @finished="onDownloadOllamaModelFinished"
-      @cancel="onDownloadOllamaModelFinished"
-    />
-    <Modal
-      v-model="isShowDownloadWebLLMModal"
-      class="fixed"
-      noCloseButton
-      :closeByMask="false"
-      :fadeInAnimation="false"
-    >
-      <DownloadWebLLMModel
-        @canceled="isShowDownloadWebLLMModal = false"
-        @finished="onDownloadWebLLMModelFinished"
-      />
-    </Modal>
+    <!-- Download modals removed - cloud-only approach -->
     <div class="flex flex-col gap-4">
       <Block :title="t('settings.provider_model.title')">
         <div class="flex flex-col gap-4">
-          <Section v-if="endpointType === 'web-llm'">
-            <span
-              class="block w-80 mt-2"
-            >
-              <Text
-                color="secondary"
-                size="xs"
-                class="leading-4"
-              >
-                {{ t('settings.webllm-desc') }}
-              </Text>
-            </span>
-          </Section>
           <Section>
             <div class="flex flex-col gap-6 items-stretch">
-              <a
-                v-if="endpointType === 'web-llm'"
-                :href="OLLAMA_HOMEPAGE_URL"
-                target="_blank"
-                @click="onClickInstall"
-              >
-                <Button
-                  class="h-8 px-[10px] font-medium text-xs"
-                  variant="primary"
-                >
-                  {{ t('settings.get_ollama') }}
-                </Button>
-              </a>
               <ScrollTarget
-                v-if="endpointType === 'ollama'"
                 :autoScrollIntoView="settingsQuery.scrollTarget.value === 'server-address-section'"
                 showHighlight
                 class="w-full"
               >
                 <Section
-                  :title="t('settings.ollama.server_address')"
+                  :title="t('settings.cloud_provider.api_endpoint')"
                   class="w-full"
                 >
                   <div class="flex flex-col gap-1">
@@ -78,14 +34,13 @@
                       size="xs"
                       display="block"
                     >
-                      {{ t('settings.ollama.server_address_desc') }}
+                      {{ t('settings.cloud_provider.api_endpoint_desc') }}
                     </Text>
                     <SavedMessage :watch="baseUrl" />
                   </div>
                 </Section>
               </ScrollTarget>
               <ScrollTarget
-                v-if="endpointType === 'openrouter'"
                 :autoScrollIntoView="settingsQuery.scrollTarget.value === 'openrouter-config-section'"
                 showHighlight
                 class="w-full"
@@ -120,6 +75,15 @@
                           placeholder="Enter your OpenRouter API key"
                           class="rounded-md py-2 px-4 grow"
                         />
+                        <Button
+                          variant="secondary"
+                          class="px-4 py-2 shrink-0"
+                          :disabled="!apiKey || validationLoading"
+                          @click="validateApiKey"
+                        >
+                          <Loading v-if="validationLoading" class="w-4 h-4" />
+                          <span v-else>{{ validationStatus === 'valid' ? 'Validated' : 'Validate' }}</span>
+                        </Button>
                       </div>
                       <Text
                         color="secondary"
@@ -128,6 +92,21 @@
                       >
                         Your OpenRouter API key (get one at openrouter.ai)
                       </Text>
+                      <!-- Validation Status -->
+                      <div v-if="validationStatus" class="flex items-center gap-2 text-xs">
+                        <div v-if="validationStatus === 'valid'" class="flex items-center gap-1 text-green-600">
+                          <span class="w-2 h-2 bg-green-500 rounded-full"></span>
+                          <span>API key is valid - {{ modelCount }} models available</span>
+                        </div>
+                        <div v-else-if="validationStatus === 'invalid'" class="flex items-center gap-1 text-red-600">
+                          <span class="w-2 h-2 bg-red-500 rounded-full"></span>
+                          <span>{{ validationError }}</span>
+                        </div>
+                        <div v-else-if="validationStatus === 'no-credits'" class="flex items-center gap-1 text-yellow-600">
+                          <span class="w-2 h-2 bg-yellow-500 rounded-full"></span>
+                          <span>API key valid but insufficient credits</span>
+                        </div>
+                      </div>
                       <SavedMessage :watch="apiKey" />
                     </div>
                   </div>
@@ -194,26 +173,14 @@
                   size="xs"
                   class="font-normal leading-4"
                 >
-                  <div
-                    v-if="endpointType === 'web-llm'"
-                    class="flex gap-1"
-                  >
-                    <span>{{ t('settings.ollama.already_installed') }}</span>
-                    <button
-                      class="whitespace-nowrap hover:text-gray-800 text-blue-500 cursor-pointer"
-                      @click="setupOllama"
-                    >
-                      {{ t('settings.ollama.setup') }}
-                    </button>
-                  </div>
                   <div class="flex gap-1">
-                    <span>{{ t('settings.ollama.need_help') }}</span>
+                    <span>Check your OpenRouter API key and connection.</span>
                     <a
-                      :href="OLLAMA_TUTORIAL_URL"
+                      href="https://openrouter.ai"
                       target="_blank"
                       class="underline whitespace-nowrap hover:text-gray-800 cursor-pointer"
                     >
-                      {{ t('settings.ollama.follow_guide') }}
+                      Visit OpenRouter
                     </a>
                   </div>
                 </Text>
@@ -233,15 +200,7 @@
                       {{ t('settings.general.refresh_status') }}
                     </span>
                   </Button>
-                  <a
-                    :href="OLLAMA_SEARCH_URL"
-                    target="_blank"
-                  >
-                    <Button class="flex items-center gap-[2px] justify-center min-h-8 min-w-40 py-1">
-                      <IconRedirectToOllama />
-                      {{ t('settings.general.discover_more_models') }}
-                    </Button>
-                  </a>
+                  <!-- Discover more models button removed - no longer supporting Ollama -->
                 </div>
               </div>
             </div>
@@ -288,25 +247,30 @@ import Text from '@/components/ui/Text.vue'
 import UILanguageSelector from '@/components/UILanguageSelector.vue'
 import WarningMessage from '@/components/WarningMessage.vue'
 import { useValueGuard } from '@/composables/useValueGuard'
-import { MIN_CONTEXT_WINDOW_SIZE, OLLAMA_HOMEPAGE_URL, OLLAMA_SEARCH_URL, OLLAMA_TUTORIAL_URL } from '@/utils/constants'
+import { MIN_CONTEXT_WINDOW_SIZE } from '@/utils/constants'
+// Ollama constants removed - no longer supporting local LLMs
+// OLLAMA_HOMEPAGE_URL, OLLAMA_SEARCH_URL, OLLAMA_TUTORIAL_URL
 import { useI18n } from '@/utils/i18n/index'
 import logger from '@/utils/logger'
 import { useOllamaStatusStore } from '@/utils/pinia-store/store'
+import { useOpenRouterStore } from '@/utils/pinia-store/openrouter-store'
+import { settings2bRpc } from '@/utils/rpc'
 import { getUserConfig } from '@/utils/user-config'
 
 import { useSettingsInitialQuery } from '../../composables/useQuery'
 import Block from '../Block.vue'
 import BlockTitle from '../BlockTitle.vue'
-import DownloadConfirmModal from '../OllamaDownloadModal.vue'
+// import DownloadConfirmModal from '../OllamaDownloadModal.vue' // Removed - no longer supporting Ollama
 import SavedMessage from '../SavedMessage.vue'
 import Section from '../Section.vue'
-import DownloadWebLLMModel from '../WebLLMDownloadModal.vue'
-import RunningModels from './RunningModels/index.vue'
+// import DownloadWebLLMModel from '../WebLLMDownloadModal.vue' // Removed - no longer supporting WebLLM
+// import RunningModels from './RunningModels/index.vue' // Removed - no longer supporting Ollama
 
 const log = logger.child('Settings')
 
 const { t } = useI18n()
 const ollamaStatusStore = useOllamaStatusStore()
+const { setValidated: setOpenRouterValidated } = useOpenRouterStore()
 
 const settingsQuery = useSettingsInitialQuery()
 const settingsRef = ref<HTMLElement | null>(null)
@@ -318,6 +282,12 @@ const loading = ref(false)
 const isShowDownloadWebLLMModal = ref(false)
 const connectionStatus = toRef(ollamaStatusStore, 'connectionStatus')
 const isShowDownloadOllamaModal = ref(settingsQuery.downloadModel.hasValue())
+
+// API Validation state
+const validationLoading = ref(false)
+const validationStatus = ref<'valid' | 'invalid' | 'no-credits' | null>(null)
+const validationError = ref('')
+const modelCount = ref(0)
 // Prompt refs
 const translationSystemPrompt = userConfig.translation.systemPrompt.toRef()
 const translationSystemPromptError = ref('')
@@ -334,13 +304,10 @@ watch(() => settingsQuery.downloadModel.value, (v) => {
   if (v) isShowDownloadOllamaModal.value = true
 })
 
-// Set default base URL when endpoint type changes
-watch(endpointType, (newType) => {
-  if (newType === 'openrouter' && baseUrl.value === 'http://localhost:11434/api') {
+// Ensure base URL is always set to OpenRouter
+watch(endpointType, () => {
+  if (baseUrl.value !== 'https://openrouter.ai/api/v1') {
     baseUrl.value = 'https://openrouter.ai/api/v1'
-  }
-  else if (newType === 'ollama' && baseUrl.value === 'https://openrouter.ai/api/v1') {
-    baseUrl.value = 'http://localhost:11434/api'
   }
 })
 const onDownloadOllamaModelFinished = async () => {
@@ -350,10 +317,11 @@ const onDownloadOllamaModelFinished = async () => {
   isShowDownloadOllamaModal.value = false
 }
 
-const onDownloadWebLLMModelFinished = async (_model: string) => {
-  endpointType.value = 'web-llm'
-  isShowDownloadWebLLMModal.value = false
-}
+// onDownloadWebLLMModelFinished removed - no longer supporting WebLLM
+// const onDownloadWebLLMModelFinished = async (_model: string) => {
+//   endpointType.value = 'web-llm'
+//   isShowDownloadWebLLMModal.value = false
+// }
 
 const testConnection = async () => {
   loading.value = true
@@ -384,20 +352,83 @@ const onClickInstall = () => {
   startCheckConnection()
 }
 
-const setupOllama = async () => {
-  endpointType.value = 'ollama'
-  const success = await ollamaStatusStore.updateConnectionStatus()
-  await ollamaStatusStore.updateModelList()
-  if (success) {
-    stopCheckConnection()
+// API Key Validation
+const validateApiKey = async () => {
+  if (!apiKey.value) return
+  
+  validationLoading.value = true
+  validationStatus.value = null
+  validationError.value = ''
+  modelCount.value = 0
+  
+  try {
+    // Use the dedicated validation function that doesn't use fallbacks
+    const response = await settings2bRpc.validateOpenRouterApiKey()
+    
+    if (response.valid) {
+      validationStatus.value = 'valid'
+      modelCount.value = response.modelCount
+      log.info('API key validation successful:', response.modelCount, 'models available')
+      
+      // Set validation in store (this will trigger timestamp update)
+      setOpenRouterValidated(true)
+      
+      // Clear cache first
+      try {
+        await settings2bRpc.clearOpenRouterModelsCache()
+      } catch (cacheError) {
+        log.warn('Failed to clear cache, but validation succeeded:', cacheError)
+      }
+      
+      // Notify components (fire and forget - don't wait for it)
+      settings2bRpc.notifyApiKeyValidated().catch((notifyError) => {
+        log.warn('Failed to notify components, but validation succeeded:', notifyError)
+      })
+    } else {
+      // Handle specific error types
+      const errorMessage = response.error || '❌ Unable to validate API key. Please try again!'
+      
+      if (errorMessage.includes('insufficient credits') || errorMessage.includes('402')) {
+        validationStatus.value = 'no-credits'
+      } else {
+        validationStatus.value = 'invalid'
+        validationError.value = errorMessage
+      }
+    }
+  } catch (error: any) {
+    log.error('API key validation failed:', error)
+    validationStatus.value = 'invalid'
+    validationError.value = error.message || '❌ Unable to validate API key. Please try again!'
+  } finally {
+    validationLoading.value = false
   }
 }
 
+// Watch API key changes to reset validation status
+watch(apiKey, () => {
+  if (validationStatus.value) {
+    validationStatus.value = null
+    validationError.value = ''
+    modelCount.value = 0
+  }
+})
+
+// setupOllama removed - no longer supporting Ollama
+// const setupOllama = async () => {
+//   endpointType.value = 'ollama'
+//   const success = await ollamaStatusStore.updateConnectionStatus()
+//   await ollamaStatusStore.updateModelList()
+//   if (success) {
+//     stopCheckConnection()
+//   }
+// }
+
 const reScanOllama = async () => {
+  // Renamed to reScanOllama but now tests OpenRouter connection
   const success = await ollamaStatusStore.updateConnectionStatus()
-  log.info('Ollama connection test result:', success)
+  log.info('OpenRouter connection test result:', success)
   if (success) {
-    endpointType.value = 'ollama'
+    // endpointType is already 'openrouter' - no need to change
     stopCheckConnection()
   }
 }

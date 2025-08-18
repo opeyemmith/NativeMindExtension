@@ -46,22 +46,22 @@
       "title": "裝置AI，專為您打造"
     },
     "guide": {
-      "already_installed": "已經安裝並執行Ollama？",
+      "step1": "步驟 1",
+      "install_desc": "設定 OpenRouter 以存取雲端 AI 模型。",
+      "openrouter_desc": "透過 OpenRouter 的統一 API 存取 100+ AI 模型。",
       "features": {
-        "1": "執行DeepSeek、Qwen、Llama等高級模型",
-        "2": "自訂和切換模型完全控制",
-        "3": "您的資料在裝置上保持私密"
+        "1": "存取來自 OpenAI、Anthropic、Google、Meta 的模型",
+        "2": "無需下載即可在模型間瞬間切換",
+        "3": "按使用量付費，成本透明"
       },
-      "follow_our_tutorial": "參照我們的安裝指南",
-      "get_ollama": "獲取Ollama",
-      "install_desc": "安裝Ollama來設置您的本地AI。",
-      "need_help": "需要幫助嗎？",
-      "ollama_desc": "用Ollama解鎖AI的全部力量。",
-      "setup": "設置",
-      "step1": "步驟1",
-      "download_model_to_begin": "下載模型以開始。",
-      "select_model_to_start": "選擇並下載模型以開始使用",
-      "download_and_install": "下載 & 安裝",
+      "get_openrouter": "取得 OpenRouter API 金鑰",
+      "already_have_key": "已有 API 金鑰？",
+      "setup": "設定",
+      "need_help": "需要協助？",
+      "follow_our_tutorial": "按照我們的設定指南操作",
+      "configure_to_begin": "設定您的 API 金鑰以開始使用。",
+      "select_model_to_start": "選擇模型開始使用",
+      "configure_api": "設定 API",
       "choose_model": "選擇模型"
     },
     "webllm_tutorial": {
@@ -93,7 +93,8 @@
       "title": "模型",
       "discover_more": "探索更多模型",
       "no_model": "⚠️ 沒有模型",
-      "add_model_to_start": "新增模型以開始"
+      "add_model_to_start": "新增模型以開始",
+      "search_models": "搜尋模型..."
     },
     "ollama": {
       "already_installed": "已經安裝並執行Ollama？",

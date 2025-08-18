@@ -35,7 +35,9 @@ export const c2bRpc = only(['content'], () =>
     },
     post(data) {
       logger.debug('[content -> background] message post', data)
-      browser.runtime.sendMessage(makeMessage(data, MessageSource.contentScript, [MessageSource.background]))
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.contentScript, [MessageSource.background])).catch((e) => {
+        logger.warn('failed to send message to background', e)
+      })
     },
     serialize: (v) => v,
     deserialize: (v) => v,
@@ -54,7 +56,9 @@ export const c2pRpc = only(['content'], () =>
     },
     post(data) {
       logger.debug('[content -> popup] message post', data)
-      browser.runtime.sendMessage(makeMessage(data, MessageSource.contentScript, [MessageSource.popup]))
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.contentScript, [MessageSource.popup])).catch((e) => {
+        logger.warn('failed to send message to popup', e)
+      })
     },
     serialize: (v) => v,
     deserialize: (v) => v,
@@ -80,7 +84,13 @@ export const p2cRpc = only(['popup'], () => {
         const tabId = msgTabIdMap.get(data.i)
         if (tabId) {
           logger.debug('[popup -> content] sending message to tab', tabId, data)
-          browser.tabs.sendMessage(tabId, makeMessage(data, MessageSource.popup, [MessageSource.contentScript]))
+          browser.tabs.sendMessage(tabId, makeMessage(data, MessageSource.popup, [MessageSource.contentScript])).catch((e) => {
+            if (e.message?.includes('Could not establish connection')) {
+              logger.debug('popup target tab has no content script', tabId)
+            } else {
+              logger.warn('failed to send message from popup to tab', tabId, e)
+            }
+          })
         }
         else {
           logger.warn('no tab id found for', data.i)
@@ -90,7 +100,13 @@ export const p2cRpc = only(['popup'], () => {
         const tab = await browser.tabs.query({ active: true, currentWindow: true })
         if (tab[0].id) {
           logger.debug('[popup -> content] sending message to active tab', tab[0].id, data)
-          browser.tabs.sendMessage(tab[0].id, makeMessage(data, MessageSource.popup, [MessageSource.contentScript]))
+          browser.tabs.sendMessage(tab[0].id, makeMessage(data, MessageSource.popup, [MessageSource.contentScript])).catch((e) => {
+            if (e.message?.includes('Could not establish connection')) {
+              logger.debug('active tab has no content script', tab[0].id, tab[0].url)
+            } else {
+              logger.warn('failed to send message from popup to active tab', tab[0].id, e)
+            }
+          })
         }
         else {
           logger.warn('no tab found')
@@ -143,7 +159,13 @@ export const bgBroadcastRpc = only(['background'], () => {
         msgTabIdMap.delete(data.i) // Clear the tab ID after sending
         if (callInfo) {
           logger.debug('[background -> content] sending message to tab', callInfo.tabId, data)
-          browser.tabs.sendMessage(callInfo.tabId, msg)
+          browser.tabs.sendMessage(callInfo.tabId, msg).catch((e) => {
+            if (e.message?.includes('Could not establish connection')) {
+              logger.debug('response tab has no content script', callInfo.tabId)
+            } else {
+              logger.warn('failed to send response to tab', callInfo.tabId, e)
+            }
+          })
           self.clearTimeout(callInfo.timer) // Clear the timer as well
         }
         else {
@@ -156,16 +178,27 @@ export const bgBroadcastRpc = only(['background'], () => {
           throw new Error(`Tab ${specificTab} not found`)
         }
         logger.debug('[background -> content] sending message to specific tab', specificTab, data)
-        logger.debug('sending message to specific tab', specificTab, data)
-        browser.tabs.sendMessage(specificTab, msg)
+        browser.tabs.sendMessage(specificTab, msg).catch((e) => {
+          if (e.message?.includes('Could not establish connection')) {
+            logger.debug('specific tab has no content script', specificTab, tab.url)
+          } else {
+            logger.warn('failed to send message to specific tab', specificTab, e)
+          }
+        })
       }
       else {
         const tabs = await browser.tabs.query({})
-        logger.debug('[background -> content] sending message to all tabs', data, tabs)
+        logger.debug('[background -> content] sending message to all tabs', data, tabs.length, 'tabs')
         for (const tab of tabs) {
           if (tab.id) {
             await browser.tabs.sendMessage(tab.id, msg).catch((e) => {
-              logger.warn('failed to send message to tab', tab.id, e)
+              // Only log connection errors at debug level to reduce noise
+              // These are expected when tabs don't have content scripts
+              if (e.message?.includes('Could not establish connection')) {
+                logger.debug('tab has no content script', tab.id, tab.url)
+              } else {
+                logger.warn('failed to send message to tab', tab.id, e)
+              }
             })
           }
         }
@@ -173,6 +206,12 @@ export const bgBroadcastRpc = only(['background'], () => {
     },
     serialize: (v) => v,
     deserialize: (v) => v,
+    // Add timeout handler to prevent uncaught promise errors
+    onTimeoutError: (method, args) => {
+      logger.debug(`[birpc] timeout on calling "${method}" to content script - this is expected when the tab is not ready`, { args })
+      return true // Return true to prevent the error from being thrown
+    },
+    timeout: 15000 // Reduce timeout to 15 seconds (from 60s default)
   })
 })
 
@@ -275,7 +314,9 @@ export const s2bRpc = only(['sidepanel'], () =>
     },
     post(data) {
       logger.debug('[sidepanel -> background] message post', data)
-      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background]))
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background])).catch((e) => {
+        logger.warn('failed to send message to background', e)
+      })
     },
     serialize: (v) => v,
     deserialize: (v) => v,
@@ -297,11 +338,22 @@ export const b2sRpc = only(['background'], () => {
       logger.debug('[background -> sidepanel] message post', data)
       const msg = makeMessage(data, MessageSource.background, [MessageSource.sidepanel])
       await browser.runtime.sendMessage(msg).catch((e) => {
-        logger.warn('failed to send message to sidepanel', e)
+        // Don't log timeout errors as warnings - they're expected
+        if (e.message?.includes('timeout') || e.message?.includes('Receiving end does not exist')) {
+          logger.debug('Sidepanel not ready (expected when sidepanel not loaded):', e.message)
+        } else {
+          logger.warn('failed to send message to sidepanel', e)
+        }
       })
     },
     serialize: (v) => v,
     deserialize: (v) => v,
+    // Add timeout handler to prevent uncaught promise errors
+    onTimeoutError: (method, args) => {
+      logger.debug(`[birpc] timeout on calling "${method}" - this is expected when sidepanel is not loaded`, { args })
+      return true // Return true to prevent the error from being thrown
+    },
+    timeout: 15000 // Reduce timeout to 15 seconds (from 60s default)
   })
 })
 
@@ -341,7 +393,9 @@ export const settings2bRpc = only(['settings'], () =>
     },
     post(data) {
       logger.debug('[sidepanel -> background] message post', data)
-      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background]))
+      browser.runtime.sendMessage(makeMessage(data, MessageSource.sidepanel, [MessageSource.background])).catch((e) => {
+        logger.warn('failed to send message to background', e)
+      })
     },
     serialize: (v) => v,
     deserialize: (v) => v,

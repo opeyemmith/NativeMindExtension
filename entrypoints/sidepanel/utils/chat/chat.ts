@@ -7,7 +7,7 @@ import { PDFContentForModel } from '@/types/pdf'
 import { nonNullable } from '@/utils/array'
 import { debounce } from '@/utils/debounce'
 import { parseDocument } from '@/utils/document-parser'
-import { AbortError, AppError, fromError, GenerateObjectSchemaError } from '@/utils/error'
+import { AbortError, AppError, fromError, GenerateObjectSchemaError, ModelRequestTimeoutError, RateLimitError } from '@/utils/error'
 import { useGlobalI18n } from '@/utils/i18n'
 import { generateRandomId } from '@/utils/id'
 import logger from '@/utils/logger'
@@ -19,7 +19,8 @@ import { type HistoryItemV1 } from '@/utils/tab-store'
 import { ActionMessageV1, ActionTypeV1, ActionV1, AssistantMessageV1, ChatHistoryV1, ChatList, pickByRoles, TaskMessageV1, UserMessageV1 } from '@/utils/tab-store/history'
 import { getUserConfig } from '@/utils/user-config'
 
-import { generateObjectInBackground, initCurrentModel, isCurrentModelReady, streamTextInBackground } from '../llm'
+import { generateObjectInBackground, isCurrentModelReady, streamTextInBackground } from '../llm'
+// initCurrentModel import removed - no longer needed for cloud providers
 import { makeMarkdownIcon, makeParagraph } from '../markdown/content'
 import { SearchScraper } from '../search'
 import { getCurrentTabInfo, getDocumentContentOfTabs } from '../tabs'
@@ -29,7 +30,7 @@ const log = logger.child('chat')
 export type MessageIdScope = 'quickActions' | 'welcomeMessage'
 
 export class ReactiveHistoryManager extends EventEmitter {
-  constructor(public chatHistory: Ref<ChatHistoryV1>, public systemMessage?: string) {
+  constructor(public chatHistory: Ref<ChatHistoryV1>, public systemMessage?: string, private immediateSave?: () => Promise<void>) {
     super()
     this.cleanUp()
   }
@@ -134,8 +135,12 @@ export class ReactiveHistoryManager extends EventEmitter {
       done: true,
       timestamp: Date.now(),
     })
+    // Set lastInteractedAt to ensure the message gets saved
+    this.chatHistory.value.lastInteractedAt = Date.now()
     const newMsg = this.history.value[this.history.value.length - 1]
     this.emit('messageAdded', newMsg)
+    // Immediately save user messages to prevent data loss
+    this.immediateSave?.()
     return newMsg as UserMessageV1
   }
 
@@ -147,6 +152,8 @@ export class ReactiveHistoryManager extends EventEmitter {
       done: false,
       timestamp: Date.now(),
     })
+    // Set lastInteractedAt to ensure the message gets saved
+    this.chatHistory.value.lastInteractedAt = Date.now()
     const newMsg = this.history.value[this.history.value.length - 1]
     this.emit('messageAdded', newMsg)
     return newMsg as AssistantMessageV1
@@ -170,6 +177,8 @@ export class ReactiveHistoryManager extends EventEmitter {
       this.history.value.push(msg)
       newMsg = this.history.value[this.history.value.length - 1] as TaskMessageV1
     }
+    // Set lastInteractedAt to ensure the message gets saved
+    this.chatHistory.value.lastInteractedAt = Date.now()
     return newMsg as TaskMessageV1
   }
 
@@ -182,6 +191,8 @@ export class ReactiveHistoryManager extends EventEmitter {
       timestamp: Date.now(),
       done: true,
     })
+    // Set lastInteractedAt to ensure the message gets saved
+    this.chatHistory.value.lastInteractedAt = Date.now()
     const newMsg = this.history.value[this.history.value.length - 1]
     this.emit('messageAdded', newMsg)
     return newMsg as ActionMessageV1
@@ -191,6 +202,8 @@ export class ReactiveHistoryManager extends EventEmitter {
     const idx = this.history.value.findIndex((m) => m.id === msg.id)
     if (idx > -1) {
       const [msg] = this.history.value.splice(idx, 1)
+      // Set lastInteractedAt to ensure the deletion gets saved
+      this.chatHistory.value.lastInteractedAt = Date.now()
       this.emit('messageRemoved', msg)
       return msg
     }
@@ -265,7 +278,7 @@ export class Chat {
         const debounceSaveHistory = debounce(async () => {
           if (!chatHistory.value.lastInteractedAt) return
           await this.chatStorage.setItem(`${chatHistory.value.id}`, { chat: toRaw(chatHistory.value) }, { timestamp: Date.now(), title: chatHistory.value.title })
-        }, 1000)
+        }, 300)
         const debounceSaveContextAttachment = debounce(async () => {
           if (!contextAttachments.value.lastInteractedAt) return
           await this.chatStorage.setItem(`${contextAttachments.value.id}`, { 'context-attachments': toRaw(contextAttachments.value) }, { timestamp: Date.now(), title: '' })
@@ -280,7 +293,13 @@ export class Chat {
         watch(contextAttachments, async () => debounceSaveContextAttachment(), { deep: true })
         updateChatList()
         this.chatStorage.onMetaChange(async () => await updateChatList())
-        const instance = new this(new ReactiveHistoryManager(chatHistory), contextAttachments, chatList)
+        // Create immediate save function for critical operations
+        const immediateSave = async () => {
+          if (chatHistory.value.lastInteractedAt) {
+            await this.chatStorage.setItem(`${chatHistory.value.id}`, { chat: toRaw(chatHistory.value) }, { timestamp: Date.now(), title: chatHistory.value.title })
+          }
+        }
+        const instance = new this(new ReactiveHistoryManager(chatHistory, undefined, immediateSave), contextAttachments, chatList)
         return instance
       })()
     }
@@ -339,7 +358,7 @@ export class Chat {
       const errorMsg = msg || this.historyManager.appendAssistantMessage()
       errorMsg.isError = true
       errorMsg.done = true
-      errorMsg.content = e instanceof AppError ? await e.toLocaleMessage() : 'Unexpected error occurred'
+      errorMsg.content = e instanceof AppError ? await e.toLocaleMessage() : '😅 Something unexpected happened. Please try again!'
     }
     else if (msg) {
       this.historyManager.deleteMessage(msg)
@@ -376,9 +395,23 @@ export class Chat {
       prompt: prompt.user.extractText(),
       system: prompt.system,
       abortSignal: abortController.signal,
+      timeout: 180_000, // 3 minutes for nextStep decisions (longer timeout)
     }).then((r) => r.object).catch((e) => {
       log.error('Error in nextStep', e)
+      // Handle rate limit and timeout errors more gracefully
       if (fromError(e) instanceof GenerateObjectSchemaError) return { action: 'chat' as const }
+      if (fromError(e) instanceof ModelRequestTimeoutError) {
+        log.warn('NextStep decision timed out, defaulting to chat')
+        return { action: 'chat' as const }
+      }
+      if (fromError(e) instanceof RateLimitError) {
+        log.warn('NextStep hit rate limit, defaulting to chat')
+        return { action: 'chat' as const }
+      }
+      if (e instanceof Error && e.message.includes('Rate limit')) {
+        log.warn('NextStep hit rate limit, defaulting to chat')
+        return { action: 'chat' as const }
+      }
       throw e
     })
     log.debug('nextStep', next)
@@ -392,30 +425,10 @@ export class Chat {
   }
 
   private async prepareModel() {
-    const abortController = this.createAbortController()
+    // Cloud providers like OpenRouter are always ready - no local model loading needed
     const isReady = await isCurrentModelReady()
     if (!isReady) {
-      const initIter = initCurrentModel(abortController.signal)
-      const msg = this.historyManager.appendTaskMessage(`${makeMarkdownIcon('download')} Loading model...`)
-      try {
-        for await (const progress of initIter) {
-          if (progress.type === 'progress') {
-            msg.content = `${makeMarkdownIcon('download')} Loading model... ${((progress.progress.progress * 100).toFixed(0))}%`
-          }
-        }
-        msg.done = true
-      }
-      catch (e) {
-        logger.error('Error in loading model', e)
-        if (e instanceof Error && e.message.includes('aborted')) {
-          msg.content = 'Loading model aborted'
-        }
-        else {
-          msg.content = 'Loading model failed'
-        }
-        msg.done = true
-        throw e
-      }
+      throw new Error('Model not configured or API key missing')
     }
   }
 
@@ -489,6 +502,12 @@ export class Chat {
       system: prompt.system,
       prompt: prompt.user.extractText(),
       abortSignal: abortController.signal,
+      timeout: 90_000, // 90 seconds for keyword generation
+    }).catch((e) => {
+      log.error('Error generating search keywords', e)
+      // Fallback to using the last user message as keywords if generation fails
+      const lastUserMsg = contextMsgs.filter(msg => msg.role === 'user').pop()?.content || ''
+      return { object: { queryKeywords: [lastUserMsg.slice(0, 100)] } }
     })
     return r.object.queryKeywords
   }
@@ -529,12 +548,18 @@ export class Chat {
     let next: Awaited<ReturnType<typeof this.checkNextStep>> = { action: 'chat' }
     let searchKeywords: string[] = []
     if (enableOnlineSearch === 'force') {
-      searchKeywords = await this.questionToKeywords(nextStepContext)
+      searchKeywords = await this.questionToKeywords(nextStepContext).catch((e) => {
+        log.error('Error in questionToKeywords, using fallback', e)
+        // Fallback to using the last user message as keywords
+        const lastUserMsg = nextStepContext.filter(msg => msg.role === 'user').pop()?.content || ''
+        return [lastUserMsg.slice(0, 100)]
+      })
     }
     else if (enableOnlineSearch === 'auto') {
       next = await this.checkNextStep(nextStepContext).catch(async (e) => {
-        await this.errorHandler(e, loading)
-        throw e
+        log.error('Error in checkNextStep, defaulting to chat mode', e)
+        // Don't show error to user for checkNextStep failures, just default to chat
+        return { action: 'chat' as const }
       })
       if (next.action === 'search_online') {
         searchKeywords = next.queryKeywords
@@ -599,7 +624,7 @@ export class Chat {
     catch (e) {
       logger.error('Error in chat stream', e)
       msg.isError = true
-      msg.content = e instanceof AppError ? await e.toLocaleMessage() : 'Unknown error occurred'
+      msg.content = e instanceof AppError ? await e.toLocaleMessage() : '😅 Something unexpected happened. Please try again!'
     }
     finally {
       msg.done = true

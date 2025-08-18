@@ -46,23 +46,23 @@
       "title": "IA sur appareil, conçue spécialement pour vous"
     },
     "guide": {
-      "already_installed": "Ollama est déjà installé et en cours d'exécution ?",
-      "features": {
-        "1": "Exécutez des modèles avancés comme DeepSeek, Qwen, Llama",
-        "2": "Personnalisez et changez de modèles avec un contrôle total",
-        "3": "Vos données restent privées, sur votre appareil"
-      },
-      "follow_our_tutorial": "Suivez notre guide d'installation",
-      "get_ollama": "Obtenir Ollama",
-      "install_desc": "Installez Ollama pour configurer votre IA locale.",
-      "need_help": "Besoin d'aide ?",
-      "ollama_desc": "Libérez toute la puissance de l'IA locale avec Ollama.",
-      "setup": "Configuration",
       "step1": "ÉTAPE 1",
-      "download_model_to_begin": "Téléchargez un modèle pour commencer.",
-      "select_model_to_start": "Sélectionnez et téléchargez un modèle pour commencer",
-      "download_and_install": "Télécharger & Installer",
-      "choose_model": "Choisir un modèle"
+      "install_desc": "Configurez OpenRouter pour accéder aux modèles d'IA cloud.",
+      "openrouter_desc": "Accédez à plus de 100 modèles d'IA via l'API unifiée d'OpenRouter.",
+      "features": {
+        "1": "Accès aux modèles d'OpenAI, Anthropic, Google, Meta",
+        "2": "Basculez entre les modèles instantanément sans téléchargements",
+        "3": "Prix de paiement à l'utilisation avec des coûts transparents"
+      },
+      "get_openrouter": "Obtenir la clé API OpenRouter",
+      "already_have_key": "Vous avez déjà une clé API ?",
+      "setup": "Configurer",
+      "need_help": "Besoin d'aide ?",
+      "follow_our_tutorial": "Suivez notre guide de configuration",
+      "configure_to_begin": "Configurez votre clé API pour commencer.",
+      "select_model_to_start": "Sélectionnez un modèle pour commencer",
+      "configure_api": "Configurer l'API",
+      "choose_model": "Choisir le modèle"
     },
     "webllm_tutorial": {
       "desc": "Utilisez un modèle léger (Qwen 0.6b) directement dans votre navigateur - sans configuration, sans attente.",
@@ -93,7 +93,8 @@
       "title": "Modèles",
       "discover_more": "Découvrez plus de modèles",
       "no_model": "⚠️ Aucun modèle",
-      "add_model_to_start": "Ajouter un modèle pour commencer"
+      "add_model_to_start": "Ajouter un modèle pour commencer",
+      "search_models": "Rechercher des modèles..."
     },
     "ollama": {
       "already_installed": "Ollama est déjà installé et en cours d'exécution ?",

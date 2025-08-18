@@ -14,6 +14,9 @@ import { registerDeclarativeNetRequestRule } from '@/utils/web-request'
 
 import { waitForSidepanelLoaded } from './utils'
 
+// Import the safe emit function
+import { safeEmit } from '@/utils/rpc/background-fns'
+
 export default defineBackground(() => {
   if (import.meta.env.CHROME) {
     browser.storage.session.setAccessLevel({ accessLevel: 'TRUSTED_AND_UNTRUSTED_CONTEXTS' })
@@ -34,14 +37,20 @@ export default defineBackground(() => {
   })
 
   browser.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
-    logger.info('tab updated', { tabId, changeInfo, tab })
+    // Only log significant changes to reduce console noise
+    if (changeInfo.status === 'complete' || changeInfo.url) {
+      logger.debug('tab updated', { tabId, changeInfo: Object.keys(changeInfo), url: tab.url })
+    }
 
-    bgBroadcastRpc.emit('tabUpdated', {
-      tabId,
-      url: tab.url,
-      title: tab.title,
-      faviconUrl: tab.favIconUrl,
-    })
+    // Only emit updates for meaningful changes (not loading states)
+    if (changeInfo.status === 'complete' || changeInfo.url || changeInfo.title || changeInfo.favIconUrl) {
+      bgBroadcastRpc.emit('tabUpdated', {
+        tabId,
+        url: tab.url,
+        title: tab.title,
+        faviconUrl: tab.favIconUrl,
+      })
+    }
   })
 
   browser.runtime.onSuspend.addListener(() => {
@@ -99,7 +108,10 @@ export default defineBackground(() => {
       if (typeof info.menuItemId === 'string' && ['quick-actions', 'add-image-to-chat'].some((id) => info.menuItemId.toString().includes(id))) {
         await browser.sidePanel.open({ windowId: tab.windowId })
         await waitForSidepanelLoaded()
-        await b2sRpc.emit('contextMenuClicked', { ...info, menuItemId: info.menuItemId as ContextMenuId })
+        
+        // Use the non-blocking safeEmit pattern from background-fns.ts
+        safeEmit('contextMenuClicked', { ...info, menuItemId: info.menuItemId as ContextMenuId })
+          .catch(() => {}); // Extra catch to ensure no uncaught promises
       }
       else {
         bgBroadcastRpc.emit('contextMenuClicked', {

@@ -46,22 +46,22 @@
       "title": "KI direkt auf Ihrem Gerät – nur für Sie entwickelt"
     },
     "guide": {
-      "already_installed": "Haben Sie Ollama bereits installiert und gestartet?",
-      "features": {
-        "1": "Führen Sie fortschrittliche Modelle wie Deepseek, Qwen, Lama aus",
-        "2": "Passen Sie die Modelle mit voller Steuerung an und wechseln Sie sie",
-        "3": "Ihre Daten bleiben privat auf Ihrem Gerät"
-      },
-      "follow_our_tutorial": "Folgen Sie unserem Installationshandbuch",
-      "get_ollama": "Holen Sie sich Ollama",
-      "install_desc": "Installieren Sie Ollama, um Ihre lokale KI einzurichten.",
-      "need_help": "Benötigen Sie Hilfe?",
-      "ollama_desc": "Mit Ollama die volle lokale KI -Macht freischalten.",
-      "setup": "Aufstellen",
       "step1": "Schritt 1",
-      "download_model_to_begin": "Laden Sie ein Modell herunter, um zu beginnen.",
-      "select_model_to_start": "Wählen Sie ein Modell aus und laden Sie es herunter, um zu beginnen",
-      "download_and_install": "Herunterladen & Installieren",
+      "install_desc": "Konfigurieren Sie OpenRouter für den Zugriff auf Cloud-KI-Modelle.",
+      "openrouter_desc": "Zugriff auf über 100 KI-Modelle über OpenRouters einheitliche API.",
+      "features": {
+        "1": "Zugriff auf Modelle von OpenAI, Anthropic, Google, Meta",
+        "2": "Sofortiger Wechsel zwischen Modellen ohne Downloads",
+        "3": "Pay-per-Use-Preise mit transparenten Kosten"
+      },
+      "get_openrouter": "OpenRouter API-Schlüssel erhalten",
+      "already_have_key": "Haben Sie bereits einen API-Schlüssel?",
+      "setup": "Konfigurieren",
+      "need_help": "Benötigen Sie Hilfe?",
+      "follow_our_tutorial": "Folgen Sie unserem Einrichtungsleitfaden",
+      "configure_to_begin": "Konfigurieren Sie Ihren API-Schlüssel, um zu beginnen.",
+      "select_model_to_start": "Wählen Sie ein Modell zum Starten aus",
+      "configure_api": "API konfigurieren",
       "choose_model": "Modell auswählen"
     },
     "webllm_tutorial": {
@@ -93,7 +93,8 @@
       "title": "Aktives Modell",
       "discover_more": "Entdecken Sie weitere Modelle",
       "no_model": "⚠️ Kein Modell",
-      "add_model_to_start": "Fügen Sie ein Modell hinzu, um zu beginnen"
+      "add_model_to_start": "Fügen Sie ein Modell hinzu, um zu beginnen",
+      "search_models": "Modelle suchen..."
     },
     "ollama": {
       "already_installed": "Haben Sie Ollama bereits installiert und gestartet?",
